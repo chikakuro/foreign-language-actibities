@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>えいごゲームひろば | 3〜6年生 英語ゲームアプリ</title>
+<style>
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body {
+  margin: 0; padding: 0;
+  font-family: "Hiragino Maru Gothic ProN", "Rounded Mplus 1c", "M PLUS Rounded 1c", "Yu Gothic", sans-serif;
+  background: linear-gradient(160deg, #fef6e4 0%, #e9f7ff 50%, #f3ecff 100%);
+  min-height: 100vh;
+  color: #33313f;
+}
+#app { max-width: 720px; margin: 0 auto; min-height: 100vh; padding-bottom: 40px; }
+button { font-family: inherit; cursor: pointer; }
+
+.screen { padding: 12px 16px 24px; animation: fadeIn .25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
+
+/* ---------- Top bar ---------- */
+.topbar { display: flex; align-items: center; gap: 10px; padding: 10px 2px 18px; }
+.topbar-title { font-size: 1.25rem; font-weight: 800; color: #4a3f7a; }
+.back-btn {
+  border: none; background: #fff; border-radius: 999px; padding: 8px 14px;
+  font-weight: 700; font-size: .9rem; color: #6a5acd; box-shadow: 0 2px 6px rgba(0,0,0,.08);
+}
+
+/* ---------- Home ---------- */
+.home-screen { padding-top: 24px; text-align: center; }
+.app-title { font-size: 1.8rem; font-weight: 900; color: #4a3f7a; margin-bottom: 6px; }
+.app-subtitle { font-size: 1rem; color: #7c7492; margin-bottom: 20px; }
+.grade-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grade-card {
+  border-radius: 22px; padding: 26px 10px; color: #fff; font-weight: 800;
+  box-shadow: 0 6px 14px rgba(0,0,0,.15); transition: transform .12s ease;
+}
+.grade-card:active { transform: scale(.96); }
+.grade-num { font-size: 1.3rem; margin-bottom: 6px; }
+.grade-book { font-size: .85rem; opacity: .92; font-weight: 600; }
+
+/* ---------- Unit list ---------- */
+.unit-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.unit-card {
+  background: #fff; border-radius: 18px; padding: 14px 18px; box-shadow: 0 3px 10px rgba(0,0,0,.08);
+  border-left: 8px solid #ffb26b; transition: transform .12s ease;
+}
+.unit-card:active { transform: scale(.98); }
+.unit-no { font-size: .78rem; font-weight: 800; color: #ff8a5c; letter-spacing: .05em; }
+.unit-title { font-size: 1.15rem; font-weight: 800; color: #3d3455; margin-top: 2px; }
+.unit-subtitle { font-size: .85rem; color: #8b8398; margin-top: 2px; }
+
+/* ---------- Unit detail ---------- */
+.unit-detail-subtitle { color: #7c7492; margin: -8px 0 18px 2px; font-size: .95rem; }
+.section-label { font-weight: 800; color: #4a3f7a; margin: 18px 2px 10px; font-size: 1.02rem; }
+.words-preview { margin-bottom: 6px; }
+.word-chip-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.word-chip {
+  background: #fff; border-radius: 14px; padding: 8px 12px; box-shadow: 0 2px 6px rgba(0,0,0,.07);
+  display: flex; flex-direction: column; align-items: flex-start; min-width: 78px;
+  font-weight: 700; color: #3d3455; font-size: .92rem;
+}
+.word-chip-ja { font-size: .74rem; color: #9b93ac; font-weight: 500; }
+
+.game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.game-card {
+  background: #fff; border-radius: 18px; padding: 16px 8px; text-align: center;
+  border: 3px solid #eee; box-shadow: 0 3px 10px rgba(0,0,0,.06); transition: transform .12s ease;
+}
+.game-card:active { transform: scale(.95); }
+.game-icon { font-size: 1.8rem; }
+.game-name { font-weight: 800; font-size: .88rem; margin-top: 6px; color: #3d3455; }
+
+/* ---------- Common game elements ---------- */
+.game-root { padding-top: 4px; }
+.quiz-title { font-weight: 800; color: #4a3f7a; font-size: 1.05rem; margin-bottom: 6px; text-align: center; }
+.progress-label { text-align: center; color: #9b93ac; font-size: .85rem; margin-bottom: 14px; }
+.big-word { font-size: 1.9rem; font-weight: 900; color: #2f2a45; text-align: center; margin: 10px 0; }
+.ja-prompt { color: #4a3f7a; }
+.ja-hint { text-align: center; color: #7c7492; font-size: 1rem; margin-bottom: 10px; }
+.prompt-box { text-align: center; margin-bottom: 16px; }
+.replay-btn {
+  border: none; background: #fff4e0; color: #d98324; font-weight: 800; padding: 8px 16px;
+  border-radius: 999px; font-size: .95rem; box-shadow: 0 2px 6px rgba(0,0,0,.06);
+}
+
+.btn {
+  border: none; border-radius: 14px; padding: 12px 18px; font-weight: 800; font-size: 1rem;
+  box-shadow: 0 3px 8px rgba(0,0,0,.1); transition: transform .1s ease;
+}
+.btn:active { transform: scale(.96); }
+.btn-primary { background: #6a5acd; color: #fff; }
+.btn-secondary { background: #fff; color: #6a5acd; border: 2px solid #e2ddf7; }
+.row-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+.option-btn { background: #fff; color: #3d3455; border: 2px solid #e2ddf7; padding: 16px 8px; font-size: 1rem; }
+.option-btn.correct { background: #d7f5da; border-color: #4caf50; color: #2e7d32; }
+.option-btn.wrong { background: #fde3e3; border-color: #e57373; color: #c62828; }
+
+.spk-btn {
+  border: none; background: #6a5acd; color: #fff; width: 44px; height: 44px; border-radius: 50%;
+  font-size: 1.2rem; margin-top: 8px; box-shadow: 0 3px 8px rgba(0,0,0,.15);
+}
+
+.score-box { text-align: center; padding: 40px 10px; }
+.score-emoji { font-size: 3.4rem; margin-bottom: 12px; }
+.score-text { font-size: 1.3rem; font-weight: 800; color: #4a3f7a; margin-bottom: 22px; }
+
+/* ---------- Flashcard ---------- */
+.game-flashcard { display: flex; flex-direction: column; align-items: center; }
+.flip-card { width: 260px; height: 180px; perspective: 1000px; margin: 10px 0; }
+.flip-card-inner {
+  position: relative; width: 100%; height: 100%; text-align: center; transition: transform .5s;
+  transform-style: preserve-3d;
+}
+.flip-card.flipped .flip-card-inner, .flip-card-inner { }
+.flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+.flip-card-face {
+  position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+  border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,.12);
+}
+.flip-front { background: #fff; }
+.flip-back { background: #6a5acd; color: #fff; transform: rotateY(180deg); }
+.flip-back .big-word { color: #fff; }
+
+/* ---------- Spell / sentence tiles ---------- */
+.spell-answer-row, .sentence-answer-row { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; min-height: 52px; margin: 14px 0 10px; }
+.spell-slot {
+  width: 38px; height: 44px; border-bottom: 3px solid #6a5acd; display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; font-weight: 800; color: #2f2a45;
+}
+.spell-letters-row, .sentence-word-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 12px; }
+.letter-tile, .word-tile {
+  border: none; background: #fff; border: 2px solid #e2ddf7; border-radius: 12px; padding: 10px 14px;
+  font-weight: 800; font-size: 1.1rem; color: #3d3455; box-shadow: 0 2px 6px rgba(0,0,0,.06);
+}
+.letter-tile.used, .word-tile.used { opacity: .25; pointer-events: none; }
+.sentence-chip {
+  background: #6a5acd; color: #fff; padding: 8px 12px; border-radius: 10px; font-weight: 700;
+}
+.sentence-placeholder { color: #b8b1cc; font-size: .9rem; }
+.sentence-answer-row { border: 2px dashed #cfc7ea; border-radius: 14px; padding: 8px; }
+
+/* ---------- Memory ---------- */
+.memory-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+.memory-card { aspect-ratio: 1; perspective: 800px; }
+.memory-card-inner { position: relative; width: 100%; height: 100%; transition: transform .4s; transform-style: preserve-3d; }
+.memory-card.flipped .memory-card-inner, .memory-card.matched .memory-card-inner { transform: rotateY(180deg); }
+.memory-face {
+  position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; text-align: center; padding: 4px;
+  font-weight: 800; font-size: .82rem; box-shadow: 0 2px 6px rgba(0,0,0,.1);
+}
+.memory-back { background: #ffd97d; font-size: 1.4rem; }
+.memory-front { background: #fff; color: #3d3455; transform: rotateY(180deg); }
+.memory-card.matched .memory-face { opacity: .55; }
+
+/* ---------- Time attack ---------- */
+.timeattack-header { display: flex; justify-content: space-between; font-weight: 800; color: #4a3f7a; margin-bottom: 8px; font-size: 1.05rem; }
+
+/* ---------- Pronounce ---------- */
+.game-pronounce { display: flex; flex-direction: column; align-items: center; }
+.mic-btn { margin-top: 10px; }
+.pronounce-result { margin-top: 14px; text-align: center; color: #4a3f7a; font-weight: 600; min-height: 30px; }
+
+/* ---------- Bingo ---------- */
+.bingo-call { text-align: center; font-size: 1.05rem; font-weight: 800; color: #4a3f7a; margin-bottom: 10px; min-height: 28px; }
+.bingo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+.bingo-cell {
+  background: #fff; border: 2px solid #e2ddf7; border-radius: 12px; aspect-ratio: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-weight: 800; font-size: .82rem; color: #3d3455; text-align: center; padding: 4px;
+}
+.bingo-ja { font-size: .68rem; color: #9b93ac; font-weight: 500; }
+.bingo-cell.marked { background: #ffe08a; border-color: #f5b942; }
+.bingo-status { text-align: center; font-weight: 800; color: #e07a1f; font-size: 1.15rem; margin: 10px 0; }
+
+/* ---------- Flash feedback overlay ---------- */
+.flash-overlay {
+  position: fixed; inset: 0; pointer-events: none; z-index: 999; animation: flashfade .45s ease forwards;
+}
+.flash-ok { background: rgba(76,175,80,.18); }
+.flash-ng { background: rgba(229,115,115,.18); }
+@keyframes flashfade { from { opacity: 1; } to { opacity: 0; } }
+
+@media (max-width: 380px) {
+  .grade-grid { gap: 10px; }
+  .options-grid { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+<div id="app">
+  <div style="max-width:480px;margin:60px auto;padding:24px;text-align:center;font-family:sans-serif;color:#4a3f7a;">
+    <p style="font-size:1.1rem;font-weight:700;">読み込み中です…</p>
+    <p style="font-size:0.9rem;color:#7c7492;">もしこの画面のまま変わらない場合は、このファイルをダウンロードしてから<br>お使いの端末の標準ブラウザ（Safari／Chromeなど）で開いてください。</p>
+  </div>
+</div>
+<noscript>
+  <div style="max-width:480px;margin:60px auto;padding:24px;text-align:center;font-family:sans-serif;color:#c62828;">
+    このアプリを使うにはJavaScriptが必要です。<br>ファイルをダウンロードして、Safari／Chromeなどの通常のブラウザで開いてください。
+  </div>
+</noscript>
+<script>
+// ============================================================
+// 小学校英語ゲームアプリ 学習データ
+// Let's Try 1 (3年) / Let's Try 2 (4年) / New Horizon Elementary 5 / New Horizon Elementary 6
+// ============================================================
+
+const GRADES = [
+  {
+    grade: 3,
+    label: "3年生",
+    book: "Let's Try! 1",
+    color: "#ff8a5c",
+    units: [
+      {
+        id: "g3u1", no: 1, title: "Hello!", subtitle: "あいさつをして友だちになろう",
+        words: [
+          ["Hello", "こんにちは"], ["Hi", "やあ"], ["Good morning", "おはよう"],
+          ["Good afternoon", "こんにちは（午後）"], ["Good evening", "こんばんは"],
+          ["Good night", "おやすみ"], ["Goodbye", "さようなら"], ["See you", "またね"],
+          ["Thank you", "ありがとう"], ["Nice to meet you", "はじめまして"],
+          ["Japan", "日本"], ["America", "アメリカ"]
+        ],
+        sentences: [
+          ["Hello! I'm Yui.", "こんにちは。ゆいです。"],
+          ["Nice to meet you.", "はじめまして。"],
+          ["Good morning!", "おはようございます。"],
+          ["See you!", "またね。"],
+          ["Thank you very much.", "どうもありがとう。"],
+          ["I'm from Japan.", "わたしは日本出身です。"]
+        ]
+      },
+      {
+        id: "g3u2", no: 2, title: "How are you?", subtitle: "ごきげんいかが?",
+        words: [
+          ["How are you?", "元気?"], ["I'm fine", "元気です"], ["I'm good", "調子いいよ"],
+          ["I'm happy", "うれしい"], ["I'm sad", "悲しい"], ["I'm tired", "疲れた"],
+          ["I'm hungry", "おなかがすいた"], ["I'm sleepy", "眠い"], ["I'm great", "最高だよ"],
+          ["I'm so-so", "まあまあ"], ["sunny", "晴れ"], ["rainy", "雨"]
+        ],
+        sentences: [
+          ["How are you?", "元気ですか。"],
+          ["I'm fine, thank you.", "元気です、ありがとう。"],
+          ["I'm happy today.", "今日はうれしいです。"],
+          ["I'm sleepy.", "眠いです。"],
+          ["How's the weather?", "天気はどうですか。"],
+          ["It's sunny today.", "今日は晴れです。"]
+        ]
+      },
+      {
+        id: "g3u3", no: 3, title: "How many?", subtitle: "数えてあそぼう",
+        words: [
+          ["one", "1"], ["two", "2"], ["three", "3"], ["four", "4"], ["five", "5"],
+          ["six", "6"], ["seven", "7"], ["eight", "8"], ["nine", "9"], ["ten", "10"],
+          ["How many?", "いくつ?"], ["apples", "りんご"]
+        ],
+        sentences: [
+          ["How many apples?", "りんごはいくつ?"],
+          ["I have five pencils.", "えんぴつを5本持っています。"],
+          ["How many balls do you have?", "ボールをいくつ持っていますか。"],
+          ["I have ten balloons.", "風船を10個持っています。"],
+          ["Count with me.", "いっしょに数えよう。"],
+          ["I have three cats.", "ねこを3匹飼っています。"]
+        ]
+      },
+      {
+        id: "g3u4", no: 4, title: "I like blue.", subtitle: "すきなものをつたえよう",
+        words: [
+          ["red", "赤"], ["blue", "青"], ["yellow", "黄色"], ["green", "緑"],
+          ["pink", "ピンク"], ["purple", "紫"], ["orange", "オレンジ"], ["black", "黒"],
+          ["white", "白"], ["brown", "茶色"], ["I like", "好き"], ["I don't like", "好きじゃない"]
+        ],
+        sentences: [
+          ["I like blue.", "青が好きです。"],
+          ["I don't like green.", "緑は好きじゃないです。"],
+          ["Do you like red?", "赤は好きですか。"],
+          ["Yes, I do.", "はい、好きです。"],
+          ["No, I don't.", "いいえ、好きじゃないです。"],
+          ["I like soccer.", "サッカーが好きです。"]
+        ]
+      },
+      {
+        id: "g3u5", no: 5, title: "What do you like?", subtitle: "何がすき?",
+        words: [
+          ["apple", "りんご"], ["banana", "バナナ"], ["strawberry", "いちご"],
+          ["grape", "ぶどう"], ["melon", "メロン"], ["tomato", "トマト"],
+          ["carrot", "にんじん"], ["onion", "たまねぎ"], ["potato", "じゃがいも"],
+          ["soccer", "サッカー"], ["baseball", "野球"], ["swimming", "水泳"]
+        ],
+        sentences: [
+          ["What do you like?", "何が好きですか。"],
+          ["I like apples.", "りんごが好きです。"],
+          ["What sport do you like?", "どのスポーツが好きですか。"],
+          ["I like soccer.", "サッカーが好きです。"],
+          ["Do you like tomatoes?", "トマトは好きですか。"],
+          ["I like swimming.", "水泳が好きです。"]
+        ]
+      },
+      {
+        id: "g3u6", no: 6, title: "ALPHABET", subtitle: "アルファベットとなかよし",
+        words: [
+          ["A", "エー"], ["B", "ビー"], ["C", "シー"], ["D", "ディー"], ["E", "イー"],
+          ["F", "エフ"], ["G", "ジー"], ["H", "エイチ"], ["I", "アイ"], ["J", "ジェイ"],
+          ["K", "ケイ"], ["L", "エル"], ["M", "エム"], ["N", "エヌ"], ["O", "オー"],
+          ["P", "ピー"], ["Q", "キュー"], ["R", "アール"], ["S", "エス"], ["T", "ティー"],
+          ["U", "ユー"], ["V", "ブイ"], ["W", "ダブリュー"], ["X", "エックス"], ["Y", "ワイ"], ["Z", "ゼッド"]
+        ],
+        sentences: [
+          ["A is for Apple.", "AはAppleのA。"],
+          ["B is for Ball.", "BはBallのB。"],
+          ["What letter is this?", "これは何の文字?"],
+          ["This is letter C.", "これはCの文字です。"],
+          ["Spell your name.", "名前をつづってみよう。"],
+          ["I like the letter S.", "Sの文字が好きです。"]
+        ]
+      },
+      {
+        id: "g3u7", no: 7, title: "This is for you.", subtitle: "カードをおくろう",
+        words: [
+          ["circle", "円"], ["triangle", "三角形"], ["square", "正方形"],
+          ["rectangle", "長方形"], ["star", "星"], ["heart", "ハート"],
+          ["diamond", "ひし形"], ["red", "赤"], ["blue", "青"],
+          ["This is for you", "これをどうぞ"], ["Thank you", "ありがとう"], ["Here you are", "はいどうぞ"]
+        ],
+        sentences: [
+          ["This is for you.", "これをどうぞ。"],
+          ["Thank you!", "ありがとう!"],
+          ["Here you are.", "はい、どうぞ。"],
+          ["I made a card.", "カードを作りました。"],
+          ["It's a star.", "それは星です。"],
+          ["What shape is it?", "それは何の形?"]
+        ]
+      },
+      {
+        id: "g3u8", no: 8, title: "What's this?", subtitle: "これなあに?",
+        words: [
+          ["What's this?", "これは何?"], ["It's an apple", "それはりんごです"],
+          ["animal", "動物"], ["fruit", "果物"], ["vegetable", "野菜"], ["hint", "ヒント"],
+          ["guess", "当てる"], ["correct", "正解"], ["dog", "犬"], ["cat", "ねこ"],
+          ["apple", "りんご"], ["ball", "ボール"]
+        ],
+        sentences: [
+          ["What's this?", "これは何?"],
+          ["It's an apple.", "それはりんごです。"],
+          ["Guess what it is.", "何か当ててみて。"],
+          ["Here's a hint.", "ヒントだよ。"],
+          ["That's right!", "その通り!"],
+          ["It's a dog.", "それは犬です。"]
+        ]
+      },
+      {
+        id: "g3u9", no: 9, title: "Who are you?", subtitle: "きみはだれ?",
+        words: [
+          ["dog", "犬"], ["cat", "ねこ"], ["bird", "鳥"], ["lion", "ライオン"],
+          ["elephant", "ぞう"], ["monkey", "さる"], ["rabbit", "うさぎ"], ["bear", "くま"],
+          ["head", "頭"], ["eyes", "目"], ["nose", "鼻"], ["mouth", "口"]
+        ],
+        sentences: [
+          ["Who are you?", "きみはだれ?"],
+          ["I'm a cat.", "わたしはねこです。"],
+          ["I have big eyes.", "大きな目があります。"],
+          ["I have a long nose.", "長い鼻があります。"],
+          ["What animal are you?", "きみは何の動物?"],
+          ["I'm a lion.", "わたしはライオンです。"]
+        ]
+      }
+    ]
+  },
+  {
+    grade: 4,
+    label: "4年生",
+    book: "Let's Try! 2",
+    color: "#4cb8ff",
+    units: [
+      {
+        id: "g4u1", no: 1, title: "Hello, world!", subtitle: "世界のいろいろなことばであいさつをしよう",
+        words: [
+          ["Hello", "こんにちは（英語）"], ["Bonjour", "こんにちは（フランス語）"],
+          ["Hola", "こんにちは（スペイン語）"], ["Ni hao", "こんにちは（中国語）"],
+          ["Annyeong", "こんにちは（韓国語）"], ["Namaste", "こんにちは（ヒンディー語）"],
+          ["country", "国"], ["France", "フランス"], ["Spain", "スペイン"],
+          ["China", "中国"], ["Korea", "韓国"], ["India", "インド"]
+        ],
+        sentences: [
+          ["Hello!", "こんにちは!"],
+          ["Bonjour!", "ボンジュール!"],
+          ["Where are you from?", "出身はどこですか。"],
+          ["I'm from Japan.", "日本出身です。"],
+          ["Nice to meet you.", "はじめまして。"],
+          ["What language do you speak?", "何語を話しますか。"]
+        ]
+      },
+      {
+        id: "g4u2", no: 2, title: "Let's play cards.", subtitle: "すきな遊びをつたえよう",
+        words: [
+          ["sunny", "晴れ"], ["cloudy", "くもり"], ["rainy", "雨"], ["snowy", "雪"],
+          ["windy", "風が強い"], ["hot", "暑い"], ["cold", "寒い"], ["T-shirt", "Tシャツ"],
+          ["cap", "帽子"], ["shoes", "くつ"], ["jacket", "ジャケット"], ["Let's play", "遊ぼう"]
+        ],
+        sentences: [
+          ["How's the weather?", "天気はどうですか。"],
+          ["It's sunny.", "晴れています。"],
+          ["Let's play cards.", "カードで遊ぼう。"],
+          ["Let's play outside.", "外で遊ぼう。"],
+          ["What do you wear?", "何を着ますか。"],
+          ["I wear a jacket.", "ジャケットを着ます。"]
+        ]
+      },
+      {
+        id: "g4u3", no: 3, title: "I like Mondays.", subtitle: "すきな曜日は何かな?",
+        words: [
+          ["Sunday", "日曜日"], ["Monday", "月曜日"], ["Tuesday", "火曜日"],
+          ["Wednesday", "水曜日"], ["Thursday", "木曜日"], ["Friday", "金曜日"],
+          ["Saturday", "土曜日"], ["today", "今日"], ["weekend", "週末"],
+          ["school", "学校"], ["homework", "宿題"], ["favorite", "お気に入りの"]
+        ],
+        sentences: [
+          ["What day is it today?", "今日は何曜日?"],
+          ["It's Monday.", "月曜日です。"],
+          ["I like Mondays.", "月曜日が好きです。"],
+          ["What do you do on Sundays?", "日曜日は何をしますか。"],
+          ["I play soccer on Saturdays.", "土曜日にサッカーをします。"],
+          ["Do you like Fridays?", "金曜日は好きですか。"]
+        ]
+      },
+      {
+        id: "g4u4", no: 4, title: "What time is it?", subtitle: "今、何時?",
+        words: [
+          ["o'clock", "〜時"], ["morning", "朝"], ["noon", "正午"], ["afternoon", "午後"],
+          ["evening", "夕方"], ["night", "夜"], ["wake up", "起きる"], ["breakfast", "朝食"],
+          ["lunch", "昼食"], ["dinner", "夕食"], ["bedtime", "寝る時間"], ["time", "時間"]
+        ],
+        sentences: [
+          ["What time is it?", "今、何時ですか。"],
+          ["It's seven o'clock.", "7時です。"],
+          ["I get up at seven.", "7時に起きます。"],
+          ["I eat breakfast at eight.", "8時に朝食を食べます。"],
+          ["I go to bed at nine.", "9時に寝ます。"],
+          ["What time do you get up?", "何時に起きますか。"]
+        ]
+      },
+      {
+        id: "g4u5", no: 5, title: "Do you have a pen?", subtitle: "おすすめの文房具セットをつくろう",
+        words: [
+          ["pen", "ペン"], ["pencil", "えんぴつ"], ["eraser", "消しゴム"], ["ruler", "定規"],
+          ["notebook", "ノート"], ["scissors", "はさみ"], ["glue", "のり"], ["crayon", "クレヨン"],
+          ["pencil case", "筆箱"], ["bag", "かばん"], ["Do you have?", "持っていますか"], ["I have", "持っています"]
+        ],
+        sentences: [
+          ["Do you have a pen?", "ペンを持っていますか。"],
+          ["Yes, I have.", "はい、持っています。"],
+          ["No, I don't have.", "いいえ、持っていません。"],
+          ["I have three pencils.", "えんぴつを3本持っています。"],
+          ["What do you have?", "何を持っていますか。"],
+          ["I need a ruler.", "定規が必要です。"]
+        ]
+      },
+      {
+        id: "g4u6", no: 6, title: "Alphabet", subtitle: "アルファベットで文字遊びをしよう",
+        words: [
+          ["a", "エー(小文字)"], ["b", "ビー(小文字)"], ["c", "シー(小文字)"], ["d", "ディー(小文字)"],
+          ["e", "イー(小文字)"], ["f", "エフ(小文字)"], ["g", "ジー(小文字)"], ["h", "エイチ(小文字)"],
+          ["cat", "ねこ"], ["dog", "犬"], ["red", "赤"], ["blue", "青"]
+        ],
+        sentences: [
+          ["This is lowercase a.", "これは小文字のaです。"],
+          ["Can you find b?", "bを見つけられる?"],
+          ["Let's make words.", "単語を作ろう。"],
+          ["What letter comes next?", "次はどの文字?"],
+          ["Spell \"cat.\"", "catをつづってみよう。"],
+          ["c-a-t spells cat.", "c-a-tでcatとつづります。"]
+        ]
+      },
+      {
+        id: "g4u7", no: 7, title: "What do you want?", subtitle: "ほしいものは何かな?",
+        words: [
+          ["onion", "たまねぎ"], ["carrot", "にんじん"], ["potato", "じゃがいも"],
+          ["tomato", "トマト"], ["cabbage", "キャベツ"], ["corn", "とうもろこし"],
+          ["pumpkin", "かぼちゃ"], ["cucumber", "きゅうり"], ["want", "ほしい"],
+          ["pizza", "ピザ"], ["salad", "サラダ"], ["parfait", "パフェ"]
+        ],
+        sentences: [
+          ["What do you want?", "何がほしいですか。"],
+          ["I want tomatoes.", "トマトがほしいです。"],
+          ["I want a pizza.", "ピザがほしいです。"],
+          ["What do you want on your pizza?", "ピザに何を乗せたいですか。"],
+          ["I want cheese.", "チーズがほしいです。"],
+          ["Let's make a salad.", "サラダを作ろう。"]
+        ]
+      },
+      {
+        id: "g4u8", no: 8, title: "This is my favorite place.", subtitle: "お気に入りの場所をしょうかいしよう",
+        words: [
+          ["classroom", "教室"], ["gym", "体育館"], ["library", "図書室"],
+          ["music room", "音楽室"], ["playground", "校庭"], ["nurse's office", "保健室"],
+          ["staircase", "階段"], ["turn right", "右に曲がる"], ["turn left", "左に曲がる"],
+          ["go straight", "まっすぐ行く"], ["favorite place", "お気に入りの場所"], ["kind", "親切な"]
+        ],
+        sentences: [
+          ["This is my favorite place.", "ここがお気に入りの場所です。"],
+          ["Where is the library?", "図書室はどこですか。"],
+          ["Go straight.", "まっすぐ行ってください。"],
+          ["Turn right.", "右に曲がってください。"],
+          ["Turn left.", "左に曲がってください。"],
+          ["It's the gym.", "それは体育館です。"]
+        ]
+      },
+      {
+        id: "g4u9", no: 9, title: "This is my day.", subtitle: "ぼく・わたしの一日",
+        words: [
+          ["get up", "起きる"], ["wash my face", "顔を洗う"], ["eat breakfast", "朝食を食べる"],
+          ["go to school", "学校に行く"], ["study", "勉強する"], ["play", "遊ぶ"],
+          ["take a bath", "お風呂に入る"], ["go to bed", "寝る"], ["clean my room", "部屋を掃除する"],
+          ["watch TV", "テレビを見る"], ["help", "手伝う"], ["do homework", "宿題をする"]
+        ],
+        sentences: [
+          ["I get up at six.", "6時に起きます。"],
+          ["I eat breakfast at seven.", "7時に朝食を食べます。"],
+          ["I go to school at eight.", "8時に学校に行きます。"],
+          ["I do my homework.", "宿題をします。"],
+          ["I watch TV.", "テレビを見ます。"],
+          ["I go to bed at nine.", "9時に寝ます。"]
+        ]
+      }
+    ]
+  },
+  {
+    grade: 5,
+    label: "5年生",
+    book: "New Horizon Elementary 5",
+    color: "#5ec98f",
+    units: [
+      {
+        id: "g5u1", no: 1, title: "Hello, friends!", subtitle: "名前や好きなものを伝え合おう",
+        words: [
+          ["My name is ~", "私の名前は〜です"], ["Nice to meet you", "はじめまして"],
+          ["I like", "好きです"], ["I don't like", "好きじゃないです"], ["soccer", "サッカー"],
+          ["tennis", "テニス"], ["basketball", "バスケットボール"], ["swimming", "水泳"],
+          ["red", "赤"], ["blue", "青"], ["spell", "つづる"], ["favorite", "お気に入りの"]
+        ],
+        sentences: [
+          ["Hello, my name is Yui.", "こんにちは、私の名前はゆいです。"],
+          ["Nice to meet you.", "はじめまして。"],
+          ["I like tennis.", "テニスが好きです。"],
+          ["What sport do you like?", "どのスポーツが好きですか。"],
+          ["How do you spell your name?", "名前はどうつづりますか。"],
+          ["I like the color blue.", "青色が好きです。"]
+        ]
+      },
+      {
+        id: "g5u2", no: 2, title: "Happy birthday!", subtitle: "誕生日やほしいものを伝え合おう",
+        words: [
+          ["January", "1月"], ["February", "2月"], ["March", "3月"], ["April", "4月"],
+          ["May", "5月"], ["June", "6月"], ["July", "7月"], ["August", "8月"],
+          ["September", "9月"], ["October", "10月"], ["November", "11月"], ["December", "12月"],
+          ["birthday", "誕生日"], ["present", "プレゼント"]
+        ],
+        sentences: [
+          ["When is your birthday?", "誕生日はいつですか。"],
+          ["My birthday is May 5th.", "誕生日は5月5日です。"],
+          ["What do you want for your birthday?", "誕生日に何がほしいですか。"],
+          ["I want a bag.", "かばんがほしいです。"],
+          ["Happy birthday!", "誕生日おめでとう!"],
+          ["My birthday is in June.", "誕生日は6月です。"]
+        ]
+      },
+      {
+        id: "g5u3", no: 3, title: "Can you play dodgeball?", subtitle: "できることを伝え合おう",
+        words: [
+          ["can", "〜できる"], ["can't", "〜できない"], ["play the piano", "ピアノをひく"],
+          ["swim", "泳ぐ"], ["cook", "料理する"], ["dance", "踊る"], ["run fast", "速く走る"],
+          ["jump high", "高くとぶ"], ["sing well", "上手に歌う"], ["ride a bike", "自転車に乗る"],
+          ["dodgeball", "ドッジボール"], ["ski", "スキーをする"]
+        ],
+        sentences: [
+          ["Can you play dodgeball?", "ドッジボールはできますか。"],
+          ["Yes, I can.", "はい、できます。"],
+          ["No, I can't.", "いいえ、できません。"],
+          ["I can swim.", "泳げます。"],
+          ["I can't ski.", "スキーはできません。"],
+          ["Can you cook?", "料理はできますか。"]
+        ]
+      },
+      {
+        id: "g5u4", no: 4, title: "Who is this?", subtitle: "身近な人について紹介し合おう",
+        words: [
+          ["father", "父"], ["mother", "母"], ["brother", "兄・弟"], ["sister", "姉・妹"],
+          ["grandfather", "祖父"], ["grandmother", "祖母"], ["friend", "友だち"],
+          ["kind", "親切な"], ["funny", "おもしろい"], ["strong", "強い"],
+          ["gentle", "やさしい"], ["active", "活発な"]
+        ],
+        sentences: [
+          ["Who is this?", "これはだれですか。"],
+          ["This is my father.", "これは私の父です。"],
+          ["He is kind.", "彼は親切です。"],
+          ["She is funny.", "彼女はおもしろいです。"],
+          ["This is my friend.", "これは私の友だちです。"],
+          ["He can play soccer well.", "彼は上手にサッカーができます。"]
+        ]
+      },
+      {
+        id: "g5u5", no: 5, title: "Let's go to the zoo.", subtitle: "場所をたずねたり案内したりしよう",
+        words: [
+          ["zoo", "動物園"], ["station", "駅"], ["park", "公園"], ["hospital", "病院"],
+          ["restaurant", "レストラン"], ["museum", "美術館・博物館"], ["go straight", "まっすぐ行く"],
+          ["turn right", "右に曲がる"], ["turn left", "左に曲がる"], ["on your left", "左側に"],
+          ["on your right", "右側に"], ["Where is~?", "〜はどこですか"]
+        ],
+        sentences: [
+          ["Where is the zoo?", "動物園はどこですか。"],
+          ["Go straight.", "まっすぐ行ってください。"],
+          ["Turn left at the corner.", "角を左に曲がってください。"],
+          ["It's on your right.", "右側にあります。"],
+          ["Let's go to the park.", "公園に行こう。"],
+          ["Where is the station?", "駅はどこですか。"]
+        ]
+      },
+      {
+        id: "g5u6", no: 6, title: "At a restaurant.", subtitle: "ていねいに注文したり値段をたずねたりしよう",
+        words: [
+          ["menu", "メニュー"], ["hamburger", "ハンバーガー"], ["pizza", "ピザ"],
+          ["spaghetti", "スパゲッティ"], ["salad", "サラダ"], ["juice", "ジュース"],
+          ["water", "水"], ["How much?", "いくらですか"], ["yen", "円"],
+          ["order", "注文する"], ["please", "お願いします"], ["I'd like", "〜がほしいです"]
+        ],
+        sentences: [
+          ["What would you like?", "何になさいますか。"],
+          ["I'd like a hamburger.", "ハンバーガーをお願いします。"],
+          ["How much is it?", "いくらですか。"],
+          ["It's 500 yen.", "500円です。"],
+          ["Here you are.", "どうぞ。"],
+          ["Thank you.", "ありがとうございます。"]
+        ]
+      },
+      {
+        id: "g5u7", no: 7, title: "Welcome to Japan!", subtitle: "日本のすてきな場所をしょうかいしよう",
+        words: [
+          ["spring", "春"], ["summer", "夏"], ["autumn", "秋"], ["winter", "冬"],
+          ["festival", "祭り"], ["fireworks", "花火"], ["cherry blossoms", "桜"],
+          ["snow", "雪"], ["beautiful", "美しい"], ["delicious", "おいしい"],
+          ["exciting", "わくわくする"], ["famous", "有名な"]
+        ],
+        sentences: [
+          ["Welcome to Japan!", "日本へようこそ!"],
+          ["You can see cherry blossoms in spring.", "春には桜が見られます。"],
+          ["It's beautiful.", "美しいです。"],
+          ["You can enjoy fireworks in summer.", "夏には花火が楽しめます。"],
+          ["I recommend Kyoto.", "京都をおすすめします。"],
+          ["It's famous for temples.", "お寺で有名です。"]
+        ]
+      },
+      {
+        id: "g5u8", no: 8, title: "Who is your hero?", subtitle: "あこがれの人について紹介し合おう",
+        words: [
+          ["hero", "ヒーロー"], ["brave", "勇敢な"], ["kind", "親切な"], ["honest", "正直な"],
+          ["hardworking", "がんばりや"], ["doctor", "医者"], ["teacher", "先生"],
+          ["singer", "歌手"], ["athlete", "アスリート"], ["get up early", "早起きする"],
+          ["help people", "人を助ける"], ["work hard", "がんばって働く"]
+        ],
+        sentences: [
+          ["Who is your hero?", "あなたのヒーローはだれですか。"],
+          ["My hero is my mother.", "私のヒーローは母です。"],
+          ["She is kind.", "彼女は親切です。"],
+          ["She works hard every day.", "彼女は毎日がんばって働いています。"],
+          ["He helps people.", "彼は人を助けます。"],
+          ["My hero is a doctor.", "私のヒーローは医者です。"]
+        ]
+      }
+    ]
+  },
+  {
+    grade: 6,
+    label: "6年生",
+    book: "New Horizon Elementary 6",
+    color: "#c07df0",
+    units: [
+      {
+        id: "g6u1", no: 1, title: "This is me!", subtitle: "好きなものや宝物について紹介し合おう",
+        words: [
+          ["treasure", "宝物"], ["country", "国"], ["Australia", "オーストラリア"],
+          ["Canada", "カナダ"], ["Egypt", "エジプト"], ["India", "インド"],
+          ["birthday", "誕生日"], ["alphabet", "アルファベット"], ["favorite", "お気に入りの"],
+          ["hobby", "趣味"], ["from", "〜出身"], ["live in", "〜に住んでいる"]
+        ],
+        sentences: [
+          ["This is me.", "これが私です。"],
+          ["I'm from Japan.", "私は日本出身です。"],
+          ["My treasure is my bike.", "私の宝物は自転車です。"],
+          ["I like drawing.", "絵を描くのが好きです。"],
+          ["I was born in April.", "4月に生まれました。"],
+          ["Where are you from?", "出身はどこですか。"]
+        ]
+      },
+      {
+        id: "g6u2", no: 2, title: "My Daily Schedule", subtitle: "日常生活について紹介しよう",
+        words: [
+          ["always", "いつも"], ["usually", "たいてい"], ["sometimes", "ときどき"],
+          ["never", "決して〜ない"], ["wash the dishes", "皿を洗う"], ["walk the dog", "犬を散歩させる"],
+          ["clean my room", "部屋を掃除する"], ["take out the garbage", "ゴミを出す"],
+          ["study English", "英語を勉強する"], ["practice the piano", "ピアノを練習する"],
+          ["help my family", "家族を手伝う"], ["every day", "毎日"]
+        ],
+        sentences: [
+          ["What time do you usually get up?", "たいてい何時に起きますか。"],
+          ["I usually get up at six thirty.", "たいてい6時半に起きます。"],
+          ["I always eat breakfast.", "私はいつも朝食を食べます。"],
+          ["I sometimes walk the dog.", "私はときどき犬の散歩をします。"],
+          ["What do you do every day?", "毎日何をしますか。"],
+          ["I study English every day.", "毎日英語を勉強します。"]
+        ]
+      },
+      {
+        id: "g6u3", no: 3, title: "My Weekend", subtitle: "週末の出来事を伝え合おう",
+        words: [
+          ["went", "行った"], ["saw", "見た"], ["ate", "食べた"], ["enjoyed", "楽しんだ"],
+          ["played", "した・遊んだ"], ["watched", "見た(テレビなど)"], ["visited", "訪れた"],
+          ["fun", "楽しい"], ["exciting", "わくわくする"], ["delicious", "おいしい"],
+          ["tired", "疲れた"], ["yesterday", "昨日"]
+        ],
+        sentences: [
+          ["I went to the park.", "公園に行きました。"],
+          ["I saw a movie.", "映画を見ました。"],
+          ["I ate pizza.", "ピザを食べました。"],
+          ["I enjoyed swimming.", "水泳を楽しみました。"],
+          ["How was your weekend?", "週末はどうでしたか。"],
+          ["It was fun.", "楽しかったです。"]
+        ]
+      },
+      {
+        id: "g6u4", no: 4, title: "Let's see the world.", subtitle: "行きたい国をしょうかいしよう",
+        words: [
+          ["want to go", "行きたい"], ["pyramid", "ピラミッド"], ["mountain", "山"],
+          ["ocean", "海"], ["rainforest", "熱帯雨林"], ["castle", "城"],
+          ["ancient", "古代の"], ["huge", "巨大な"], ["wonderful", "すばらしい"],
+          ["see", "見る"], ["visit", "訪れる"], ["famous for", "〜で有名な"]
+        ],
+        sentences: [
+          ["I want to go to Egypt.", "エジプトに行きたいです。"],
+          ["I want to see the pyramids.", "ピラミッドを見たいです。"],
+          ["Where do you want to go?", "どこに行きたいですか。"],
+          ["I want to visit France.", "フランスを訪れたいです。"],
+          ["You can see the Eiffel Tower.", "エッフェル塔が見られます。"],
+          ["It's famous for its food.", "食べ物で有名です。"]
+        ]
+      },
+      {
+        id: "g6u5", no: 5, title: "Where is it from?", subtitle: "身の回りのものの生産地について知ろう",
+        words: [
+          ["made in", "〜製"], ["from", "〜から"], ["coffee", "コーヒー"],
+          ["banana", "バナナ"], ["cotton", "綿"], ["chocolate", "チョコレート"],
+          ["imported", "輸入された"], ["produced", "生産された"], ["Brazil", "ブラジル"],
+          ["Ecuador", "エクアドル"], ["Vietnam", "ベトナム"], ["Australia", "オーストラリア"]
+        ],
+        sentences: [
+          ["Where is this from?", "これはどこ産ですか。"],
+          ["This coffee is from Brazil.", "このコーヒーはブラジル産です。"],
+          ["These bananas are from the Philippines.", "このバナナはフィリピン産です。"],
+          ["This is made in China.", "これは中国製です。"],
+          ["Many things come from other countries.", "多くのものが他の国から来ています。"],
+          ["Where is this T-shirt from?", "このTシャツはどこ製ですか。"]
+        ]
+      },
+      {
+        id: "g6u6", no: 6, title: "Save the animals.", subtitle: "生き物のためにできることを発表しよう",
+        words: [
+          ["endangered", "絶滅危惧の"], ["protect", "守る"], ["forest", "森"],
+          ["ocean", "海"], ["plastic", "プラスチック"], ["recycle", "リサイクルする"],
+          ["save water", "水を大切にする"], ["turn off lights", "電気を消す"],
+          ["panda", "パンダ"], ["tiger", "トラ"], ["sea turtle", "ウミガメ"], ["elephant", "ぞう"]
+        ],
+        sentences: [
+          ["Let's save the animals.", "動物たちを守ろう。"],
+          ["Pandas are endangered.", "パンダは絶滅の危機にあります。"],
+          ["We should protect the forest.", "森を守るべきです。"],
+          ["We can recycle plastic.", "プラスチックをリサイクルできます。"],
+          ["Let's turn off the lights.", "電気を消しましょう。"],
+          ["We should save water.", "水を大切にするべきです。"]
+        ]
+      },
+      {
+        id: "g6u7", no: 7, title: "My Best Memory", subtitle: "小学校生活の思い出を伝えよう",
+        words: [
+          ["sports day", "運動会"], ["field trip", "遠足"], ["music festival", "音楽祭"],
+          ["drama festival", "学芸会"], ["entrance ceremony", "入学式"], ["graduation", "卒業"],
+          ["best memory", "一番の思い出"], ["remember", "覚えている"], ["practiced", "練習した"],
+          ["worked hard", "がんばった"], ["enjoyed", "楽しんだ"], ["exciting", "わくわくする"]
+        ],
+        sentences: [
+          ["My best memory is our field trip.", "一番の思い出は遠足です。"],
+          ["We went to Kyoto.", "京都に行きました。"],
+          ["It was exciting.", "わくわくしました。"],
+          ["I enjoyed the sports day.", "運動会を楽しみました。"],
+          ["We worked hard for the music festival.", "音楽祭のためにがんばりました。"],
+          ["What is your best memory?", "あなたの一番の思い出は何ですか。"]
+        ]
+      },
+      {
+        id: "g6u8", no: 8, title: "My Future, My Dream", subtitle: "将来の夢と中学校での希望を伝えよう",
+        words: [
+          ["want to be", "〜になりたい"], ["dream", "夢"], ["future", "将来"],
+          ["junior high school", "中学校"], ["join", "入る・参加する"], ["club", "部活動"],
+          ["brass band", "吹奏楽部"], ["science club", "科学部"], ["soccer team", "サッカー部"],
+          ["study hard", "一生懸命勉強する"], ["doctor", "医者"], ["astronaut", "宇宙飛行士"]
+        ],
+        sentences: [
+          ["What do you want to be?", "何になりたいですか。"],
+          ["I want to be a doctor.", "医者になりたいです。"],
+          ["I want to join the soccer team.", "サッカー部に入りたいです。"],
+          ["I want to study English hard.", "英語を一生懸命勉強したいです。"],
+          ["What club do you want to join?", "どの部活動に入りたいですか。"],
+          ["My dream is to be an astronaut.", "私の夢は宇宙飛行士になることです。"]
+        ]
+      }
+    ]
+  }
+];
+
+
+// ============================================================
+// ゲームエンジン: 10種類のミニゲームを共通データから生成する
+// ============================================================
+
+// ---------- 音声読み上げ ----------
+let VOICES = [];
+function loadVoices() {
+  VOICES = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+}
+if (window.speechSynthesis) {
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+function speak(text, lang) {
+  lang = lang || "en-US";
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = lang;
+  u.rate = 0.9;
+  const v = VOICES.find(v => v.lang === lang) || VOICES.find(v => v.lang && v.lang.startsWith(lang.slice(0,2)));
+  if (v) u.voice = v;
+  window.speechSynthesis.speak(u);
+}
+
+// ---------- ユーティリティ ----------
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function sample(arr, n) { return shuffle(arr).slice(0, n); }
+function el(tag, cls, html) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (html !== undefined) e.innerHTML = html;
+  return e;
+}
+function speakerBtn(text, lang) {
+  const b = el("button", "spk-btn", "🔊");
+  b.setAttribute("aria-label", "listen");
+  b.onclick = (ev) => { ev.stopPropagation(); speak(text, lang); };
+  return b;
+}
+function playCorrect() { flashResult(true); }
+function playWrong() { flashResult(false); }
+function flashResult(ok) {
+  const flash = el("div", "flash-overlay " + (ok ? "flash-ok" : "flash-ng"));
+  document.body.appendChild(flash);
+  setTimeout(() => flash.remove(), 450);
+}
+
+// ---------- ゲーム定義一覧 ----------
+const GAME_TYPES = [
+  { key: "flashcard",   icon: "🗂️", name: "たんごカード" },
+  { key: "listening",   icon: "🎧", name: "リスニングクイズ" },
+  { key: "meaning",     icon: "🈶", name: "いみあてクイズ" },
+  { key: "spell",       icon: "🔤", name: "スペルならべかえ" },
+  { key: "memory",      icon: "🧠", name: "しんけいすいじゃく" },
+  { key: "timeattack",  icon: "⏱️", name: "タイムアタック" },
+  { key: "fillblank",   icon: "✏️", name: "あなうめクイズ" },
+  { key: "pronounce",   icon: "🎤", name: "はつおんチャレンジ" },
+  { key: "sentence",    icon: "🧩", name: "えいぶんパズル" },
+  { key: "bingo",       icon: "🎯", name: "えいごビンゴ" }
+];
+
+// ============================================================
+// 1. たんごカード (Flashcard)
+// ============================================================
+function renderFlashcard(root, unit) {
+  const words = unit.words;
+  let i = 0;
+  const wrap = el("div", "game-flashcard");
+  root.appendChild(wrap);
+
+  function draw() {
+    wrap.innerHTML = "";
+    const [en, ja] = words[i];
+    const card = el("div", "flip-card");
+    const inner = el("div", "flip-card-inner");
+    const front = el("div", "flip-card-face flip-front");
+    front.appendChild(el("div", "big-word", en));
+    front.appendChild(speakerBtn(en));
+    const back = el("div", "flip-card-face flip-back", `<div class="big-word">${ja}</div>`);
+    inner.appendChild(front); inner.appendChild(back);
+    card.appendChild(inner);
+    card.onclick = (e) => {
+      if (e.target.closest(".spk-btn")) return;
+      card.classList.toggle("flipped");
+    };
+    wrap.appendChild(card);
+    wrap.appendChild(el("div", "progress-label", `${i + 1} / ${words.length}`));
+
+    const nav = el("div", "row-buttons");
+    const prev = el("button", "btn btn-secondary", "◀ まえ");
+    prev.onclick = () => { i = (i - 1 + words.length) % words.length; draw(); };
+    const speakBtn = el("button", "btn btn-secondary", "🔊 きく");
+    speakBtn.onclick = () => speak(en);
+    const next = el("button", "btn btn-primary", "つぎ ▶");
+    next.onclick = () => { i = (i + 1) % words.length; draw(); };
+    nav.appendChild(prev); nav.appendChild(speakBtn); nav.appendChild(next);
+    wrap.appendChild(nav);
+    speak(en);
+  }
+  draw();
+}
+
+// ============================================================
+// 2. リスニングクイズ (聞いて日本語を選ぶ)
+// ============================================================
+function renderListening(root, unit) {
+  renderChoiceQuiz(root, unit, {
+    title: "🎧 音声を聞いて、正しい意味を選ぼう",
+    prompt: (en, ja) => { speak(en); return `<button class="replay-btn">🔊 もう一度きく</button>`; },
+    getOptions: (correct, all) => sample(all.filter(w => w[1] !== correct[1]), 3).concat([correct]).map(w => w[1]),
+    answerOf: (w) => w[1],
+    onPromptRender: (box, en) => {
+      const rp = box.querySelector(".replay-btn");
+      if (rp) rp.onclick = () => speak(en);
+    }
+  });
+}
+
+// ============================================================
+// 3. いみあてクイズ (日本語を見て英語を選ぶ)
+// ============================================================
+function renderMeaning(root, unit) {
+  renderChoiceQuiz(root, unit, {
+    title: "🈶 日本語の意味に合う英語を選ぼう",
+    prompt: (en, ja) => `<div class="big-word ja-prompt">${ja}</div>`,
+    getOptions: (correct, all) => sample(all.filter(w => w[0] !== correct[0]), 3).concat([correct]).map(w => w[0]),
+    answerOf: (w) => w[0],
+    onOptionClick: (optText) => speak(optText)
+  });
+}
+
+// 共通の4択クイズエンジン
+function renderChoiceQuiz(root, unit, cfg) {
+  const words = unit.words;
+  const total = Math.min(10, words.length);
+  const quizWords = sample(words, total);
+  let i = 0, score = 0;
+  const wrap = el("div", "game-quiz");
+  root.appendChild(wrap);
+
+  function draw() {
+    if (i >= quizWords.length) {
+      showScore(wrap, score, quizWords.length, () => { i = 0; score = 0; draw(); });
+      return;
+    }
+    wrap.innerHTML = "";
+    wrap.appendChild(el("div", "quiz-title", cfg.title));
+    wrap.appendChild(el("div", "progress-label", `もんだい ${i + 1} / ${quizWords.length}`));
+    const [en, ja] = quizWords[i];
+    const box = el("div", "prompt-box", cfg.prompt(en, ja));
+    wrap.appendChild(box);
+    if (cfg.onPromptRender) cfg.onPromptRender(box, en, ja);
+
+    const options = shuffle(cfg.getOptions(quizWords[i], words));
+    const optWrap = el("div", "options-grid");
+    options.forEach(opt => {
+      const b = el("button", "btn option-btn", opt);
+      b.onclick = () => {
+        if (cfg.onOptionClick) cfg.onOptionClick(opt);
+        const correct = opt === cfg.answerOf(quizWords[i]);
+        [...optWrap.children].forEach(c => c.disabled = true);
+        b.classList.add(correct ? "correct" : "wrong");
+        if (correct) { score++; playCorrect(); }
+        else {
+          playWrong();
+          [...optWrap.children].find(c => c.textContent === cfg.answerOf(quizWords[i]))?.classList.add("correct");
+        }
+        setTimeout(() => { i++; draw(); }, 900);
+      };
+      optWrap.appendChild(b);
+    });
+    wrap.appendChild(optWrap);
+  }
+  draw();
+}
+
+function showScore(wrap, score, total, onRetry) {
+  wrap.innerHTML = "";
+  const box = el("div", "score-box");
+  const pct = Math.round((score / total) * 100);
+  const emoji = pct === 100 ? "🏆" : pct >= 70 ? "🎉" : pct >= 40 ? "👍" : "💪";
+  box.appendChild(el("div", "score-emoji", emoji));
+  box.appendChild(el("div", "score-text", `${score} / ${total} 問正解!`));
+  const retry = el("button", "btn btn-primary", "もういちど");
+  retry.onclick = onRetry;
+  box.appendChild(retry);
+  wrap.appendChild(box);
+}
+
+// ============================================================
+// 4. スペルならべかえ
+// ============================================================
+function renderSpell(root, unit) {
+  const words = unit.words.filter(w => /^[A-Za-z ]+$/.test(w[0]) && w[0].replace(/\s/g,"").length <= 12);
+  const pool = words.length ? words : unit.words;
+  const total = Math.min(8, pool.length);
+  const quizWords = sample(pool, total);
+  let i = 0, score = 0;
+  const wrap = el("div", "game-spell");
+  root.appendChild(wrap);
+
+  function draw() {
+    if (i >= quizWords.length) { showScore(wrap, score, quizWords.length, () => { i=0; score=0; draw(); }); return; }
+    wrap.innerHTML = "";
+    wrap.appendChild(el("div", "quiz-title", "🔤 文字をならべて単語を作ろう"));
+    wrap.appendChild(el("div", "progress-label", `もんだい ${i + 1} / ${quizWords.length}`));
+    const [en, ja] = quizWords[i];
+    const target = en.replace(/\s/g, "").toUpperCase();
+    wrap.appendChild(el("div", "big-word ja-prompt", ja));
+    const replay = el("button", "btn btn-secondary", "🔊 きく");
+    replay.onclick = () => speak(en);
+    wrap.appendChild(replay);
+
+    const answerRow = el("div", "spell-answer-row");
+    wrap.appendChild(answerRow);
+    const letterRow = el("div", "spell-letters-row");
+    wrap.appendChild(letterRow);
+
+    let picked = [];
+    const letters = shuffle(target.split(""));
+    function renderRows() {
+      answerRow.innerHTML = "";
+      target.split("").forEach((_, idx) => {
+        answerRow.appendChild(el("div", "spell-slot", picked[idx] || ""));
+      });
+      letterRow.innerHTML = "";
+      letters.forEach((ltr, idx) => {
+        const used = usedIdx.includes(idx);
+        const b = el("button", "letter-tile" + (used ? " used" : ""), ltr);
+        if (!used) b.onclick = () => {
+          picked.push(ltr); usedIdx.push(idx); renderRows();
+          if (picked.length === target.length) checkAnswer();
+        };
+        letterRow.appendChild(b);
+      });
+    }
+    let usedIdx = [];
+    renderRows();
+
+    const clearBtn = el("button", "btn btn-secondary", "やりなおす");
+    clearBtn.onclick = () => { picked = []; usedIdx = []; renderRows(); };
+    wrap.appendChild(clearBtn);
+
+    function checkAnswer() {
+      const guess = picked.join("");
+      const correct = guess === target;
+      if (correct) { score++; playCorrect(); } else { playWrong(); }
+      setTimeout(() => { i++; draw(); }, 900);
+    }
+    speak(en);
+  }
+  draw();
+}
+
+// ============================================================
+// 5. しんけいすいじゃく (Memory Match)
+// ============================================================
+function renderMemory(root, unit) {
+  const pairCount = Math.min(6, unit.words.length);
+  const pairs = sample(unit.words, pairCount);
+  let cards = [];
+  pairs.forEach((w, idx) => {
+    cards.push({ id: idx, type: "en", text: w[0] });
+    cards.push({ id: idx, type: "ja", text: w[1] });
+  });
+  cards = shuffle(cards);
+  let first = null, second = null, matched = 0, lock = false;
+
+  const wrap = el("div", "game-memory");
+  wrap.appendChild(el("div", "quiz-title", "🧠 英語とにほんごをそろえよう"));
+  const grid = el("div", "memory-grid");
+  wrap.appendChild(grid);
+  root.appendChild(wrap);
+
+  const cardEls = cards.map((c, idx) => {
+    const cardEl = el("div", "memory-card");
+    const inner = el("div", "memory-card-inner");
+    inner.appendChild(el("div", "memory-face memory-back", "❓"));
+    inner.appendChild(el("div", "memory-face memory-front", c.text));
+    cardEl.appendChild(inner);
+    cardEl.onclick = () => onPick(idx, cardEl, c);
+    grid.appendChild(cardEl);
+    return cardEl;
+  });
+
+  function onPick(idx, cardEl, c) {
+    if (lock || cardEl.classList.contains("flipped") || cardEl.classList.contains("matched")) return;
+    cardEl.classList.add("flipped");
+    if (c.type === "en") speak(c.text);
+    if (!first) { first = { idx, cardEl, c }; return; }
+    second = { idx, cardEl, c };
+    lock = true;
+    setTimeout(() => {
+      if (first.c.id === second.c.id && first.c.type !== second.c.type) {
+        first.cardEl.classList.add("matched");
+        second.cardEl.classList.add("matched");
+        matched++;
+        playCorrect();
+        if (matched === pairs.length) {
+          setTimeout(() => showScore(wrap, matched, pairs.length, () => { root.innerHTML=""; renderMemory(root, unit); }), 500);
+        }
+      } else {
+        first.cardEl.classList.remove("flipped");
+        second.cardEl.classList.remove("flipped");
+        playWrong();
+      }
+      first = null; second = null; lock = false;
+    }, 700);
+  }
+}
+
+// ============================================================
+// 6. タイムアタック
+// ============================================================
+function renderTimeAttack(root, unit) {
+  const words = unit.words;
+  let score = 0, wrong = 0, timeLeft = 45, timer = null, running = true;
+  const wrap = el("div", "game-timeattack");
+  root.appendChild(wrap);
+
+  function draw() {
+    if (!running) return;
+    wrap.innerHTML = "";
+    const header = el("div", "timeattack-header");
+    header.appendChild(el("div", "ta-timer", `⏱️ ${timeLeft}秒`));
+    header.appendChild(el("div", "ta-score", `せいかい: ${score}`));
+    wrap.appendChild(header);
+    wrap.appendChild(el("div", "quiz-title", "⏱️ 時間内にたくさん正解しよう!"));
+
+    const [en, ja] = words[Math.floor(Math.random() * words.length)];
+    wrap.appendChild(el("div", "big-word", en));
+    speak(en);
+    const options = shuffle([ja, ...sample(words.filter(w => w[1] !== ja), 3).map(w => w[1])]);
+    const optWrap = el("div", "options-grid");
+    options.forEach(opt => {
+      const b = el("button", "btn option-btn", opt);
+      b.onclick = () => {
+        if (!running) return;
+        if (opt === ja) { score++; playCorrect(); } else { wrong++; playWrong(); }
+        draw();
+      };
+      optWrap.appendChild(b);
+    });
+    wrap.appendChild(optWrap);
+  }
+
+  timer = setInterval(() => {
+    timeLeft--;
+    if (timeLeft <= 0) {
+      running = false;
+      clearInterval(timer);
+      wrap.innerHTML = "";
+      const box = el("div", "score-box");
+      box.appendChild(el("div", "score-emoji", score >= 15 ? "🏆" : score >= 8 ? "🎉" : "💪"));
+      box.appendChild(el("div", "score-text", `せいかい ${score} 回! (まちがい ${wrong} 回)`));
+      const retry = el("button", "btn btn-primary", "もういちど");
+      retry.onclick = () => { root.innerHTML = ""; renderTimeAttack(root, unit); };
+      box.appendChild(retry);
+      wrap.appendChild(box);
+    } else {
+      const t = wrap.querySelector(".ta-timer");
+      if (t) t.textContent = `⏱️ ${timeLeft}秒`;
+    }
+  }, 1000);
+  draw();
+}
+
+// ============================================================
+// 7. あなうめクイズ (Fill in the blank)
+// ============================================================
+function renderFillBlank(root, unit) {
+  const sentences = unit.sentences;
+  const total = sentences.length;
+  let i = 0, score = 0;
+  const order = shuffle(sentences.map((_, idx) => idx));
+  const wrap = el("div", "game-fillblank");
+  root.appendChild(wrap);
+
+  function pickBlankWord(sentenceWords) {
+    // 3文字以上の単語をブランク候補にする
+    const candidates = sentenceWords.map((w, idx) => ({ w, idx })).filter(o => o.w.replace(/[.,!?]/g,"").length >= 3);
+    if (!candidates.length) return 0;
+    return candidates[Math.floor(Math.random() * candidates.length)].idx;
+  }
+
+  function draw() {
+    if (i >= order.length) { showScore(wrap, score, order.length, () => { i=0; score=0; draw(); }); return; }
+    wrap.innerHTML = "";
+    wrap.appendChild(el("div", "quiz-title", "✏️ 空らんに入る単語を選ぼう"));
+    wrap.appendChild(el("div", "progress-label", `もんだい ${i + 1} / ${order.length}`));
+    const [en, ja] = sentences[order[i]];
+    const tokens = en.split(" ");
+    const blankIdx = pickBlankWord(tokens);
+    const answer = tokens[blankIdx].replace(/[.,!?]/g, "");
+    const display = tokens.map((t, idx) => idx === blankIdx ? "_____" : t).join(" ");
+
+    wrap.appendChild(el("div", "big-word sentence-blank", display));
+    wrap.appendChild(el("div", "ja-hint", ja));
+    const replay = el("button", "btn btn-secondary", "🔊 全文をきく");
+    replay.onclick = () => speak(en);
+    wrap.appendChild(replay);
+    speak(en);
+
+    const distractors = sample(unit.words.map(w => w[0]).filter(w => w.toLowerCase() !== answer.toLowerCase() && !w.includes(" ")), 3);
+    const options = shuffle([answer, ...distractors]);
+    const optWrap = el("div", "options-grid");
+    options.forEach(opt => {
+      const b = el("button", "btn option-btn", opt);
+      b.onclick = () => {
+        [...optWrap.children].forEach(c => c.disabled = true);
+        const correct = opt.toLowerCase() === answer.toLowerCase();
+        b.classList.add(correct ? "correct" : "wrong");
+        if (correct) { score++; playCorrect(); } else { playWrong(); }
+        setTimeout(() => { i++; draw(); }, 900);
+      };
+      optWrap.appendChild(b);
+    });
+    wrap.appendChild(optWrap);
+  }
+  draw();
+}
+
+// ============================================================
+// 8. はつおんチャレンジ (Pronunciation)
+// ============================================================
+function renderPronounce(root, unit) {
+  const words = unit.words;
+  let i = 0;
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const wrap = el("div", "game-pronounce");
+  root.appendChild(wrap);
+
+  function normalize(s) { return s.toLowerCase().replace(/[^a-z ]/g, "").trim(); }
+
+  function draw() {
+    wrap.innerHTML = "";
+    wrap.appendChild(el("div", "quiz-title", "🎤 はつおんチャレンジ"));
+    wrap.appendChild(el("div", "progress-label", `${i + 1} / ${words.length}`));
+    const [en, ja] = words[i];
+    wrap.appendChild(el("div", "big-word", en));
+    wrap.appendChild(el("div", "ja-hint", ja));
+    const listenBtn = el("button", "btn btn-secondary", "🔊 お手本をきく");
+    listenBtn.onclick = () => speak(en);
+    wrap.appendChild(listenBtn);
+
+    const resultBox = el("div", "pronounce-result");
+    wrap.appendChild(resultBox);
+
+    if (SR) {
+      const micBtn = el("button", "btn btn-primary mic-btn", "🎤 話してみる");
+      micBtn.onclick = () => {
+        resultBox.textContent = "きいています…";
+        const rec = new SR();
+        rec.lang = "en-US";
+        rec.maxAlternatives = 3;
+        rec.onresult = (e) => {
+          const said = e.results[0][0].transcript;
+          const ok = normalize(said).includes(normalize(en)) || normalize(en).includes(normalize(said));
+          resultBox.innerHTML = `あなたの発音: <b>${said}</b><br>` + (ok ? "✅ Great! 正しく言えました!" : "🔁 もう一度チャレンジしてみよう");
+          if (ok) playCorrect(); else playWrong();
+        };
+        rec.onerror = () => { resultBox.textContent = "うまく聞き取れませんでした。もう一度どうぞ。"; };
+        rec.start();
+      };
+      wrap.appendChild(micBtn);
+    } else {
+      resultBox.textContent = "この端末では音声認識が使えないので、お手本を聞いてマネして発音してみよう!";
+    }
+
+    const nav = el("div", "row-buttons");
+    const prev = el("button", "btn btn-secondary", "◀ まえ");
+    prev.onclick = () => { i = (i - 1 + words.length) % words.length; draw(); };
+    const next = el("button", "btn btn-primary", "つぎ ▶");
+    next.onclick = () => { i = (i + 1) % words.length; draw(); };
+    nav.appendChild(prev); nav.appendChild(next);
+    wrap.appendChild(nav);
+    speak(en);
+  }
+  draw();
+}
+
+// ============================================================
+// 9. えいぶんパズル (Sentence word order)
+// ============================================================
+function renderSentence(root, unit) {
+  const sentences = unit.sentences.filter(s => s[0].split(" ").length >= 3);
+  const pool = sentences.length ? sentences : unit.sentences;
+  const total = Math.min(6, pool.length);
+  const quiz = sample(pool, total);
+  let i = 0, score = 0;
+  const wrap = el("div", "game-sentence");
+  root.appendChild(wrap);
+
+  function draw() {
+    if (i >= quiz.length) { showScore(wrap, score, quiz.length, () => { i=0; score=0; draw(); }); return; }
+    wrap.innerHTML = "";
+    wrap.appendChild(el("div", "quiz-title", "🧩 単語をならべて英文を作ろう"));
+    wrap.appendChild(el("div", "progress-label", `もんだい ${i + 1} / ${quiz.length}`));
+    const [en, ja] = quiz[i];
+    const target = en.replace(/[.!?]$/, "").split(" ");
+    wrap.appendChild(el("div", "ja-hint", ja));
+    const replay = el("button", "btn btn-secondary", "🔊 お手本をきく");
+    replay.onclick = () => speak(en);
+    wrap.appendChild(replay);
+
+    const answerRow = el("div", "sentence-answer-row");
+    const wordRow = el("div", "sentence-word-row");
+    wrap.appendChild(answerRow);
+    wrap.appendChild(wordRow);
+
+    let picked = [];
+    let usedIdx = [];
+    const scrambled = shuffle(target);
+
+    function renderRows() {
+      answerRow.innerHTML = "";
+      picked.forEach(w => answerRow.appendChild(el("span", "sentence-chip", w)));
+      if (!picked.length) answerRow.appendChild(el("span", "sentence-placeholder", "ここに単語をならべよう"));
+      wordRow.innerHTML = "";
+      scrambled.forEach((w, idx) => {
+        const used = usedIdx.includes(idx);
+        const b = el("button", "word-tile" + (used ? " used" : ""), w);
+        if (!used) b.onclick = () => {
+          picked.push(w); usedIdx.push(idx); renderRows();
+          if (picked.length === target.length) checkAnswer();
+        };
+        wordRow.appendChild(b);
+      });
+    }
+    renderRows();
+
+    const clearBtn = el("button", "btn btn-secondary", "やりなおす");
+    clearBtn.onclick = () => { picked = []; usedIdx = []; renderRows(); };
+    wrap.appendChild(clearBtn);
+
+    function checkAnswer() {
+      const correct = picked.join(" ").toLowerCase() === target.join(" ").toLowerCase();
+      if (correct) { score++; playCorrect(); } else { playWrong(); }
+      setTimeout(() => { i++; draw(); }, 1000);
+    }
+    speak(en);
+  }
+  draw();
+}
+
+// ============================================================
+// 10. えいごビンゴ
+// ============================================================
+function renderBingo(root, unit) {
+  const size = 9; // 3x3
+  const words = sample(unit.words, Math.min(size, unit.words.length));
+  while (words.length < size) words.push(words[words.length % unit.words.length]);
+  const board = words.slice(0, 9);
+  const marked = new Array(9).fill(false);
+  let calledOrder = shuffle(board.map((_, idx) => idx));
+  let callPos = 0;
+  let bingoDone = false;
+
+  const wrap = el("div", "game-bingo");
+  wrap.appendChild(el("div", "quiz-title", "🎯 えいごビンゴ！読み上げられた単語をタップしよう"));
+  const callBox = el("div", "bingo-call");
+  wrap.appendChild(callBox);
+  const grid = el("div", "bingo-grid");
+  wrap.appendChild(grid);
+  const status = el("div", "bingo-status", "");
+  wrap.appendChild(status);
+  const nextBtn = el("button", "btn btn-primary", "🔊 つぎの単語を読み上げる");
+  wrap.appendChild(nextBtn);
+  root.appendChild(wrap);
+
+  const lines = [
+    [0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]
+  ];
+  const cellEls = board.map((w, idx) => {
+    const c = el("div", "bingo-cell", `<div>${w[0]}</div><div class="bingo-ja">${w[1]}</div>`);
+    c.onclick = () => {
+      if (bingoDone) return;
+      marked[idx] = !marked[idx];
+      c.classList.toggle("marked", marked[idx]);
+      checkBingo();
+    };
+    grid.appendChild(c);
+    return c;
+  });
+
+  function checkBingo() {
+    const win = lines.some(line => line.every(idx => marked[idx]));
+    if (win && !bingoDone) {
+      bingoDone = true;
+      status.textContent = "🎉 ビンゴ！おめでとう！";
+      playCorrect();
+      const retry = el("button", "btn btn-primary", "もういちど");
+      retry.onclick = () => { root.innerHTML = ""; renderBingo(root, unit); };
+      wrap.appendChild(retry);
+    }
+  }
+
+  function callNext() {
+    if (callPos >= calledOrder.length) {
+      callBox.textContent = "ぜんぶ読み上げました！まだの単語をさがしてみよう。";
+      callPos = 0;
+      calledOrder = shuffle(calledOrder);
+      return;
+    }
+    const idx = calledOrder[callPos++];
+    const [en, ja] = board[idx];
+    callBox.innerHTML = `よみあげ: <b>${en}</b> (${ja})`;
+    speak(en);
+  }
+  nextBtn.onclick = callNext;
+  callNext();
+}
+
+// ---------- 起動マップ ----------
+const GAME_RENDERERS = {
+  flashcard: renderFlashcard,
+  listening: renderListening,
+  meaning: renderMeaning,
+  spell: renderSpell,
+  memory: renderMemory,
+  timeattack: renderTimeAttack,
+  fillblank: renderFillBlank,
+  pronounce: renderPronounce,
+  sentence: renderSentence,
+  bingo: renderBingo
+};
+
+
+// ============================================================
+// アプリ本体: 画面遷移・ナビゲーション
+// ============================================================
+
+const appRoot = document.getElementById("app");
+let state = { grade: null, unit: null, game: null };
+
+function navigate(next) {
+  state = Object.assign({}, state, next);
+  render();
+  window.scrollTo(0, 0);
+}
+
+function render() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  appRoot.innerHTML = "";
+  if (!state.grade) return renderHome();
+  if (!state.unit) return renderUnitList();
+  if (!state.game) return renderUnitDetail();
+  return renderGameScreen();
+}
+
+function topBar(title, onBack) {
+  const bar = el("div", "topbar");
+  if (onBack) {
+    const back = el("button", "back-btn", "← もどる");
+    back.onclick = onBack;
+    bar.appendChild(back);
+  }
+  bar.appendChild(el("div", "topbar-title", title));
+  return bar;
+}
+
+// ---------- ホーム画面: 学年選択 ----------
+function renderHome() {
+  const wrap = el("div", "screen home-screen");
+  wrap.appendChild(el("div", "app-title", "🌟 えいごゲームひろば 🌟"));
+  wrap.appendChild(el("div", "app-subtitle", "学年をえらんでね"));
+  const grid = el("div", "grade-grid");
+  GRADES.forEach(g => {
+    const card = el("div", "grade-card");
+    card.style.background = g.color;
+    card.innerHTML = `<div class="grade-num">${g.label}</div><div class="grade-book">${g.book}</div>`;
+    card.onclick = () => navigate({ grade: g.grade, unit: null, game: null });
+    grid.appendChild(card);
+  });
+  wrap.appendChild(grid);
+  appRoot.appendChild(wrap);
+}
+
+// ---------- 単元一覧画面 ----------
+function renderUnitList() {
+  const g = GRADES.find(x => x.grade === state.grade);
+  const wrap = el("div", "screen");
+  wrap.appendChild(topBar(`${g.label} - ${g.book}`, () => navigate({ grade: null })));
+  const grid = el("div", "unit-grid");
+  g.units.forEach(u => {
+    const card = el("div", "unit-card");
+    card.innerHTML = `<div class="unit-no">Unit ${u.no}</div><div class="unit-title">${u.title}</div><div class="unit-subtitle">${u.subtitle}</div>`;
+    card.onclick = () => navigate({ unit: u.id, game: null });
+    grid.appendChild(card);
+  });
+  wrap.appendChild(grid);
+  appRoot.appendChild(wrap);
+}
+
+function findUnit() {
+  const g = GRADES.find(x => x.grade === state.grade);
+  const u = g.units.find(x => x.id === state.unit);
+  return { g, u };
+}
+
+// ---------- 単元詳細: ゲーム10種選択 ----------
+function renderUnitDetail() {
+  const { g, u } = findUnit();
+  const wrap = el("div", "screen");
+  wrap.appendChild(topBar(`Unit ${u.no}: ${u.title}`, () => navigate({ unit: null })));
+  wrap.appendChild(el("div", "unit-detail-subtitle", u.subtitle));
+
+  const wordsPreview = el("div", "words-preview");
+  wordsPreview.appendChild(el("div", "section-label", "📖 このユニットの単語・表現"));
+  const wordList = el("div", "word-chip-list");
+  u.words.forEach(([en, ja]) => {
+    const chip = el("div", "word-chip");
+    chip.innerHTML = `<span>${en}</span><span class="word-chip-ja">${ja}</span>`;
+    chip.onclick = () => speak(en);
+    wordList.appendChild(chip);
+  });
+  wordsPreview.appendChild(wordList);
+  wrap.appendChild(wordsPreview);
+
+  wrap.appendChild(el("div", "section-label", "🎮 ゲームをえらぼう（全10種類）"));
+  const gameGrid = el("div", "game-grid");
+  GAME_TYPES.forEach(gt => {
+    const card = el("div", "game-card");
+    card.style.borderColor = g.color;
+    card.innerHTML = `<div class="game-icon">${gt.icon}</div><div class="game-name">${gt.name}</div>`;
+    card.onclick = () => navigate({ game: gt.key });
+    gameGrid.appendChild(card);
+  });
+  wrap.appendChild(gameGrid);
+  appRoot.appendChild(wrap);
+}
+
+// ---------- ゲーム画面 ----------
+function renderGameScreen() {
+  const { g, u } = findUnit();
+  const gt = GAME_TYPES.find(x => x.key === state.game);
+  const wrap = el("div", "screen");
+  wrap.appendChild(topBar(`${gt.icon} ${gt.name}`, () => navigate({ game: null })));
+  const gameRoot = el("div", "game-root");
+  wrap.appendChild(gameRoot);
+  appRoot.appendChild(wrap);
+  GAME_RENDERERS[state.game](gameRoot, u);
+}
+
+render();
+
+</script>
+</body>
+</html>
