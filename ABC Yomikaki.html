@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABC よみかき 3〜6年</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f9ff; --card:#fff; --ink:#33304a; --sub:#827d99; --line:#e3e8f3;
+  --g3:#f07a45; --g4:#2f97e0; --g5:#38a872; --g6:#8a5cdc;
+  --ok:#2fb36e; --ng:#e85a5a; --pri:#5b6cf0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Meiryo",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.6;-webkit-user-select:none;user-select:none}
+.abc{font-family:"Andika","Century Gothic","Avenir Next",sans-serif}
+button{font-family:inherit;cursor:pointer;border:none;color:inherit}
+#app{max-width:900px;margin:0 auto;padding:16px 16px 60px}
+.topbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;min-height:44px}
+.back{width:44px;height:44px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08);font-size:1.2rem}
+.topbar .ttl{font-weight:900;font-size:1.05rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pill{background:#fff;border-radius:999px;padding:6px 12px;font-size:.85rem;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.06);white-space:nowrap}
+h1{font-size:1.6rem;font-weight:900;text-align:center;margin:8px 0 4px}
+.lead{text-align:center;color:var(--sub);font-size:.95rem;margin-bottom:18px}
+.card{background:var(--card);border-radius:20px;padding:16px;box-shadow:0 4px 14px rgba(40,50,90,.07);margin-bottom:14px}
+.note{font-size:.88rem;color:var(--sub)}
+.center{text-align:center}
+
+.grade-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grade{border-radius:22px;padding:20px 12px;color:#fff;text-align:center;font-weight:900;box-shadow:0 6px 0 rgba(0,0,0,.12)}
+.grade:active{transform:translateY(3px);box-shadow:0 3px 0 rgba(0,0,0,.12)}
+.grade .n{font-size:2.4rem;line-height:1}
+.grade .b{font-size:.8rem;font-weight:700;opacity:.95;margin-top:6px}
+.grade .big{font-family:"Andika",sans-serif;font-size:1.4rem;margin-top:4px}
+.bg3{background:linear-gradient(135deg,#ff9f73,#f07a45)} .bg4{background:linear-gradient(135deg,#5cc0ff,#2f97e0)}
+.bg5{background:linear-gradient(135deg,#5ec98f,#38a872)} .bg6{background:linear-gradient(135deg,#b07df0,#8a5cdc)}
+
+.menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.mi{background:#fff;border-radius:18px;padding:16px;text-align:left;box-shadow:0 3px 10px rgba(0,0,0,.06);position:relative}
+.mi:active{transform:scale(.98)}
+.mi .ic{font-size:2rem}
+.mi .t{font-weight:900;font-size:1.08rem}
+.mi .d{font-size:.84rem;color:var(--sub)}
+.mi .stars{position:absolute;right:14px;top:12px;color:#f5b301;font-size:.9rem}
+.mi .no{font-size:.75rem;font-weight:900;color:var(--pri);letter-spacing:.05em}
+
+/* letter grid */
+.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px}
+.lt{background:#fff;border-radius:14px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:2.3rem;font-weight:700;box-shadow:0 3px 0 #dfe4f0}
+.lt:active{transform:translateY(2px);box-shadow:0 1px 0 #dfe4f0}
+.lt.hl{background:#fff4c2}
+.lt.done{background:#e3f7ec;color:#9bbfa9}
+.lt.ok{background:var(--ok);color:#fff}
+.lt.ng{background:var(--ng);color:#fff;animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* quiz */
+.qhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-weight:700}
+.prog{height:10px;background:#e6eaf4;border-radius:5px;overflow:hidden;margin-bottom:14px}
+.prog i{display:block;height:100%;background:var(--pri);transition:width .3s}
+.ear{display:flex;flex-direction:column;align-items:center;gap:6px;margin:6px 0 16px}
+.ear button{width:110px;height:110px;border-radius:50%;background:var(--pri);color:#fff;font-size:3rem;box-shadow:0 6px 0 rgba(0,0,0,.15)}
+.ear button:active{transform:translateY(3px);box-shadow:0 3px 0 rgba(0,0,0,.15)}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+.choices.words{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.ch{background:#fff;border-radius:16px;min-height:90px;font-size:2.8rem;font-weight:700;box-shadow:0 4px 0 #dfe4f0;padding:6px}
+.choices.words .ch{font-size:1.5rem;min-height:70px}
+.ch.ok{background:var(--ok);color:#fff}
+.ch.ng{background:var(--ng);color:#fff;animation:shake .3s}
+.show{font-size:4.5rem;font-weight:700;text-align:center;line-height:1.2}
+.emoji{font-size:4rem;text-align:center;line-height:1.2}
+.levels{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.levels button{flex:1;min-width:120px;border-radius:12px;padding:9px 6px;font-weight:900;font-size:.85rem;background:#fff;color:var(--sub);box-shadow:0 2px 5px rgba(0,0,0,.06)}
+.levels button.on{background:var(--ink);color:#fff}
+.fb{min-height:2.2em;text-align:center;font-weight:900;font-size:1.15rem;margin-top:12px}
+.btn{border-radius:14px;padding:12px 18px;font-weight:900;font-size:1rem;background:var(--pri);color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.15)}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.btn.sub{background:#fff;color:var(--ink);box-shadow:0 3px 0 #dfe4f0}
+.btn.ok{background:var(--ok)}
+.btn:disabled{opacity:.45}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.row.c{justify-content:center}
+.result{text-align:center}
+.result .s{font-size:3rem;color:#f5b301;letter-spacing:4px}
+.result .p{font-size:1.4rem;font-weight:900}
+
+/* reading */
+.sent{background:#fff;border-radius:14px;padding:10px 12px;margin-bottom:8px;box-shadow:0 2px 6px rgba(0,0,0,.05);display:flex;gap:10px;align-items:flex-start}
+.sent.hl{outline:3px solid #ffd54a;background:#fffbe6}
+.sent .en{font-size:1.45rem;line-height:1.5}
+.sent .w{display:inline-block;padding:0 2px;border-radius:6px}
+.sent .w:active,.sent .w.on{background:#dfe6ff}
+.sent .ja{font-size:.85rem;color:var(--sub)}
+.spk{flex:0 0 auto;width:38px;height:38px;border-radius:50%;background:#eef1ff;font-size:1.05rem}
+.toggle{background:#fff;border-radius:999px;padding:6px 14px;font-weight:700;font-size:.85rem;box-shadow:0 2px 5px rgba(0,0,0,.06)}
+.toggle.on{background:var(--ink);color:#fff}
+
+/* order & spell */
+.ja-big{font-size:1.15rem;font-weight:900;text-align:center;margin-bottom:8px}
+.slotline{min-height:68px;background:#fff;border-radius:16px;border:3px dashed #cfd6ea;padding:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;margin-bottom:12px}
+.slotline.ok{border-color:var(--ok);border-style:solid;background:#eefaf3}
+.slotline.ng{border-color:var(--ng);border-style:solid}
+.tiles{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.tile{background:#fff;border-radius:12px;padding:8px 14px;font-size:1.5rem;font-weight:700;box-shadow:0 3px 0 #dfe4f0;min-width:48px}
+.tile.used{visibility:hidden}
+.tile.in{background:#eef1ff;box-shadow:none}
+.tiles.letters .tile{width:54px;height:58px;padding:0;font-size:1.9rem}
+
+/* four lines */
+.fourwrap{position:relative;background:#fff;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden;margin-bottom:10px;touch-action:none}
+.fourwrap canvas{display:block;width:100%}
+.fourwrap canvas.ink{position:absolute;left:0;top:0;cursor:crosshair}
+.lbl{font-size:.82rem;font-weight:900;color:var(--sub);margin:4px 2px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:999px;padding:10px 18px;font-weight:700;z-index:50;max-width:90vw;text-align:center}
+.pen{display:flex;gap:6px;align-items:center}
+.pen button{width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px #dfe4f0}
+.pen button.on{box-shadow:0 0 0 3px var(--ink)}
+@media (max-width:520px){ h1{font-size:1.35rem} .lt{font-size:2rem} .ch{font-size:2.3rem;min-height:76px} .sent .en{font-size:1.25rem} .show{font-size:3.6rem} }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<noscript><p style="padding:20px">このアプリを使うにはJavaScriptが必要です。</p></noscript>
+<script>
+/* ============================================================
+   ABC よみかき 3〜6年
+   3年: 大文字を聞いて分かる（Let's Try! 1 Unit 6 ALPHABET）
+   4年: 小文字を聞いて分かる（Let's Try! 2 Unit 6 Alphabet）
+   5・6年: NEW HORIZON Elementary 5・6（令和6年度版）単元ごとの読み書き
+   ============================================================ */
+const NH = [
+{
+    grade: 5,
+    label: "5年生",
+    book: "NEW HORIZON Elementary 5（令和6年度版）",
+    color: "#5ec98f",
+    units: [
+      {
+        id: "g5u1", no: 1, title: "Hello, friends!", subtitle: "名前や好きなものを伝え合おう",
+        words: [
+          ["Nice to meet you", "はじめまして"], ["spell", "つづる"], ["name", "名前"],
+          ["subject", "教科"], ["sport", "スポーツ"], ["English", "英語"],
+          ["math", "算数"], ["science", "理科"], ["music", "音楽"],
+          ["dodgeball", "ドッジボール"], ["together", "いっしょに"], ["Sounds nice", "いいね"]
+        ],
+        sentences: [
+          ["My name is Sophia.", "わたしの名前はソフィアです。"],
+          ["Nice to meet you.", "はじめまして。"],
+          ["How do you spell your name?", "名前はどうつづりますか。"],
+          ["What subject do you like?", "どの教科が好きですか。"],
+          ["I like English.", "英語が好きです。"],
+          ["Let's play dodgeball together.", "いっしょにドッジボールをしよう。"]
+        ]
+      },
+      {
+        id: "g5u2", no: 2, title: "Happy birthday!", subtitle: "誕生日やほしいものを伝え合おう",
+        words: [
+          ["January", "1月"], ["February", "2月"], ["March", "3月"], ["April", "4月"],
+          ["May", "5月"], ["June", "6月"], ["July", "7月"], ["August", "8月"],
+          ["September", "9月"], ["October", "10月"], ["November", "11月"], ["December", "12月"],
+          ["birthday", "誕生日"], ["shoes", "くつ"], ["tablet", "タブレット"], ["turn", "番"]
+        ],
+        sentences: [
+          ["When is your birthday?", "誕生日はいつですか。"],
+          ["My birthday is May 5th.", "誕生日は5月5日です。"],
+          ["What do you want for your birthday?", "誕生日に何がほしいですか。"],
+          ["I want new shoes.", "新しいくつがほしいです。"],
+          ["Here you are.", "はい、どうぞ。"],
+          ["It's my turn.", "わたしの番です。"]
+        ]
+      },
+      {
+        id: "g5u3", no: 3, title: "Can you play dodgeball?", subtitle: "できることを伝え合おう",
+        words: [
+          ["can", "〜できる"], ["can't", "〜できない"], ["play the piano", "ピアノをひく"],
+          ["swim", "泳ぐ"], ["cook", "料理する"], ["dance", "おどる"], ["skate", "スケートをする"],
+          ["sing", "歌う"], ["well", "上手に"], ["ride a unicycle", "一輪車に乗る"],
+          ["dodgeball", "ドッジボール"], ["sorry", "ごめんなさい"]
+        ],
+        sentences: [
+          ["Can you play the piano?", "ピアノをひけますか。"],
+          ["Yes, I can.", "はい、できます。"],
+          ["No, I can't.", "いいえ、できません。"],
+          ["You can sing well, too.", "あなたも上手に歌えるね。"],
+          ["Don't run.", "走らないで。"],
+          ["I'm sorry.", "ごめんなさい。"]
+        ]
+      },
+      {
+        id: "g5u4", no: 4, title: "Who is this?", subtitle: "身近な人について紹介し合おう",
+        words: [
+          ["classmate", "クラスメート"], ["friend", "友だち"], ["brother", "兄・弟"],
+          ["sister", "姉・妹"], ["kind", "親切な"], ["funny", "おもしろい"],
+          ["cool", "かっこいい"], ["active", "活発な"], ["badminton", "バドミントン"],
+          ["high", "高く"], ["fast", "速く"], ["well", "上手に"]
+        ],
+        sentences: [
+          ["Who is this?", "この人はだれですか。"],
+          ["This is Saki.", "こちらはさきです。"],
+          ["She is my classmate.", "彼女はわたしのクラスメートです。"],
+          ["She is kind.", "彼女は親切です。"],
+          ["She can play badminton well.", "彼女はバドミントンが上手です。"],
+          ["He can run fast.", "彼は速く走れます。"]
+        ]
+      },
+      {
+        id: "g5u5", no: 5, title: "Let's go to the zoo.", subtitle: "場所をたずねたり案内したりしよう",
+        words: [
+          ["zoo", "動物園"], ["station", "駅"], ["park", "公園"], ["library", "図書館"],
+          ["restaurant", "レストラン"], ["town", "町"], ["go straight", "まっすぐ行く"],
+          ["block", "ブロック（区画）"], ["turn right", "右に曲がる"], ["turn left", "左に曲がる"],
+          ["Excuse me", "すみません"], ["Really", "ほんとう?"]
+        ],
+        sentences: [
+          ["What do you have in your town?", "あなたの町には何がありますか。"],
+          ["We have a nice restaurant.", "すてきなレストランがあります。"],
+          ["Excuse me. Where is the park?", "すみません、公園はどこですか。"],
+          ["Go straight for two blocks.", "2ブロックまっすぐ行ってください。"],
+          ["Turn right.", "右に曲がってください。"],
+          ["You can see it on your left.", "左側に見えます。"]
+        ]
+      },
+      {
+        id: "g5u6", no: 6, title: "At a restaurant.", subtitle: "ていねいに注文したり値段をたずねたりしよう",
+        words: [
+          ["hamburger", "ハンバーガー"], ["beef bowl", "牛丼"], ["ice cream", "アイスクリーム"],
+          ["spaghetti", "スパゲッティ"], ["salad", "サラダ"], ["juice", "ジュース"],
+          ["sandwich", "サンドイッチ"], ["yen", "円"], ["How much", "いくら"],
+          ["I'd like", "〜をお願いします"], ["menu", "メニュー"], ["dessert", "デザート"]
+        ],
+        sentences: [
+          ["What would you like?", "何になさいますか。"],
+          ["I'd like a hamburger and juice.", "ハンバーガーとジュースをお願いします。"],
+          ["How much is it?", "いくらですか。"],
+          ["It's 940 yen.", "940円です。"],
+          ["Let me see.", "ええと。"],
+          ["No, thank you.", "いいえ、けっこうです。"]
+        ]
+      },
+      {
+        id: "g5u7", no: 7, title: "Welcome to Japan!", subtitle: "日本のすてきな場所をしょうかいしよう",
+        words: [
+          ["Shiga", "滋賀"], ["Hokkaido", "北海道"], ["Okinawa", "沖縄"], ["Kyoto", "京都"],
+          ["lake", "湖"], ["go fishing", "つりに行く"], ["ski", "スキーをする"],
+          ["see", "見る"], ["eat", "食べる"], ["exciting", "わくわくする"],
+          ["beautiful", "美しい"], ["delicious", "おいしい"]
+        ],
+        sentences: [
+          ["Where do you want to go?", "どこに行きたいですか。"],
+          ["I want to go to Shiga.", "滋賀に行きたいです。"],
+          ["Why do you want to go to Shiga?", "どうして滋賀に行きたいのですか。"],
+          ["I want to go to Lake Biwa.", "びわ湖に行きたいです。"],
+          ["I want to go fishing.", "つりがしたいです。"],
+          ["It's exciting.", "わくわくします。"]
+        ]
+      },
+      {
+        id: "g5u8", no: 8, title: "Who is your hero?", subtitle: "あこがれの人について紹介し合おう",
+        words: [
+          ["hero", "ヒーロー"], ["golfer", "ゴルファー"], ["baseball player", "野球選手"],
+          ["singer", "歌手"], ["doctor", "医者"], ["teacher", "先生"],
+          ["good at", "〜が得意な"], ["running", "走ること"], ["cooking", "料理すること"],
+          ["kind", "親切な"], ["strong", "強い"], ["brave", "勇かんな"]
+        ],
+        sentences: [
+          ["Who is your hero?", "あなたのヒーローはだれですか。"],
+          ["My hero is my mother.", "わたしのヒーローは母です。"],
+          ["He is a golfer.", "彼はゴルファーです。"],
+          ["She is good at running.", "彼女は走るのが得意です。"],
+          ["She is kind.", "彼女は親切です。"],
+          ["Good job!", "よくできました!"]
+        ]
+      }
+    ]
+  },
+  {
+    grade: 6,
+    label: "6年生",
+    book: "NEW HORIZON Elementary 6（令和6年度版）",
+    color: "#c07df0",
+    units: [
+      {
+        id: "g6u1", no: 1, title: "This is me!", subtitle: "好きなものや宝物について紹介し合おう",
+        words: [
+          ["treasure", "宝物"], ["bag", "かばん"], ["glove", "グローブ"], ["watch", "うで時計"],
+          ["badminton", "バドミントン"], ["drawing", "絵をかくこと"], ["mother", "母"],
+          ["grandfather", "祖父"], ["from", "〜から"], ["good at", "〜が得意な"],
+          ["question", "質問"], ["favorite", "お気に入りの"]
+        ],
+        sentences: [
+          ["I'm Deepa.", "わたしはディーパです。"],
+          ["I like badminton.", "バドミントンが好きです。"],
+          ["My treasure is this bag.", "わたしの宝物はこのかばんです。"],
+          ["It's from my mother.", "母からもらいました。"],
+          ["I'm good at drawing.", "絵をかくのが得意です。"],
+          ["Any questions?", "何か質問はありますか。"]
+        ]
+      },
+      {
+        id: "g6u2", no: 2, title: "My Daily Schedule", subtitle: "日常生活について紹介し合おう",
+        words: [
+          ["always", "いつも"], ["usually", "たいてい"], ["sometimes", "ときどき"],
+          ["never", "一度も〜ない"], ["get up", "起きる"], ["go to bed", "寝る"],
+          ["wash the dishes", "皿を洗う"], ["walk the dog", "犬を散歩させる"],
+          ["clean my room", "部屋をそうじする"], ["take out the garbage", "ごみを出す"],
+          ["breakfast", "朝食"], ["lucky", "運がいい"]
+        ],
+        sentences: [
+          ["What time do you usually go to bed?", "たいてい何時に寝ますか。"],
+          ["I usually go to bed at 9 p.m.", "たいてい夜9時に寝ます。"],
+          ["I usually get up at six thirty.", "たいてい6時半に起きます。"],
+          ["I usually wash the dishes.", "たいてい皿を洗います。"],
+          ["I never wash the dishes.", "一度も皿を洗いません。"],
+          ["Lucky you!", "いいなあ!"]
+        ]
+      },
+      {
+        id: "g6u3", no: 3, title: "My Weekend", subtitle: "週末にしたことを紹介し合おう",
+        words: [
+          ["went", "行った"], ["saw", "見た"], ["ate", "食べた"], ["enjoyed", "楽しんだ"],
+          ["played", "した・遊んだ"], ["watched", "見た（試合など）"], ["weekend", "週末"],
+          ["stadium", "球場"], ["great", "すばらしい"], ["fun", "楽しい"],
+          ["was", "〜だった"], ["Cool", "いいね"]
+        ],
+        sentences: [
+          ["How was your weekend?", "週末はどうでしたか。"],
+          ["It was great.", "最高でした。"],
+          ["I went to Koshien Stadium.", "甲子園球場に行きました。"],
+          ["I enjoyed watching a baseball game.", "野球の試合を見て楽しみました。"],
+          ["I played soccer with my brother.", "兄とサッカーをしました。"],
+          ["Cool!", "いいね!"]
+        ]
+      },
+      {
+        id: "g6u4", no: 4, title: "Let's see the world.", subtitle: "世界の行きたい国について紹介し合おう",
+        words: [
+          ["Italy", "イタリア"], ["France", "フランス"], ["Australia", "オーストラリア"],
+          ["Egypt", "エジプト"], ["Brazil", "ブラジル"], ["country", "国"],
+          ["pizza", "ピザ"], ["koala", "コアラ"], ["pyramid", "ピラミッド"],
+          ["delicious", "おいしい"], ["nice", "すてきな"], ["Anything else", "ほかには?"]
+        ],
+        sentences: [
+          ["Where do you want to go?", "どこに行きたいですか。"],
+          ["I want to go to Italy.", "イタリアに行きたいです。"],
+          ["You can eat pizza.", "ピザが食べられます。"],
+          ["It's delicious.", "おいしいです。"],
+          ["Let's go to France.", "フランスに行こう。"],
+          ["France is a nice country.", "フランスはすてきな国です。"]
+        ]
+      },
+      {
+        id: "g6u5", no: 5, title: "Where is it from?", subtitle: "世界とのつながりを考え、発表しよう",
+        words: [
+          ["sweater", "セーター"], ["T-shirt", "Tシャツ"], ["banana", "バナナ"],
+          ["chicken", "とり肉"], ["sandwich", "サンドイッチ"], ["New Zealand", "ニュージーランド"],
+          ["Vietnam", "ベトナム"], ["China", "中国"], ["Oceania", "オセアニア"],
+          ["Asia", "アジア"], ["Europe", "ヨーロッパ"], ["guess", "当てる"]
+        ],
+        sentences: [
+          ["This is my sweater.", "これはわたしのセーターです。"],
+          ["It's from New Zealand.", "ニュージーランドからです。"],
+          ["New Zealand is in Oceania.", "ニュージーランドはオセアニアにあります。"],
+          ["Where is it from?", "それはどこから来ましたか。"],
+          ["Can you guess?", "わかるかな?"],
+          ["C is for chicken.", "Cはチキンのことです。"]
+        ]
+      },
+      {
+        id: "g6u6", no: 6, title: "Save the animals.", subtitle: "生き物のためにできることを発表し合おう",
+        words: [
+          ["panda", "パンダ"], ["sea turtle", "ウミガメ"], ["koala", "コアラ"],
+          ["forest", "森"], ["sea", "海"], ["live", "すむ"], ["save", "守る"],
+          ["plastic", "プラスチック"], ["problem", "問題"], ["eco-friendly bag", "エコバッグ"],
+          ["trash", "ごみ"], ["idea", "考え"]
+        ],
+        sentences: [
+          ["Where do pandas live?", "パンダはどこにすんでいますか。"],
+          ["Pandas live in forests.", "パンダは森にすんでいます。"],
+          ["Let's save the sea turtles.", "ウミガメを守ろう。"],
+          ["Plastic is a big problem.", "プラスチックは大きな問題です。"],
+          ["We can use eco-friendly bags.", "エコバッグを使うことができます。"],
+          ["Nice idea!", "いい考えだね!"]
+        ]
+      },
+      {
+        id: "g6u7", no: 7, title: "My Best Memory", subtitle: "小学校生活の一番の思い出を伝え合おう",
+        words: [
+          ["school trip", "修学旅行"], ["sports day", "運動会"], ["field trip", "遠足"],
+          ["music festival", "音楽会"], ["memory", "思い出"], ["temple", "寺"],
+          ["went", "行った"], ["saw", "見た"], ["enjoyed", "楽しんだ"],
+          ["old", "古い"], ["great", "すばらしい"], ["exciting", "わくわくする"]
+        ],
+        sentences: [
+          ["What's your best memory?", "一番の思い出は何ですか。"],
+          ["My best memory is our school trip.", "一番の思い出は修学旅行です。"],
+          ["We went to Todaiji Temple.", "東大寺に行きました。"],
+          ["We saw the big Buddha.", "大仏を見ました。"],
+          ["It was old and great.", "古くてすばらしかったです。"],
+          ["Nice talking to you.", "話せてよかったです。"]
+        ]
+      },
+      {
+        id: "g6u8", no: 8, title: "My Future, My Dream", subtitle: "中学校生活や将来の夢について伝え合おう",
+        words: [
+          ["join", "入る"], ["club", "部活動"], ["team", "チーム・部"],
+          ["brass band", "吹奏楽部"], ["tennis team", "テニス部"], ["junior high school", "中学校"],
+          ["future", "将来"], ["dream", "夢"], ["teacher", "先生"],
+          ["doctor", "医者"], ["vet", "獣医"], ["Good luck", "がんばってね"]
+        ],
+        sentences: [
+          ["What club do you want to join?", "どの部活動に入りたいですか。"],
+          ["I want to join the tennis team.", "テニス部に入りたいです。"],
+          ["What do you want to be?", "何になりたいですか。"],
+          ["I want to be a teacher.", "先生になりたいです。"],
+          ["I want to study English hard.", "英語を一生懸命勉強したいです。"],
+          ["Good luck!", "がんばってね!"]
+        ]
+      }
+    ]
+  }
+];
+
+const UP = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const LOW = UP.map(c=>c.toLowerCase());
+// 文字の名前（読み上げ用）
+const NAME = {a:"ay",b:"bee",c:"see",d:"dee",e:"ee",f:"ef",g:"jee",h:"aitch",i:"eye",j:"jay",k:"kay",l:"el",m:"em",n:"en",o:"oh",p:"pee",q:"cue",r:"ar",s:"ess",t:"tee",u:"you",v:"vee",w:"double you",x:"ex",y:"why",z:"zee"};
+// 聞きまちがえやすい・見まちがえやすい文字のグループ
+const CONF_UP = [["B","D","E","G","P","T","V","Z","C"],["M","N"],["A","H","J","K"],["I","Y"],["F","S","X"],["Q","U","W"],["O","R","L"]];
+const CONF_LOW = [["b","d","p","q"],["m","n","h","u"],["i","j","l"],["a","o","e","c"],["v","w","y"],["f","t"],["g","q","y"],["r","n"]];
+// 4年 さいしょの文字
+const FIRST = [["a","apple","🍎"],["b","bear","🐻"],["c","cat","🐱"],["d","dog","🐶"],["e","egg","🥚"],["f","fish","🐟"],["g","gorilla","🦍"],["h","hat","🎩"],["i","insect","🐜"],["j","juice","🧃"],["k","key","🔑"],["l","lion","🦁"],["m","monkey","🐵"],["n","nose","👃"],["o","octopus","🐙"],["p","pig","🐷"],["q","queen","👸"],["r","rabbit","🐰"],["s","sun","☀️"],["t","tiger","🐯"],["u","umbrella","☂️"],["v","violin","🎻"],["w","watch","⌚"],["y","yo-yo","🪀"],["z","zebra","🦓"]];
+
+/* ---------------- storage ---------------- */
+const KEY="abc_yomikaki_v1";
+let SAVE={}; try{ SAVE=JSON.parse(localStorage.getItem(KEY)||"{}")||{}; }catch(e){ SAVE={}; }
+function persist(){ try{ localStorage.setItem(KEY, JSON.stringify(SAVE)); }catch(e){} }
+function setStars(k,n){ if((SAVE[k]||0)<n){ SAVE[k]=n; persist(); } }
+function starStr(k){ const n=SAVE[k]||0; return n?"★".repeat(n)+"☆".repeat(3-n):""; }
+
+/* ---------------- utils ---------------- */
+function el(t,c,h){ const e=document.createElement(t); if(c) e.className=c; if(h!==undefined) e.innerHTML=h; return e; }
+function esc(s){ return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function pick(a,n){ return shuffle(a).slice(0,n); }
+function toast(m){ const t=el("div","toast",m); document.body.appendChild(t); setTimeout(()=>t.remove(),1600); }
+
+/* ---------------- speech ---------------- */
+const TTS="speechSynthesis" in window;
+let VOICES=[]; function lv(){ VOICES=TTS?speechSynthesis.getVoices():[]; } if(TTS){ lv(); speechSynthesis.onvoiceschanged=lv; }
+let SLOW=false;
+function utter(t){ const u=new SpeechSynthesisUtterance(t); u.lang="en-US"; u.rate=SLOW?0.65:0.88; const v=VOICES.find(v=>v.lang==="en-US")||VOICES.find(v=>v.lang&&v.lang.startsWith("en")); if(v) u.voice=v; return u; }
+function say(t){ if(!TTS) return; speechSynthesis.cancel(); speechSynthesis.speak(utter(t)); }
+function sayLetter(c){ say(NAME[c.toLowerCase()]); }
+function sayWord(w){ say(w.replace(/^the /i,"the ")); }
+function seq(list, onEach, gap){
+  if(!TTS) return; speechSynthesis.cancel(); let i=0;
+  const next=()=>{ if(i>=list.length){ onEach&&onEach(-1); return; } onEach&&onEach(i); const u=utter(list[i]); u.onend=()=>{ i++; setTimeout(next,gap||250); }; u.onerror=u.onend; speechSynthesis.speak(u); };
+  next();
+}
+function spk(t){ const b=el("button","spk","🔊"); b.setAttribute("aria-label","読み上げ"); b.onclick=e=>{e.stopPropagation();say(t);}; return b; }
+
+/* ---------------- state & router ---------------- */
+let st={screen:"home", grade:null, mode:null, unit:null};
+function render(){
+  if(TTS) speechSynthesis.cancel();
+  const app=document.getElementById("app"); app.innerHTML="";
+  const v = st.screen==="home"?vHome(): st.screen==="menu"?vMenu(): st.screen==="units"?vUnits(): st.screen==="umenu"?vUnitMenu(): vMode();
+  app.appendChild(v); window.scrollTo(0,0);
+}
+function go(o){ Object.assign(st,o); render(); }
+function topbar(t, back){
+  const b=el("div","topbar");
+  if(back){ const x=el("button","back","←"); x.setAttribute("aria-label","もどる"); x.onclick=back; b.appendChild(x); }
+  b.appendChild(el("div","ttl",t));
+  const s=el("button","pill",SLOW?"🐢 ゆっくり":"🐰 ふつう");
+  s.onclick=()=>{ SLOW=!SLOW; s.textContent=SLOW?"🐢 ゆっくり":"🐰 ふつう"; };
+  b.appendChild(s); return b;
+}
+
+/* ---------------- home ---------------- */
+function vHome(){
+  const w=el("div");
+  w.appendChild(el("h1",null,"🔤 ABC よみかき"));
+  w.appendChild(el("p","lead","3年 大文字を聞いて分かる → 4年 小文字を聞いて分かる<br>→ 5・6年 教科書の文を読む・書く"));
+  const g=el("div","grade-grid");
+  [[3,"大文字を聞いて分かる","A B C"],[4,"小文字を聞いて分かる","a b c"],[5,"教科書の文を読む・書く","NEW HORIZON 5"],[6,"教科書の文を読む・書く","NEW HORIZON 6"]].forEach(([n,d,big])=>{
+    const b=el("button","grade bg"+n,`<div class="n">${n}<small style="font-size:1rem">年生</small></div><div class="big">${big}</div><div class="b">${d}</div>`);
+    b.onclick=()=>go({grade:n, screen: n<=4?"menu":"units"});
+    g.appendChild(b);
+  });
+  w.appendChild(g);
+  const nt=el("p","note center","※ 🔊は英語の読み上げです。音が出ない時は端末の音量やマナーモードを確かめてください。"); nt.style.marginTop="16px"; w.appendChild(nt);
+  return w;
+}
+
+/* ---------------- 3・4年 menu ---------------- */
+const MENU34 = {
+  3:[["cards","🔠","大文字カード","さわって、文字の名前を聞こう"],["listen","👂","きいてタッチ","聞こえた大文字をえらぼう"],["order","🚀","ABC じゅんばんタッチ","A から Z まで順番にタッチ"],["noLook","🎧","目をとじてクイズ","文字を見ないで、聞こえた音だけでえらぼう"]],
+  4:[["cards","🔡","小文字カード","さわって、文字の名前を聞こう"],["listen","👂","きいてタッチ","聞こえた小文字をえらぼう"],["pair","🤝","大文字と小文字","大文字のなかまの小文字をえらぼう"],["first","🐶","さいしょの文字","ことばのさいしょの音の文字をえらぼう"]]
+};
+function vMenu(){
+  const w=el("div"); const g=st.grade;
+  w.appendChild(topbar(`${g}年生 ・ ${g===3?"大文字":"小文字"}`, ()=>go({screen:"home"})));
+  w.appendChild(el("p","note",g===3?"Let's Try! 1 Unit 6「ALPHABET」とつなげて使えます。":"Let's Try! 2 Unit 6「Alphabet」とつなげて使えます。"));
+  const m=el("div","menu");
+  MENU34[g].forEach(([k,ic,t,d])=>{
+    const b=el("button","mi",`<div class="stars">${starStr("g"+g+k)}</div><div class="ic">${ic}</div><div class="t">${t}</div><div class="d">${d}</div>`);
+    b.onclick=()=>go({mode:k, screen:"mode"});
+    m.appendChild(b);
+  });
+  w.appendChild(m);
+  return w;
+}
+
+/* ---------------- 5・6年 units ---------------- */
+function nhUnits(){ return NH.find(x=>x.grade===st.grade).units; }
+function vUnits(){
+  const w=el("div");
+  w.appendChild(topbar(`${st.grade}年生 ・ 単元をえらぼう`, ()=>go({screen:"home"})));
+  w.appendChild(el("p","note",`NEW HORIZON Elementary ${st.grade}（令和6年度版）の文と単語で、読む・書くの練習をします。`));
+  const m=el("div","menu");
+  nhUnits().forEach((u,i)=>{
+    const total=MODES56.reduce((a,md)=>a+(SAVE[u.id+md[0]]||0),0);
+    const b=el("button","mi",`<div class="stars">${total?"★×"+total:""}</div><div class="no">UNIT ${u.no}</div><div class="t abc">${esc(u.title)}</div><div class="d">${esc(u.subtitle)}</div>`);
+    b.onclick=()=>go({unit:i, screen:"umenu"});
+    m.appendChild(b);
+  });
+  w.appendChild(m); return w;
+}
+const MODES56=[["read","📖","聞いて読む","文を聞いて、指でおいながら読もう"],["wordq","🔎","単語よみクイズ","聞こえた単語をえらぼう"],["order","🧩","語順ならべ","単語をならべて文をつくろう"],["spell","🔤","つづりチャレンジ","文字をならべて単語を書こう"],["write","✍️","4線に書く","なぞり書き・書き写し"]];
+function vUnitMenu(){
+  const u=nhUnits()[st.unit], w=el("div");
+  w.appendChild(topbar(`UNIT ${u.no}　${u.title}`, ()=>go({screen:"units"})));
+  w.appendChild(el("p","note",esc(u.subtitle)+"　｜　聞く → 読む → ならべる → 書く の順がおすすめ"));
+  const m=el("div","menu");
+  MODES56.forEach(([k,ic,t,d],i)=>{
+    const b=el("button","mi",`<div class="stars">${starStr(u.id+k)}</div><div class="ic">${ic}</div><div class="t">${i+1}. ${t}</div><div class="d">${d}</div>`);
+    b.onclick=()=>go({mode:k, screen:"mode"});
+    m.appendChild(b);
+  });
+  w.appendChild(m); return w;
+}
+
+/* ---------------- mode router ---------------- */
+function vMode(){
+  const w=el("div");
+  if(st.grade<=4){
+    const t=MENU34[st.grade].find(x=>x[0]===st.mode);
+    w.appendChild(topbar(t[1]+" "+t[2], ()=>go({screen:"menu"})));
+    ({cards:mCards, listen:mListen, order:mOrderABC, noLook:mNoLook, pair:mPair, first:mFirst})[st.mode](w);
+  } else {
+    const u=nhUnits()[st.unit], t=MODES56.find(x=>x[0]===st.mode);
+    w.appendChild(topbar(`U${u.no} ${t[1]} ${t[2]}`, ()=>go({screen:"umenu"})));
+    ({read:mRead, wordq:mWordQ, order:mOrderSent, spell:mSpell, write:mWrite})[st.mode](w, u);
+  }
+  return w;
+}
+
+/* ---------------- generic quiz engine ---------------- */
+// qs: [{prompt:()=>void(play sound), show:html|null, answer, choices:[...], wide:bool, after:html}]
+function quiz(root, qs, key, opts){
+  opts=opts||{};
+  let i=0, score=0, firstTry=true, locked=false;
+  const box=el("div","card");
+  root.appendChild(box);
+  function draw(){
+    box.innerHTML="";
+    if(i>=qs.length){ return finish(); }
+    const q=qs[i]; firstTry=true; locked=false;
+    box.appendChild(el("div","qhead",`<span>${i+1} / ${qs.length}</span><span>⭕ ${score}</span>`));
+    const pg=el("div","prog",`<i style="width:${i/qs.length*100}%"></i>`); box.appendChild(pg);
+    if(q.show) box.appendChild(el("div",q.showClass||"show abc",q.show));
+    if(q.prompt){
+      const ear=el("div","ear"); const b=el("button",null,"🔊"); b.setAttribute("aria-label","もう一度聞く"); b.onclick=q.prompt; ear.appendChild(b);
+      ear.appendChild(el("div","note",q.hint||"もう一回聞くときはタッチ")); box.appendChild(ear);
+      setTimeout(q.prompt, 300);
+    }
+    const ch=el("div","choices"+(q.wide?" words":""));
+    q.choices.forEach(c=>{
+      const b=el("button","ch abc",esc(c));
+      b.onclick=()=>{
+        if(locked) return;
+        if(c===q.answer){
+          b.classList.add("ok"); locked=true; if(firstTry) score++;
+          fb.innerHTML = (firstTry?"⭕ せいかい!":"⭕ できたね!") + (q.after?`<div class="note">${q.after}</div>`:"");
+          if(opts.sayOnOk) opts.sayOnOk(q);
+          setTimeout(()=>{ i++; draw(); }, q.after?1600:900);
+        } else { b.classList.add("ng"); firstTry=false; fb.innerHTML="もう一度聞いてみよう 👂"; setTimeout(()=>b.classList.remove("ng"),400); if(q.prompt) setTimeout(q.prompt,350); }
+      };
+      ch.appendChild(b);
+    });
+    box.appendChild(ch);
+    const fb=el("div","fb",""); box.appendChild(fb);
+  }
+  function finish(){
+    const pct=score/qs.length, s= pct>=0.9?3: pct>=0.7?2: 1;
+    setStars(key,s);
+    box.innerHTML="";
+    const r=el("div","result",`<div class="s">${"★".repeat(s)}${"☆".repeat(3-s)}</div><div class="p">${qs.length}問中 ${score}問 1回でせいかい!</div><div class="note">${s===3?"すばらしい! 次のレベルにもチャレンジしよう":"まちがえた文字をカードでたしかめよう"}</div>`);
+    box.appendChild(r);
+    const row=el("div","row c");
+    const again=el("button","btn","もう一回"); again.onclick=()=>render();
+    const back=el("button","btn sub","メニューへ"); back.onclick=()=>go({screen: st.grade<=4?"menu":"umenu"});
+    row.appendChild(again); row.appendChild(back); box.appendChild(row);
+  }
+  draw();
+}
+function levelBar(root, labels, cur, onPick){
+  const l=el("div","levels");
+  labels.forEach((t,i)=>{ const b=el("button",i===cur?"on":"",t); b.onclick=()=>onPick(i); l.appendChild(b); });
+  root.appendChild(l);
+}
+function distractors(ans, pool, groups, n){
+  const g=groups.find(x=>x.includes(ans)) || [];
+  const near=shuffle(g.filter(x=>x!==ans));
+  const rest=shuffle(pool.filter(x=>x!==ans && !near.includes(x)));
+  return shuffle([ans, ...near.concat(rest).slice(0,n-1)]);
+}
+
+/* ---------------- 3・4年 modes ---------------- */
+function letters(){ return st.grade===3?UP:LOW; }
+function mCards(root){
+  const L=letters();
+  root.appendChild(el("p","note","文字をタッチすると名前が聞こえるよ。「通して聞く」で歌うように聞いてみよう。"));
+  const g=el("div","lgrid"); const cells=[];
+  L.forEach(c=>{ const b=el("button","lt abc",c); b.onclick=()=>{ sayLetter(c); cells.forEach(x=>x.classList.remove("hl")); b.classList.add("hl"); }; g.appendChild(b); cells.push(b); });
+  const row=el("div","row c");
+  const all=el("button","btn","▶ 通して聞く");
+  all.onclick=()=>seq(L.map(c=>NAME[c.toLowerCase()]), i=>cells.forEach((x,k)=>x.classList.toggle("hl",k===i)), 120);
+  row.appendChild(all);
+  if(st.grade===4){
+    const sw=el("button","btn sub","大文字も見る");
+    let showUp=false;
+    sw.onclick=()=>{ showUp=!showUp; sw.textContent=showUp?"小文字だけ":"大文字も見る"; cells.forEach((b,k)=>b.innerHTML = showUp? `<span style="font-size:.7em;opacity:.6">${UP[k]}</span>${LOW[k]}` : LOW[k]); };
+    row.appendChild(sw);
+  }
+  root.appendChild(row); root.appendChild(g);
+}
+let LV=0;
+function mListen(root){
+  const L=letters(), groups=st.grade===3?CONF_UP:CONF_LOW;
+  levelBar(root, st.grade===3?["A〜M","N〜Z","ぜんぶ","にている文字"]:["a〜m","n〜z","ぜんぶ","にている文字"], LV, i=>{LV=i;render();});
+  let pool = LV===0?L.slice(0,13): LV===1?L.slice(13): L;
+  let targets = LV===3 ? groups.flat() : pool;
+  const nCh = LV>=2?6:4;
+  const qs = pick(targets.concat(targets),10).map(a=>({
+    answer:a, prompt:()=>sayLetter(a),
+    choices: distractors(a, LV===3?L:pool, groups, nCh)
+  }));
+  root.appendChild(el("p","note","🔊の音を聞いて、その文字をタッチしよう。"));
+  quiz(root, qs, "g"+st.grade+"listen");
+}
+function mNoLook(root){
+  // 3年: 3文字の並び（イニシャル）を聞いて、同じ並びをえらぶ
+  root.appendChild(el("p","note","2つの文字が続けて聞こえるよ（名前のイニシャルみたいに）。聞こえた順の文字をえらぼう。"));
+  const qs=[];
+  for(let k=0;k<8;k++){
+    const a=pick(UP,1)[0]; let b=pick(UP,1)[0]; while(b===a) b=pick(UP,1)[0];
+    const ans=a+"."+b+".";
+    const set=new Set([ans]);
+    const g1=CONF_UP.find(g=>g.includes(a))||UP, g2=CONF_UP.find(g=>g.includes(b))||UP;
+    let guard=0;
+    while(set.size<4 && guard++<50){ const x=Math.random()<.5? pick(g1,1)[0]+"."+b+"." : a+"."+pick(g2,1)[0]+"."; if(x!==ans) set.add(x); if(guard>20) set.add(b+"."+a+"."); }
+    while(set.size<4) set.add(pick(UP,1)[0]+"."+pick(UP,1)[0]+".");
+    qs.push({answer:ans, wide:true, prompt:()=>seq([NAME[a.toLowerCase()],NAME[b.toLowerCase()]],null,350), choices:shuffle([...set])});
+  }
+  quiz(root, qs, "g3noLook");
+}
+function mOrderABC(root){
+  root.appendChild(el("p","note","A から Z まで、順番にタッチしよう。タッチすると名前が聞こえるよ。"));
+  const card=el("div","card"); root.appendChild(card);
+  const info=el("div","qhead",`<span>つぎは…</span><span class="timer">0.0 秒</span>`); card.appendChild(info);
+  const g=el("div","lgrid"); card.appendChild(g);
+  let next=0, t0=null, tm=null, miss=0;
+  shuffle(UP).forEach(c=>{
+    const b=el("button","lt abc",c);
+    b.onclick=()=>{
+      if(b.classList.contains("done")) return;
+      if(t0===null){ t0=Date.now(); tm=setInterval(()=>info.lastChild.textContent=((Date.now()-t0)/1000).toFixed(1)+" 秒",100); }
+      if(c===UP[next]){ sayLetter(c); b.classList.add("done"); next++;
+        if(next===26){ clearInterval(tm); const sec=(Date.now()-t0)/1000; const s= miss<=2&&sec<60?3: miss<=6?2:1; setStars("g3order",s);
+          info.firstChild.innerHTML=`🎉 ${sec.toFixed(1)}秒でゴール!（まちがい ${miss}）`; const row=el("div","row c"); const a=el("button","btn","もう一回"); a.onclick=()=>render(); row.appendChild(a); card.appendChild(row); }
+      } else { miss++; b.classList.add("ng"); setTimeout(()=>b.classList.remove("ng"),400); }
+    };
+    g.appendChild(b);
+  });
+}
+function mPair(root){
+  root.appendChild(el("p","note","大文字を見て、名前を聞いて、なかまの小文字をえらぼう。"));
+  const qs=pick(UP,10).map(U=>{ const a=U.toLowerCase(); return {answer:a, show:U, prompt:()=>sayLetter(a), choices:distractors(a,LOW,CONF_LOW,4)}; });
+  quiz(root, qs, "g4pair");
+}
+function mFirst(root){
+  root.appendChild(el("p","note","ことばを聞いて、さいしょの音の文字（小文字）をえらぼう。"));
+  const qs=pick(FIRST,10).map(([a,w,e])=>({answer:a, show:e, showClass:"emoji", prompt:()=>say(w), hint:"ことばをよく聞いてね",
+    choices:distractors(a,LOW.filter(x=>x!=="x"),CONF_LOW,4), after:`<span class="abc" style="font-size:1.6rem;color:var(--ink)"><b>${a}</b>${esc(w.slice(1))}</span>`}));
+  quiz(root, qs, "g4first", {sayOnOk:q=>{}});
+}
+
+/* ---------------- 5・6年 modes ---------------- */
+function wordsOf(s){ return s.split(" "); }
+function bare(w){ return w.replace(/^[^A-Za-z0-9']+|[^A-Za-z0-9']+$/g,""); }
+let SHOWJA=true;
+function mRead(root,u){
+  root.appendChild(el("p","note","文を聞いて、指でおいながら読もう。単語をタッチするとその単語だけ聞こえるよ。"));
+  const row=el("div","row");
+  const all=el("button","btn","▶ 通して聞く");
+  const ja=el("button","toggle"+(SHOWJA?" on":""),"日本語 "+(SHOWJA?"ON":"OFF"));
+  ja.onclick=()=>{ SHOWJA=!SHOWJA; render(); };
+  row.appendChild(all); row.appendChild(ja); root.appendChild(row);
+  const boxes=[];
+  u.sentences.forEach(([en,j])=>{
+    const s=el("div","sent"); s.appendChild(spk(en));
+    const body=el("div");
+    const line=el("div","en abc");
+    wordsOf(en).forEach((w,k)=>{ const sp=el("span","w",esc(w)); sp.onclick=()=>{ say(bare(w)); line.querySelectorAll(".w").forEach(x=>x.classList.remove("on")); sp.classList.add("on"); }; line.appendChild(sp); if(k<wordsOf(en).length-1) line.appendChild(document.createTextNode(" ")); });
+    body.appendChild(line);
+    if(SHOWJA) body.appendChild(el("div","ja",esc(j)));
+    s.appendChild(body); root.appendChild(s); boxes.push(s);
+  });
+  all.onclick=()=>{ seq(u.sentences.map(x=>x[0]), i=>boxes.forEach((b,k)=>b.classList.toggle("hl",k===i)), 600); setStars(u.id+"read",3); };
+  root.appendChild(el("div","lbl","📚 この単元の単語"));
+  const wb=el("div","card");
+  const wl=el("div","tiles");
+  u.words.forEach(([w,j])=>{ const t=el("button","tile abc",`${esc(w)}<div class="note" style="font-family:'Zen Maru Gothic'">${esc(j)}</div>`); t.style.fontSize="1.2rem"; t.onclick=()=>say(w); wl.appendChild(t); });
+  wb.appendChild(wl); root.appendChild(wb);
+}
+function mWordQ(root,u){
+  root.appendChild(el("p","note","🔊の単語を聞いて、書いてある英語をえらぼう。こたえると意味が出るよ。"));
+  const ws=u.words;
+  const qs=pick(ws, Math.min(10,ws.length)).map(([w,j])=>{
+    const others=shuffle(ws.filter(x=>x[0]!==w)).slice(0,3).map(x=>x[0]);
+    return {answer:w, wide:true, prompt:()=>say(w), choices:shuffle([w,...others]), after:esc(j)};
+  });
+  quiz(root, qs, u.id+"wordq");
+}
+function mOrderSent(root,u){
+  root.appendChild(el("p","note","日本語と音声をヒントに、単語をタッチして文をつくろう。"));
+  const list=shuffle(u.sentences); let i=0, score=0;
+  const card=el("div","card"); root.appendChild(card);
+  function draw(){
+    card.innerHTML="";
+    if(i>=list.length){ const s=score>=list.length-1?3:score>=list.length/2?2:1; setStars(u.id+"order",s);
+      card.appendChild(el("div","result",`<div class="s">${"★".repeat(s)}${"☆".repeat(3-s)}</div><div class="p">${list.length}文中 ${score}文 1回でできた!</div>`));
+      const row=el("div","row c"); const a=el("button","btn","もう一回"); a.onclick=()=>render(); const b=el("button","btn sub","4線に書く へ"); b.onclick=()=>go({mode:"write"}); row.appendChild(a); row.appendChild(b); card.appendChild(row); return; }
+    const [en,ja]=list[i]; const target=wordsOf(en); let built=[], first=true;
+    card.appendChild(el("div","qhead",`<span>${i+1} / ${list.length}</span><span>⭕ ${score}</span>`));
+    const jb=el("div","ja-big",esc(ja)); card.appendChild(jb);
+    const r0=el("div","row c"); const ear=el("button","btn sub","🔊 聞く"); ear.onclick=()=>say(en); r0.appendChild(ear); card.appendChild(r0);
+    const slot=el("div","slotline"); card.appendChild(slot);
+    const tiles=el("div","tiles"); card.appendChild(tiles);
+    let order=shuffle(target.map((w,k)=>({w,k}))); if(target.length>1 && order.every((o,k)=>o.k===k)) order.reverse();
+    const tb=order.map(o=>{ const t=el("button","tile abc",esc(o.w)); t.onclick=()=>{ if(t.classList.contains("used")) return; t.classList.add("used"); built.push(o); paint(); say(bare(o.w)); }; tiles.appendChild(t); return t; });
+    function paint(){
+      slot.innerHTML=""; slot.classList.remove("ok","ng");
+      built.forEach((o,k)=>{ const t=el("button","tile in abc",esc(o.w)); t.onclick=()=>{ built.splice(k,1); tb[order.indexOf(o)].classList.remove("used"); paint(); }; slot.appendChild(t); });
+      if(built.length===target.length){
+        const ok=built.map(o=>o.w).join(" ")===en;
+        slot.classList.add(ok?"ok":"ng");
+        if(ok){ if(first) score++; fb.innerHTML="⭕ せいかい!"; say(en); setTimeout(()=>{i++;draw();},1500); }
+        else { first=false; fb.innerHTML="おしい!ちがう所の単語をタッチしてもどそう"; }
+      } else fb.innerHTML="";
+    }
+    const fb=el("div","fb",""); card.appendChild(fb);
+  }
+  draw();
+}
+function spellWords(u){
+  const set=new Map();
+  u.words.forEach(([w,j])=>{ if(/^[A-Za-z]{2,9}$/.test(w)) set.set(w.toLowerCase()===w?w:w, j); });
+  return [...set.entries()];
+}
+function mSpell(root,u){
+  root.appendChild(el("p","note","日本語を見て、音を聞いて、文字をならべて単語を書こう。"));
+  const list=pick(spellWords(u), 8); let i=0, score=0;
+  const card=el("div","card"); root.appendChild(card);
+  function draw(){
+    card.innerHTML="";
+    if(i>=list.length){ const s=score>=list.length-1?3:score>=list.length/2?2:1; setStars(u.id+"spell",s);
+      card.appendChild(el("div","result",`<div class="s">${"★".repeat(s)}${"☆".repeat(3-s)}</div><div class="p">${list.length}語中 ${score}語 1回でできた!</div>`));
+      const row=el("div","row c"); const a=el("button","btn","もう一回"); a.onclick=()=>render(); row.appendChild(a); card.appendChild(row); return; }
+    const [w,j]=list[i]; let built=[], first=true;
+    card.appendChild(el("div","qhead",`<span>${i+1} / ${list.length}</span><span>⭕ ${score}</span>`));
+    card.appendChild(el("div","ja-big",esc(j)));
+    const r0=el("div","row c"); const ear=el("button","btn sub","🔊 聞く"); ear.onclick=()=>say(w); r0.appendChild(ear);
+    const hint=el("button","btn sub","💡 さいしょの文字"); r0.appendChild(hint); card.appendChild(r0);
+    setTimeout(()=>say(w),300);
+    const slot=el("div","slotline"); card.appendChild(slot);
+    const extra=pick("abcdefghijklmnopqrstuvwxyz".split("").filter(c=>!w.toLowerCase().includes(c)),2);
+    const chars=shuffle(w.split("").concat(extra));
+    const tiles=el("div","tiles letters"); card.appendChild(tiles);
+    const tb=chars.map((c,k)=>{ const t=el("button","tile abc",c); t.onclick=()=>{ if(t.classList.contains("used")) return; t.classList.add("used"); built.push(k); sayLetter(c); paint(); }; tiles.appendChild(t); return t; });
+    hint.onclick=()=>{ first=false; const k=chars.findIndex((c,idx)=>c===w[0] && !built.includes(idx)); if(built.length===0 && k>=0){ tb[k].click(); } else toast("さいしょの文字は "+w[0]); };
+    function paint(){
+      slot.innerHTML=""; slot.classList.remove("ok","ng");
+      built.forEach((k,pos)=>{ const t=el("button","tile in abc",chars[k]); t.style.fontSize="1.9rem"; t.onclick=()=>{ built.splice(pos,1); tb[k].classList.remove("used"); paint(); }; slot.appendChild(t); });
+      if(built.length===w.length){
+        const ok=built.map(k=>chars[k]).join("")===w;
+        slot.classList.add(ok?"ok":"ng");
+        if(ok){ if(first) score++; fb.innerHTML="⭕ せいかい!"; say(w); setTimeout(()=>{i++;draw();},1300); }
+        else { first=false; fb.innerHTML="おしい!文字をタッチしてもどそう"; }
+      } else fb.innerHTML="";
+    }
+    const fb=el("div","fb",""); card.appendChild(fb);
+  }
+  draw();
+}
+
+/* ---- 4線 ---- */
+let WMODE=0, WIDX=0, PEN="#33304a";
+function mWrite(root,u){
+  levelBar(root,["① なぞり書き","② 書き写し"], WMODE, i=>{WMODE=i;render();});
+  root.appendChild(el("p","note", WMODE===0?"うすい文字の上を、指やペンでなぞろう。":"上のお手本を見て、下の4線に書き写そう。単語と単語の間をあけてね。"));
+  const items=u.sentences.map(s=>s[0]).concat(spellWords(u).slice(0,4).map(x=>x[0]));
+  if(WIDX>=items.length) WIDX=0;
+  const text=items[WIDX];
+  const nav=el("div","row");
+  const prev=el("button","btn sub","◀"); prev.onclick=()=>{WIDX=(WIDX-1+items.length)%items.length;render();};
+  const nxt=el("button","btn sub","▶"); nxt.onclick=()=>{WIDX=(WIDX+1)%items.length;render();};
+  const lab=el("div",null,`<b>${WIDX+1} / ${items.length}</b>`); lab.style.flex="1"; lab.style.textAlign="center";
+  nav.appendChild(prev); nav.appendChild(lab); nav.appendChild(nxt); root.appendChild(nav);
+  const jaRow=u.sentences.find(s=>s[0]===text) || u.words.find(w=>w[0]===text);
+  const top=el("div","row");
+  top.appendChild(spk(text)); top.appendChild(el("div",null,`<div class="abc" style="font-size:1.25rem;font-weight:700">${esc(text)}</div><div class="note">${esc(jaRow?jaRow[1]:"")}</div>`));
+  root.appendChild(top);
+
+  const W=Math.min(860, (document.getElementById("app").clientWidth||360)-32);
+  if(WMODE===0){
+    root.appendChild(el("div","lbl","なぞり書き"));
+    const f=fourLines(W, text, "trace"); root.appendChild(f.wrap);
+    tools(root,[f]);
+  } else {
+    root.appendChild(el("div","lbl","お手本"));
+    const m=fourLines(W, text, "model", null, true); root.appendChild(m.wrap);
+    root.appendChild(el("div","lbl","ここに書こう"));
+    const f=fourLines(W, text, "blank", m.rows); root.appendChild(f.wrap);
+    tools(root,[f]);
+  }
+  setStars(u.id+"write", 1);
+}
+function tools(root, pads){
+  const row=el("div","row");
+  const pen=el("div","pen");
+  [["#33304a","黒"],["#e85a5a","赤"],["#2f97e0","青"]].forEach(([c,n])=>{ const b=el("button",PEN===c?"on":""); b.style.background=c; b.setAttribute("aria-label",n); b.onclick=()=>{ PEN=c; pen.querySelectorAll("button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); }; pen.appendChild(b); });
+  row.appendChild(pen);
+  const undo=el("button","btn sub","↩ ひとつもどす"); undo.onclick=()=>pads.forEach(p=>p.undo());
+  const clr=el("button","btn sub","🧽 けす"); clr.onclick=()=>pads.forEach(p=>p.clear());
+  const done=el("button","btn ok","できた!"); done.onclick=()=>{ const u=nhUnits()[st.unit]; setStars(u.id+"write",3); toast("✍️ ていねいに書けたね!"); WIDX++; render(); };
+  row.appendChild(undo); row.appendChild(clr); row.appendChild(done);
+  root.appendChild(row);
+}
+// 4線: 1行 = 上線〜4線目。大文字は1〜3線、小文字のxハイトは2〜3線、下に出る文字は3〜4線。
+function fourLines(W, text, kind, forceRows, smaller){
+  const dpr=window.devicePixelRatio||1;
+  const gap = smaller ? (W<500?17:22) : (W<500?24:32);   // 線と線の間
+  const rowH = gap*3 + gap*1.6;
+  const ctxM=document.createElement("canvas").getContext("2d");
+  // フォントサイズ: キャップハイト = 2*gap になるよう調整
+  let fs=gap*2.8; ctxM.font=`${fs}px Andika, "Century Gothic", sans-serif`;
+  const capA = ctxM.measureText("H").actualBoundingBoxAscent || fs*0.7;
+  fs = fs * (2*gap)/capA; ctxM.font=`${fs}px Andika, "Century Gothic", sans-serif`;
+  const pad=16, maxW=W-pad*2;
+  // 単語ごとに折り返し
+  const rows=[]; let cur="";
+  text.split(" ").forEach(w=>{ const t=cur?cur+" "+w:w; if(ctxM.measureText(t).width>maxW && cur){ rows.push(cur); cur=w; } else cur=t; });
+  if(cur) rows.push(cur);
+  const nRows = forceRows || rows.length;
+  const H = Math.ceil(nRows*rowH + gap*0.4);
+  const wrap=el("div","fourwrap");
+  const bg=document.createElement("canvas"); bg.width=W*dpr; bg.height=H*dpr; bg.style.height=H+"px";
+  const g=bg.getContext("2d"); g.scale(dpr,dpr);
+  g.fillStyle="#fff"; g.fillRect(0,0,W,H);
+  for(let r=0;r<nRows;r++){
+    const y0=gap*0.8 + r*rowH;
+    for(let k=0;k<4;k++){
+      const y=y0+k*gap;
+      g.beginPath(); g.moveTo(8,y); g.lineTo(W-8,y);
+      g.strokeStyle = k===2? "#e7748a" : "#9fb0d6"; g.lineWidth = k===2?1.6:1;
+      g.setLineDash(k===1?[6,5]:[]); g.stroke();
+    }
+    g.setLineDash([]);
+    if(kind!=="blank" && rows[r]){
+      g.font=`${fs}px Andika, "Century Gothic", sans-serif`;
+      g.textBaseline="alphabetic";
+      g.fillStyle = kind==="trace" ? "rgba(120,130,170,.28)" : "#33304a";
+      g.fillText(rows[r], pad, y0+2*gap);
+    }
+  }
+  wrap.appendChild(bg);
+  const pad2={ undo(){}, clear(){}, wrap, rows:nRows };
+  if(kind!=="model"){
+    const ink=document.createElement("canvas"); ink.className="ink"; ink.width=W*dpr; ink.height=H*dpr; ink.style.height=H+"px";
+    const c=ink.getContext("2d"); c.scale(dpr,dpr); c.lineCap="round"; c.lineJoin="round";
+    const strokes=[]; let curS=null;
+    const pos=e=>{ const r=ink.getBoundingClientRect(); return [(e.clientX-r.left)*(W/r.width),(e.clientY-r.top)*(H/r.height)]; };
+    const redraw=()=>{ c.clearRect(0,0,W,H); strokes.forEach(s=>{ c.strokeStyle=s.c; c.lineWidth=Math.max(3,gap/7); c.beginPath(); s.p.forEach(([x,y],k)=>k?c.lineTo(x,y):c.moveTo(x,y)); if(s.p.length===1){ c.lineTo(s.p[0][0]+.1,s.p[0][1]); } c.stroke(); }); };
+    ink.addEventListener("pointerdown",e=>{ e.preventDefault(); ink.setPointerCapture(e.pointerId); curS={c:PEN,p:[pos(e)]}; strokes.push(curS); redraw(); });
+    ink.addEventListener("pointermove",e=>{ if(!curS) return; e.preventDefault(); curS.p.push(pos(e)); redraw(); });
+    const end=()=>{ curS=null; };
+    ink.addEventListener("pointerup",end); ink.addEventListener("pointercancel",end); ink.addEventListener("pointerleave",end);
+    wrap.appendChild(ink);
+    pad2.undo=()=>{ strokes.pop(); redraw(); };
+    pad2.clear=()=>{ strokes.length=0; redraw(); };
+  }
+  return pad2;
+}
+
+// フォント読み込み後に4線を描き直す
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(()=>{ if(st.mode==="write") render(); }); }
+render();
+</script>
+</body>
+</html>
