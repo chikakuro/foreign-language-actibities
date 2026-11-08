@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>スモールトーク れんしゅうノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF6EA;
+    --paper-line:#E7DCC4;
+    --ink:#2C3A45;
+    --ink-soft:#5A6B74;
+    --coral:#FF6F59;
+    --marigold:#FFC145;
+    --sky:#3F9BD1;
+    --grape:#9D7FE0;
+    --mint:#3FAE8C;
+    --berry:#E85D75;
+    --card-shadow: 0 6px 0 rgba(44,58,69,0.12);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      repeating-linear-gradient(var(--paper) 0px, var(--paper) 27px, var(--paper-line) 28px),
+      var(--paper);
+    font-family:'Zen Maru Gothic', sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:24px 14px 60px;
+  }
+  .en{font-family:'Fredoka',sans-serif;}
+  #app{width:100%;max-width:640px;}
+
+  .topbar{display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .back-btn{
+    background:none;border:2px solid var(--ink);border-radius:50%;
+    width:38px;height:38px;font-size:18px;cursor:pointer;color:var(--ink);
+    flex:none;transition:transform .15s;
+  }
+  .back-btn:hover{transform:translateX(-2px);}
+  .stamp-rail{
+    flex:1;min-width:120px;display:flex;gap:5px;background:#fff;border:2px solid var(--ink);
+    border-radius:20px;padding:6px 10px;box-shadow:var(--card-shadow);overflow-x:auto;
+  }
+  .stamp{
+    width:22px;height:22px;border-radius:50%;flex:none;
+    border:2px dashed #C9BE9E;display:flex;align-items:center;justify-content:center;
+    font-size:11px;background:#fff;
+  }
+  .stamp.done{border-style:solid;border-color:var(--berry);background:#FFEFEA;transform:rotate(-8deg);}
+  .slow-toggle{
+    flex:none;font-family:'Zen Maru Gothic';font-weight:700;font-size:11.5px;
+    border:2px solid var(--ink);border-radius:16px;padding:7px 10px;
+    background:#fff;color:var(--ink);cursor:pointer;white-space:nowrap;box-shadow:var(--card-shadow);
+  }
+  .slow-toggle.on{background:var(--grape);color:#fff;}
+
+  h1{font-family:'Fredoka',sans-serif;font-size:28px;margin:0 0 4px;letter-spacing:.5px;}
+  .subtitle{color:var(--ink-soft);font-size:14px;margin:0 0 20px;}
+  .section-label{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:12.5px;font-weight:700;color:#fff;background:var(--ink);
+    padding:4px 12px;border-radius:14px;margin-bottom:12px;
+  }
+  .book-badge{
+    display:inline-block;font-family:'Fredoka';font-size:11.5px;font-weight:600;
+    color:var(--coral);border:1.5px solid var(--coral);border-radius:10px;
+    padding:2px 8px;margin-bottom:8px;
+  }
+
+  .cover{
+    background:#fff;border:3px solid var(--ink);border-radius:18px;
+    padding:34px 26px;text-align:center;box-shadow:var(--card-shadow);
+    position:relative;overflow:hidden;
+  }
+  .cover::before{content:"";position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:var(--marigold);border-radius:50%;opacity:.35;}
+  .cover::after{content:"";position:absolute;bottom:-50px;left:-30px;width:160px;height:160px;background:var(--sky);border-radius:50%;opacity:.25;}
+  .cover h1{font-size:32px;position:relative;}
+  .cover .en-sub{font-family:'Fredoka';color:var(--coral);font-size:15px;font-weight:600;margin-bottom:14px;position:relative;}
+  .cover p{color:var(--ink-soft);font-size:14px;line-height:1.7;position:relative;max-width:440px;margin:0 auto 20px;}
+  .cover .textbook-line{font-size:12px;color:var(--ink-soft);position:relative;margin-bottom:18px;}
+  .big-btn{
+    position:relative;font-family:'Zen Maru Gothic';font-weight:700;font-size:17px;
+    background:var(--coral);color:#fff;border:3px solid var(--ink);
+    border-radius:16px;padding:14px 30px;cursor:pointer;box-shadow:0 5px 0 var(--ink);
+    transition:transform .1s, box-shadow .1s;
+  }
+  .big-btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink);}
+
+  .grade-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .grade-card{
+    background:#fff;border:3px solid var(--ink);border-radius:16px;padding:20px 10px;
+    text-align:center;cursor:pointer;box-shadow:var(--card-shadow);transition:transform .12s;
+  }
+  .grade-card:hover{transform:translateY(-3px);}
+  .grade-card .num{font-family:'Fredoka';font-size:34px;font-weight:700;color:var(--sky);}
+  .grade-card .lbl{font-size:13.5px;font-weight:700;margin-top:2px;}
+  .grade-card .book{font-size:10.5px;color:var(--ink-soft);margin-top:3px;}
+
+  .topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .topic-card{
+    position:relative;border:3px solid var(--ink);border-radius:16px;
+    padding:16px 12px 12px;cursor:pointer;box-shadow:var(--card-shadow);
+    background:#fff;transition:transform .15s;
+  }
+  .topic-card:nth-child(odd){transform:rotate(-2deg);}
+  .topic-card:nth-child(even){transform:rotate(2deg);}
+  .topic-card:hover{transform:scale(1.04) rotate(0deg);}
+  .topic-card.locked{opacity:.45;cursor:not-allowed;}
+  .topic-card.locked:hover{transform:none;}
+  .tape{position:absolute;top:-10px;left:50%;transform:translateX(-50%) rotate(-3deg);width:52px;height:16px;background:rgba(255,193,69,.85);border:1px solid rgba(44,58,69,.15);}
+  .topic-card .unum{font-family:'Fredoka';font-size:11px;color:var(--sky);font-weight:700;}
+  .topic-card .emoji{font-size:26px;margin-top:2px;}
+  .topic-card .t-ja{font-weight:700;font-size:13.5px;margin-top:4px;line-height:1.3;}
+  .topic-card .t-en{font-family:'Fredoka';font-size:11px;color:var(--ink-soft);}
+  .topic-card .lock-note{font-size:10px;color:var(--berry);margin-top:4px;font-weight:700;}
+  .topic-card .done-badge{position:absolute;top:8px;right:8px;background:var(--mint);color:#fff;border-radius:50%;width:20px;height:20px;font-size:11px;display:flex;align-items:center;justify-content:center;}
+
+  .scene-card{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:22px;box-shadow:var(--card-shadow);}
+  .progress-dots{display:flex;gap:6px;margin-bottom:16px;}
+  .dot{width:100%;height:6px;border-radius:3px;background:#EAE2CC;}
+  .dot.active{background:var(--coral);}
+  .dot.past{background:var(--mint);}
+
+  .partner-bubble{background:#F1F6FA;border:2px solid var(--sky);border-radius:16px 16px 16px 4px;padding:14px 16px;margin-bottom:16px;}
+  .partner-bubble .who{font-size:11.5px;font-weight:700;color:var(--sky);margin-bottom:4px;}
+  .en-row{display:flex;align-items:center;gap:8px;}
+  .partner-bubble .en-line{font-family:'Fredoka';font-size:18px;font-weight:600;}
+  .partner-bubble .ja-line{font-size:12.5px;color:var(--ink-soft);margin-top:3px;}
+
+  .speak-btn{
+    flex:none;width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);
+    background:#fff;color:var(--ink);font-size:13px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:background .12s, transform .1s;
+  }
+  .speak-btn:hover{transform:scale(1.08);}
+  .speak-btn.playing{background:var(--marigold);}
+  .speak-btn.sm{width:24px;height:24px;font-size:11px;border-width:1.5px;}
+
+  .prompt-note{font-size:12px;font-weight:700;color:var(--ink-soft);margin:6px 0 10px;display:flex;align-items:center;gap:6px;}
+
+  .option-list{display:flex;flex-direction:column;gap:10px;margin-bottom:8px;}
+  .option{
+    text-align:left;background:#fff;border:2.5px solid var(--ink);border-radius:14px;
+    padding:10px 10px 10px 14px;cursor:pointer;transition:background .12s, transform .1s;
+    display:flex;align-items:center;gap:10px;justify-content:space-between;
+  }
+  .option:hover{transform:translateX(3px);}
+  .option .txt{flex:1;}
+  .option .en-line{font-family:'Fredoka';font-size:15.5px;font-weight:600;}
+  .option .ja-line{font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
+  .option.chosen{background:var(--marigold);}
+
+  .say-banner{margin-top:14px;background:var(--ink);color:#fff;border-radius:14px;padding:12px 14px;font-size:13px;font-weight:700;display:flex;gap:10px;align-items:center;justify-content:space-between;}
+  .say-banner .txt{display:flex;flex-direction:column;gap:2px;}
+  .say-banner .en{color:var(--marigold);}
+  .say-banner .speak-btn{border-color:#fff;color:#fff;background:transparent;}
+  .say-banner .speak-btn.playing{background:var(--marigold);color:var(--ink);border-color:var(--marigold);}
+
+  /* ---- mic recording box ---- */
+  .mic-box{margin-top:14px;background:#F7F2FF;border:2px dashed var(--grape);border-radius:14px;padding:12px 14px;}
+  .mic-lbl{font-size:11.5px;font-weight:700;color:var(--grape);margin-bottom:8px;}
+  .mic-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+  .mic-btn{
+    font-family:'Zen Maru Gothic';font-weight:700;font-size:12.5px;border:2.5px solid var(--ink);
+    border-radius:12px;padding:9px 13px;cursor:pointer;background:#fff;color:var(--ink);
+    transition:transform .1s;
+  }
+  .mic-btn:hover{transform:translateY(-1px);}
+  .mic-btn.recording{background:var(--berry);color:#fff;border-color:var(--berry);animation:recPulse 1s infinite;}
+  @keyframes recPulse{0%,100%{opacity:1;}50%{opacity:.55;}}
+  .mic-btn.play{background:var(--sky);color:#fff;border-color:var(--sky);}
+  .mic-btn.compare{background:var(--marigold);color:var(--ink);border-color:var(--marigold);}
+  .mic-btn.ghost{background:#fff;color:var(--ink-soft);font-size:11.5px;padding:6px 12px;border-width:1.5px;}
+  .mic-timer{font-family:'Fredoka';font-weight:700;color:var(--berry);font-size:14px;}
+  .mic-note{font-size:11px;color:var(--berry);font-weight:700;line-height:1.5;}
+
+  .followup-box{margin-top:16px;border-top:2px dashed var(--paper-line);padding-top:14px;}
+  .followup-box .lbl{font-size:11.5px;font-weight:700;color:var(--grape);margin-bottom:6px;}
+  .followup-box .en-row{display:flex;align-items:center;gap:8px;}
+  .followup-box .en-line{font-family:'Fredoka';font-size:14.5px;font-weight:600;}
+  .followup-box .ja-line{font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
+
+  .nav-row{display:flex;justify-content:flex-end;margin-top:20px;}
+  .next-btn{
+    font-family:'Zen Maru Gothic';font-weight:700;font-size:15px;
+    background:var(--sky);color:#fff;border:3px solid var(--ink);border-radius:14px;
+    padding:11px 22px;cursor:pointer;box-shadow:0 4px 0 var(--ink);transition:transform .1s, box-shadow .1s;
+  }
+  .next-btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink);}
+  .next-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+  .no-voice-note{font-size:11.5px;color:var(--berry);font-weight:700;margin-top:8px;}
+
+  .complete-card{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:30px 20px;text-align:center;box-shadow:var(--card-shadow);}
+  .complete-card .stamp-big{width:90px;height:90px;border-radius:50%;border:4px solid var(--berry);display:flex;align-items:center;justify-content:center;font-size:42px;margin:0 auto 16px;transform:rotate(-8deg);color:var(--berry);}
+  .complete-card h2{font-family:'Fredoka';margin:0 0 6px;}
+  .complete-card p{color:var(--ink-soft);font-size:14px;margin:0 0 22px;}
+  .btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .ghost-btn{background:#fff;border:2.5px solid var(--ink);color:var(--ink);border-radius:14px;padding:11px 18px;font-family:'Zen Maru Gothic';font-weight:700;font-size:14px;cursor:pointer;}
+
+  @media (max-width:400px){
+    .topic-card .emoji{font-size:22px;}
+    h1{font-size:24px;}
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* ---------------- speech (text-to-speech) ---------------- */
+const VOICE_OK = ('speechSynthesis' in window);
+let playingBtn = null;
+function stopSpeak(){ if(VOICE_OK) window.speechSynthesis.cancel(); if(playingBtn){playingBtn.classList.remove('playing'); playingBtn=null;} }
+function speak(text, btnEl){
+  if(!VOICE_OK) return;
+  stopSpeak();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate = state.slow ? 0.68 : 0.95; u.pitch = 1.05;
+  if(btnEl){ btnEl.classList.add('playing'); playingBtn=btnEl; }
+  u.onend = ()=>{ if(btnEl) btnEl.classList.remove('playing'); if(playingBtn===btnEl) playingBtn=null; };
+  u.onerror = u.onend;
+  window.speechSynthesis.speak(u);
+}
+function speakBtn(text, size){
+  const b = el('button','speak-btn'+(size==='sm'?' sm':''), '🔊');
+  b.setAttribute('aria-label','きく: '+text);
+  b.onclick = (e)=>{ e.stopPropagation(); speak(text, b); };
+  return b;
+}
+
+/* ---------------- mic recording (record & playback) ---------------- */
+const MIC_SUPPORTED = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+let micState = {
+  recording:false, recorder:null, chunks:[], blobUrl:null, stream:null,
+  timerInterval:null, elapsed:0, permissionError:false
+};
+function formatTime(sec){ const m=Math.floor(sec/60); const s=sec%60; return m+':'+String(s).padStart(2,'0'); }
+function resetMic(){
+  if(micState.timerInterval) clearInterval(micState.timerInterval);
+  if(micState.recorder && micState.recorder.state!=='inactive'){
+    try{ micState.recorder.stop(); }catch(e){}
+  }
+  if(micState.stream){ micState.stream.getTracks().forEach(t=>t.stop()); }
+  if(micState.blobUrl){ URL.revokeObjectURL(micState.blobUrl); }
+  micState = { recording:false, recorder:null, chunks:[], blobUrl:null, stream:null, timerInterval:null, elapsed:0, permissionError:false };
+}
+async function startRecording(){
+  if(!MIC_SUPPORTED) return;
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    micState.stream = stream;
+    micState.chunks = [];
+    micState.permissionError = false;
+    const mr = new MediaRecorder(stream);
+    micState.recorder = mr;
+    mr.ondataavailable = e=>{ if(e.data.size>0) micState.chunks.push(e.data); };
+    mr.onstop = ()=>{
+      const blob = new Blob(micState.chunks, {type: mr.mimeType || 'audio/webm'});
+      micState.blobUrl = URL.createObjectURL(blob);
+      if(micState.stream){ micState.stream.getTracks().forEach(t=>t.stop()); }
+      micState.recording = false;
+      if(micState.timerInterval) clearInterval(micState.timerInterval);
+      render();
+    };
+    mr.start();
+    micState.recording = true;
+    micState.elapsed = 0;
+    micState.timerInterval = setInterval(()=>{
+      micState.elapsed++;
+      const t = document.getElementById('mic-timer');
+      if(t) t.textContent = formatTime(micState.elapsed);
+      if(micState.elapsed >= 15) stopRecording(); // safety cap
+    }, 1000);
+    render();
+  }catch(err){
+    micState.permissionError = true;
+    render();
+  }
+}
+function stopRecording(){
+  if(micState.recorder && micState.recording){
+    try{ micState.recorder.stop(); }catch(e){}
+  }
+}
+function renderMicBox(targetText){
+  const box = el('div','mic-box');
+  box.appendChild(el('div','mic-lbl','🎧 自分の発音をろくおんして聞いてみよう'));
+
+  if(!MIC_SUPPORTED){
+    box.appendChild(el('div','mic-note','⚠️ この端末・ブラウザでは録音機能が使えません。'));
+    return box;
+  }
+
+  const row = el('div','mic-row');
+  if(micState.recording){
+    const stopBtn = el('button','mic-btn recording','⏹ 止める');
+    stopBtn.onclick = ()=> stopRecording();
+    row.appendChild(stopBtn);
+    const timer = el('span','mic-timer', formatTime(micState.elapsed));
+    timer.id='mic-timer';
+    row.appendChild(timer);
+  } else {
+    const recBtn = el('button','mic-btn','🎙️ ろくおんする');
+    recBtn.onclick = ()=> startRecording();
+    row.appendChild(recBtn);
+  }
+  box.appendChild(row);
+
+  if(micState.blobUrl){
+    const playRow = el('div','mic-row');
+    const playBtn = el('button','mic-btn play','▶️ じぶんの声');
+    playBtn.onclick = ()=>{ const a = new Audio(micState.blobUrl); a.play(); };
+    const compareBtn = el('button','mic-btn compare','🔊→🎤 きき比べる');
+    compareBtn.onclick = ()=>{
+      stopSpeak();
+      speak(targetText);
+      setTimeout(()=>{ const a = new Audio(micState.blobUrl); a.play(); }, 1300);
+    };
+    playRow.appendChild(playBtn);
+    playRow.appendChild(compareBtn);
+    box.appendChild(playRow);
+
+    const rerecBtn = el('button','mic-btn ghost','🔁 とりなおす');
+    rerecBtn.onclick = ()=>{ resetMic(); render(); };
+    box.appendChild(rerecBtn);
+  }
+
+  if(micState.permissionError){
+    box.appendChild(el('div','mic-note','⚠️ マイクの使用が許可されませんでした。ブラウザのアドレスバーやサイト設定でマイクを「許可」にしてから、もう一度お試しください。'));
+  }
+  return box;
+}
+
+/* ---------------- content: full curriculum (3往復/unit) ---------------- */
+/* 3年 = Let's Try! 1 (9 units) / 4年 = Let's Try! 2 (9 units)
+   5年・6年 = NEW HORIZON Elementary 5 / 6 令和6年度版 (東京書籍, 各8ユニット) */
+const GRADE_INFO = {
+  3:{ book:"Let's Try! 1 準拠", units:[
+    { num:1, ja:"あいさつをして友だちになろう", en:"Hello!", emoji:"👋",
+      exchanges:[
+        { en:"Hello! What's your name?", ja:"こんにちは！なまえは？",
+          options:[{en:"Hello. I am Yuki.",ja:"こんにちは。ゆきです。"},{en:"Hi! My name is Ken.",ja:"やあ！けんです。"},{en:"Hello! I'm Mei.",ja:"こんにちは！めいです。"}],
+          followup:{en:"Nice to meet you!", ja:"はじめまして！"} },
+        { en:"Where are you from?", ja:"どこの出身？",
+          options:[{en:"I'm from Japan.",ja:"日本の出身だよ。"},{en:"I'm from Tokyo.",ja:"東京の出身だよ。"},{en:"I'm from Osaka.",ja:"大阪の出身だよ。"}],
+          followup:{en:"Nice to meet you!", ja:"はじめまして！"} },
+        { en:"It's time to go. Goodbye!", ja:"もう時間だね。バイバイ！",
+          options:[{en:"Goodbye! See you!",ja:"バイバイ！またね！"},{en:"Bye! See you tomorrow!",ja:"バイバイ！また明日！"},{en:"See you soon!",ja:"またすぐにね！"}],
+          followup:{en:"Have a nice day!", ja:"よい一日を！"} }
+      ]},
+    { num:2, ja:"ごきげんいかが？", en:"How are you?", emoji:"😊",
+      exchanges:[
+        { en:"How are you?", ja:"ちょうしはどう？",
+          options:[{en:"I'm happy!",ja:"うれしいよ！"},{en:"I'm tired.",ja:"つかれたよ。"},{en:"I'm hungry.",ja:"おなかがすいたよ。"}],
+          followup:{en:"How about you?", ja:"あなたは どう？"} },
+        { en:"Are you sleepy today?", ja:"今日はねむい？",
+          options:[{en:"Yes, I'm sleepy.",ja:"うん、ねむいよ。"},{en:"No, I'm fine.",ja:"ううん、元気だよ。"},{en:"I'm a little tired.",ja:"すこしつかれたよ。"}],
+          followup:{en:"Let's do our best!", ja:"がんばろう！"} },
+        { en:"Are you excited for today?", ja:"今日はわくわくしてる？",
+          options:[{en:"Yes, I'm excited!",ja:"うん、わくわくしてる！"},{en:"I'm a little nervous.",ja:"すこしきんちょうしてる。"},{en:"I'm calm.",ja:"落ちついているよ。"}],
+          followup:{en:"Let's have a good day!", ja:"いい一日にしよう！"} }
+      ]},
+    { num:3, ja:"数えてあそぼう", en:"How many?", emoji:"🔢",
+      exchanges:[
+        { en:"How many pencils do you have?", ja:"えんぴつは何本ある？",
+          options:[{en:"I have five pencils.",ja:"5本あるよ。"},{en:"I have three pencils.",ja:"3本あるよ。"},{en:"I have ten pencils.",ja:"10本あるよ。"}],
+          followup:{en:"Wow, that's a lot!", ja:"わあ、多いね！"} },
+        { en:"How many balls are there?", ja:"ボールはいくつある？",
+          options:[{en:"There are seven.",ja:"7こあるよ。"},{en:"There are twelve.",ja:"12こあるよ。"},{en:"There are twenty.",ja:"20こあるよ。"}],
+          followup:{en:"Let's count together!", ja:"いっしょに数えよう！"} },
+        { en:"How many friends do you have?", ja:"友だちは何人いる？",
+          options:[{en:"I have five friends.",ja:"5人いるよ。"},{en:"I have many friends!",ja:"たくさんいるよ！"},{en:"I have three good friends.",ja:"仲よしが3人いるよ。"}],
+          followup:{en:"That's nice!", ja:"いいね！"} }
+      ]},
+    { num:4, ja:"すきなものをつたえよう", en:"I like blue.", emoji:"💙",
+      exchanges:[
+        { en:"Do you like blue?", ja:"青はすき？",
+          options:[{en:"Yes, I do.",ja:"うん、すき。"},{en:"No, I don't.",ja:"ううん、すきじゃない。"},{en:"I like blue very much!",ja:"青が大すき！"}],
+          followup:{en:"What color do you like?", ja:"何色がすき？"} },
+        { en:"Do you like soccer?", ja:"サッカーはすき？",
+          options:[{en:"Yes, I like soccer.",ja:"うん、サッカーがすき。"},{en:"No, I don't like soccer.",ja:"ううん、すきじゃない。"},{en:"I like baseball better.",ja:"野球のほうがすき。"}],
+          followup:{en:"Let's play together!", ja:"いっしょにあそぼう！"} },
+        { en:"Do you like cats?", ja:"ねこはすき？",
+          options:[{en:"Yes, I like cats.",ja:"うん、ねこがすき。"},{en:"No, I like dogs better.",ja:"ううん、犬のほうがすき。"},{en:"I like both!",ja:"どっちもすき！"}],
+          followup:{en:"Cute!", ja:"かわいいね！"} }
+      ]},
+    { num:5, ja:"何がすき？", en:"What do you like?", emoji:"🍎",
+      exchanges:[
+        { en:"What fruit do you like?", ja:"何のくだものがすき？",
+          options:[{en:"I like apples.",ja:"りんごがすき。"},{en:"I like bananas.",ja:"バナナがすき。"},{en:"I like strawberries.",ja:"いちごがすき。"}],
+          followup:{en:"Me too!", ja:"わたしも！"} },
+        { en:"What sport do you like?", ja:"何のスポーツがすき？",
+          options:[{en:"I like swimming.",ja:"水えいがすき。"},{en:"I like dodgeball.",ja:"ドッジボールがすき。"},{en:"I like tennis.",ja:"テニスがすき。"}],
+          followup:{en:"Sounds fun!", ja:"たのしそう！"} },
+        { en:"What vegetable do you like?", ja:"何の野菜がすき？",
+          options:[{en:"I like carrots.",ja:"にんじんがすき。"},{en:"I like tomatoes.",ja:"トマトがすき。"},{en:"I like corn.",ja:"とうもろこしがすき。"}],
+          followup:{en:"Good choice!", ja:"いいね！"} }
+      ]},
+    { num:6, ja:"アルファベットとなかよし", en:"ALPHABET", emoji:"🔤",
+      exchanges:[
+        { en:"Can you find the letter B?", ja:"「B」の文字を見つけられる？",
+          options:[{en:"Yes, here it is!",ja:"うん、ここにあるよ！"},{en:"B is for banana.",ja:"Bはバナナの頭文字だよ。"},{en:"I found it!",ja:"見つけたよ！"}],
+          followup:{en:"Great job!", ja:"よくできました！"} },
+        { en:"How do you spell your name?", ja:"名前はどうつづるの？",
+          options:[{en:"M-E-I. Mei.",ja:"M-E-I。めい。"},{en:"K-E-N. Ken.",ja:"K-E-N。けん。"},{en:"Y-U-K-I. Yuki.",ja:"Y-U-K-I。ゆき。"}],
+          followup:{en:"Nice name!", ja:"すてきな名前だね！"} },
+        { en:"What letter does your name start with?", ja:"名前は何の文字ではじまる？",
+          options:[{en:"My name starts with M.",ja:"Mではじまるよ。"},{en:"My name starts with K.",ja:"Kではじまるよ。"},{en:"My name starts with Y.",ja:"Yではじまるよ。"}],
+          followup:{en:"Nice!", ja:"いいね！"} }
+      ]},
+    { num:7, ja:"カードをおくろう", en:"This is for you.", emoji:"🎁",
+      exchanges:[
+        { en:"What do you want?", ja:"何がほしい？",
+          options:[{en:"I want a red heart.",ja:"赤いハートがほしい。"},{en:"I want a blue star.",ja:"青い星がほしい。"},{en:"I want a yellow circle.",ja:"黄色い丸がほしい。"}],
+          followup:{en:"This is for you!", ja:"これ、あなたに！"} },
+        { en:"Do you like this card?", ja:"このカードはすき？",
+          options:[{en:"Yes, I love it!",ja:"うん、大すき！"},{en:"It's beautiful!",ja:"きれい！"},{en:"Thank you so much!",ja:"どうもありがとう！"}],
+          followup:{en:"You're welcome!", ja:"どういたしまして！"} },
+        { en:"What shape do you like?", ja:"どんな形がすき？",
+          options:[{en:"I like hearts.",ja:"ハートがすき。"},{en:"I like stars.",ja:"星がすき。"},{en:"I like circles.",ja:"丸がすき。"}],
+          followup:{en:"Let's make one together!", ja:"いっしょに作ろう！"} }
+      ]},
+    { num:8, ja:"これなあに？", en:"What's this?", emoji:"❓",
+      exchanges:[
+        { en:"What's this?", ja:"これなあに？",
+          options:[{en:"It's a cat.",ja:"ねこだよ。"},{en:"It's an apple.",ja:"りんごだよ。"},{en:"It's a ball.",ja:"ボールだよ。"}],
+          followup:{en:"You got it right!", ja:"せいかい！"} },
+        { en:"It's round and yellow. What's this?", ja:"丸くて黄色いよ。これなあに？",
+          options:[{en:"It's the sun!",ja:"太陽だ！"},{en:"It's a lemon!",ja:"レモンだ！"},{en:"It's an egg!",ja:"たまごだ！"}],
+          followup:{en:"Good guess!", ja:"いい予想だね！"} },
+        { en:"It's small and red. What's this?", ja:"小さくて赤いよ。これなあに？",
+          options:[{en:"It's a strawberry!",ja:"いちごだ！"},{en:"It's a tomato!",ja:"トマトだ！"},{en:"It's an apple!",ja:"りんごだ！"}],
+          followup:{en:"You're a good guesser!", ja:"予想じょうずだね！"} }
+      ]},
+    { num:9, ja:"きみはだれ？", en:"Who are you?", emoji:"🐾",
+      exchanges:[
+        { en:"I have four legs and a long tail. Who am I?", ja:"あしが4本で、しっぽが長いよ。だれでしょう？",
+          options:[{en:"You are a cat!",ja:"ねこだ！"},{en:"You are a dog!",ja:"犬だ！"},{en:"You are a horse!",ja:"馬だ！"}],
+          followup:{en:"That's right!", ja:"せいかい！"} },
+        { en:"Do you have wings?", ja:"はねはある？",
+          options:[{en:"Yes, I do. I can fly.",ja:"うん、あるよ。とべるよ。"},{en:"No, I don't.",ja:"ううん、ないよ。"},{en:"I have big wings!",ja:"大きなはねがあるよ！"}],
+          followup:{en:"Cool animal!", ja:"かっこいい動物だね！"} },
+        { en:"Do you live in the sea?", ja:"海に住んでいる？",
+          options:[{en:"Yes, I do.",ja:"うん、住んでいるよ。"},{en:"No, I live in the forest.",ja:"ううん、森に住んでいるよ。"},{en:"No, I live in a house.",ja:"ううん、家に住んでいるよ。"}],
+          followup:{en:"Interesting!", ja:"おもしろいね！"} }
+      ]}
+  ]},
+  4:{ book:"Let's Try! 2 準拠", units:[
+    { num:1, ja:"世界のいろいろなことばであいさつをしよう", en:"Hello, world!", emoji:"🌍",
+      exchanges:[
+        { en:"Do you like Italy?", ja:"イタリアはすき？",
+          options:[{en:"Yes, I like Italy.",ja:"うん、イタリアがすき。"},{en:"I don't know Italy.",ja:"イタリアのことは知らない。"},{en:"I want to go to Italy.",ja:"イタリアに行ってみたい。"}],
+          followup:{en:"Me too!", ja:"わたしも！"} },
+        { en:"I don't like natto. Do you like it?", ja:"納豆はすきじゃないんだ。あなたはすき？",
+          options:[{en:"Yes, I like natto.",ja:"うん、すきだよ。"},{en:"No, I don't like it.",ja:"ううん、すきじゃない。"},{en:"I like it a little.",ja:"すこしすき。"}],
+          followup:{en:"That's interesting!", ja:"おもしろいね！"} },
+        { en:"What language do you want to learn?", ja:"何語を勉強したい？",
+          options:[{en:"I want to learn English.",ja:"英語を勉強したい。"},{en:"I want to learn Chinese.",ja:"中国語を勉強したい。"},{en:"I want to learn Korean.",ja:"韓国語を勉強したい。"}],
+          followup:{en:"That sounds fun!", ja:"たのしそう！"} }
+      ]},
+    { num:2, ja:"すきな遊びをつたえよう", en:"Let's play cards.", emoji:"🌤️",
+      exchanges:[
+        { en:"How's the weather today?", ja:"今日の天気は？",
+          options:[{en:"It's sunny.",ja:"晴れだよ。"},{en:"It's rainy.",ja:"雨だよ。"},{en:"It's cloudy.",ja:"くもりだよ。"}],
+          followup:{en:"Let's play outside!", ja:"外で遊ぼう！"} },
+        { en:"Let's play cards. Do you want to?", ja:"トランプしよう。やる？",
+          options:[{en:"Yes, let's play!",ja:"うん、やろう！"},{en:"Sure, sounds fun!",ja:"うん、たのしそう！"},{en:"Sorry, I'm busy.",ja:"ごめん、いそがしいんだ。"}],
+          followup:{en:"Let's play tag instead!", ja:"じゃあ、おにごっこしよう！"} },
+        { en:"What do you want to play next?", ja:"次は何をして遊びたい？",
+          options:[{en:"Let's play tag.",ja:"おにごっこしよう。"},{en:"Let's play cards again.",ja:"またトランプをしよう。"},{en:"Let's play dodgeball.",ja:"ドッジボールをしよう。"}],
+          followup:{en:"Sounds good!", ja:"いいね！"} }
+      ]},
+    { num:3, ja:"すきな曜日は何かな？", en:"I like Mondays.", emoji:"📅",
+      exchanges:[
+        { en:"What day is it today?", ja:"今日は何曜日？",
+          options:[{en:"It's Monday.",ja:"月曜日だよ。"},{en:"It's Friday.",ja:"金曜日だよ。"},{en:"It's Sunday.",ja:"日曜日だよ。"}],
+          followup:{en:"I like that day too!", ja:"その日、わたしもすき！"} },
+        { en:"Do you like Mondays?", ja:"月曜日はすき？",
+          options:[{en:"Yes, I like Mondays.",ja:"うん、月曜日がすき。"},{en:"No, I like Fridays better.",ja:"ううん、金曜日のほうがすき。"},{en:"I like Saturdays the best.",ja:"土曜日がいちばんすき。"}],
+          followup:{en:"Why do you like it?", ja:"なんで、その日がすきなの？"} },
+        { en:"What do you do on Sundays?", ja:"日曜日は何をする？",
+          options:[{en:"I play with my family.",ja:"家族と遊ぶよ。"},{en:"I do my homework.",ja:"宿題をするよ。"},{en:"I go shopping.",ja:"買いものに行くよ。"}],
+          followup:{en:"Sounds nice!", ja:"いいね！"} }
+      ]},
+    { num:4, ja:"今、何時？", en:"What time is it?", emoji:"🕒",
+      exchanges:[
+        { en:"What time is it now?", ja:"今、何時？",
+          options:[{en:"It's three o'clock.",ja:"3時だよ。"},{en:"It's seven o'clock.",ja:"7時だよ。"},{en:"It's noon.",ja:"お昼の12時だよ。"}],
+          followup:{en:"It's time for lunch!", ja:"お昼ごはんの時間だね！"} },
+        { en:"What time do you get up?", ja:"何時に起きる？",
+          options:[{en:"I get up at six thirty.",ja:"6時30分に起きるよ。"},{en:"I get up at seven.",ja:"7時に起きるよ。"},{en:"I get up at eight.",ja:"8時に起きるよ。"}],
+          followup:{en:"That's early!", ja:"早いね！"} },
+        { en:"What time does school start?", ja:"学校は何時に始まる？",
+          options:[{en:"It starts at eight fifteen.",ja:"8時15分に始まるよ。"},{en:"It starts at eight thirty.",ja:"8時30分に始まるよ。"},{en:"It starts at nine.",ja:"9時に始まるよ。"}],
+          followup:{en:"Same as my school!", ja:"わたしの学校と同じ！"} }
+      ]},
+    { num:5, ja:"おすすめの文房具セットをつくろう", en:"Do you have a pen?", emoji:"✏️",
+      exchanges:[
+        { en:"Do you have a pen?", ja:"ペンをもってる？",
+          options:[{en:"Yes, I have a pen.",ja:"うん、もってるよ。"},{en:"No, I don't have a pen.",ja:"ううん、もってないよ。"},{en:"I have two pens.",ja:"2本もってるよ。"}],
+          followup:{en:"Can I borrow it?", ja:"かしてもらえる？"} },
+        { en:"Do you have a ruler?", ja:"じょうぎをもってる？",
+          options:[{en:"Yes, here you are.",ja:"うん、はいどうぞ。"},{en:"No, I don't have one.",ja:"ううん、もってないよ。"},{en:"I have a red ruler.",ja:"赤いじょうぎをもってるよ。"}],
+          followup:{en:"Thank you!", ja:"ありがとう！"} },
+        { en:"Do you have an eraser?", ja:"消しゴムをもってる？",
+          options:[{en:"Yes, I have one.",ja:"うん、もってるよ。"},{en:"No, I don't.",ja:"ううん、もってないよ。"},{en:"I have two erasers.",ja:"2つもってるよ。"}],
+          followup:{en:"Can I use it?", ja:"使ってもいい？"} }
+      ]},
+    { num:6, ja:"アルファベットで文字遊びをしよう", en:"Alphabet", emoji:"🔡",
+      exchanges:[
+        { en:"Can you write 'a' in lowercase?", ja:"小文字の「a」を書ける？",
+          options:[{en:"Yes, like this: a",ja:"うん、こう書くよ：a"},{en:"It's easy!",ja:"かんたんだよ！"},{en:"Let me try again.",ja:"もう一回やってみる。"}],
+          followup:{en:"Nice try!", ja:"いいちょうせんだね！"} },
+        { en:"What letter comes after m?", ja:"「m」の次の文字は？",
+          options:[{en:"It's n.",ja:"「n」だよ。"},{en:"I think it's n.",ja:"「n」だと思うよ。"},{en:"Let me check the alphabet.",ja:"アルファベットで確認するね。"}],
+          followup:{en:"That's correct!", ja:"せいかい！"} },
+        { en:"Can you say the alphabet from a to z?", ja:"aからzまで言える？",
+          options:[{en:"Yes, I can!",ja:"うん、言えるよ！"},{en:"I can try.",ja:"やってみるよ。"},{en:"Let's say it together.",ja:"いっしょに言おう。"}],
+          followup:{en:"Let's practice together!", ja:"いっしょに練習しよう！"} }
+      ]},
+    { num:7, ja:"ほしいものは何かな？", en:"What do you want?", emoji:"🥕",
+      exchanges:[
+        { en:"What do you want?", ja:"何がほしい？",
+          options:[{en:"I want strawberries.",ja:"いちごがほしい。"},{en:"I want bananas and milk.",ja:"バナナと牛乳がほしい。"},{en:"I want orange juice.",ja:"オレンジジュースがほしい。"}],
+          followup:{en:"That sounds delicious!", ja:"おいしそう！"} },
+        { en:"What toppings do you want on your pizza?", ja:"ピザに何をのせたい？",
+          options:[{en:"I want cheese and tomato.",ja:"チーズとトマトがいい。"},{en:"I want corn and sausage.",ja:"コーンとソーセージがいい。"},{en:"I want mushrooms.",ja:"きのこがいい。"}],
+          followup:{en:"Yummy!", ja:"おいしそう！"} },
+        { en:"What drink do you want?", ja:"何の飲み物がほしい？",
+          options:[{en:"I want orange juice.",ja:"オレンジジュースがほしい。"},{en:"I want milk.",ja:"牛乳がほしい。"},{en:"I want water.",ja:"水がほしい。"}],
+          followup:{en:"Here you are!", ja:"はい、どうぞ！"} }
+      ]},
+    { num:8, ja:"お気に入りの場所をしょうかいしよう", en:"This is my favorite place.", emoji:"🏫",
+      exchanges:[
+        { en:"Where is the library?", ja:"図書室はどこ？",
+          options:[{en:"Go straight and turn left.",ja:"まっすぐ行って、左に曲がって。"},{en:"Go straight and turn right.",ja:"まっすぐ行って、右に曲がって。"},{en:"It's next to the gym.",ja:"体育館のとなりだよ。"}],
+          followup:{en:"Thank you!", ja:"ありがとう！"} },
+        { en:"What is your favorite place at school?", ja:"学校でお気に入りの場所はどこ？",
+          options:[{en:"My favorite place is the library.",ja:"図書室がお気に入り。"},{en:"My favorite place is the music room.",ja:"音楽室がお気に入り。"},{en:"My favorite place is the playground.",ja:"校庭がお気に入り。"}],
+          followup:{en:"Why do you like it?", ja:"なんで、そこがすきなの？"} },
+        { en:"Do you like the school garden?", ja:"学校の花だんはすき？",
+          options:[{en:"Yes, I like it very much.",ja:"うん、大すき。"},{en:"It's beautiful.",ja:"きれいだよ。"},{en:"I go there every day.",ja:"毎日行くよ。"}],
+          followup:{en:"Let's go there together!", ja:"いっしょに行こう！"} }
+      ]},
+    { num:9, ja:"ぼく・わたしの一日", en:"This is my day.", emoji:"☀️",
+      exchanges:[
+        { en:"What do you do every morning?", ja:"毎朝、何をする？",
+          options:[{en:"I brush my teeth.",ja:"歯をみがくよ。"},{en:"I eat breakfast.",ja:"朝ごはんを食べるよ。"},{en:"I walk my dog.",ja:"犬の散歩をするよ。"}],
+          followup:{en:"I do that too!", ja:"わたしもそうするよ！"} },
+        { en:"What time do you go to bed?", ja:"何時にねる？",
+          options:[{en:"I go to bed at nine.",ja:"9時にねるよ。"},{en:"I go to bed at nine thirty.",ja:"9時30分にねるよ。"},{en:"I go to bed at ten.",ja:"10時にねるよ。"}],
+          followup:{en:"Good night!", ja:"おやすみ！"} },
+        { en:"What do you do after school?", ja:"放課後、何をする？",
+          options:[{en:"I do my homework.",ja:"宿題をするよ。"},{en:"I play with friends.",ja:"友だちと遊ぶよ。"},{en:"I practice the piano.",ja:"ピアノの練習をするよ。"}],
+          followup:{en:"That sounds fun!", ja:"たのしそう！"} }
+      ]}
+  ]},
+  5:{ book:"NEW HORIZON Elementary 5（令和6年度版）準拠", units:[
+    { num:1, ja:"名前や好きなものを伝え合おう", en:"Hello, friends!", emoji:"🤝",
+      exchanges:[
+        { en:"Hi! I'm Emily. How do you spell your name?", ja:"こんにちは、エミリーです。名前はどうつづるの？",
+          options:[{en:"S-O-T-A. Sota.",ja:"S-O-T-A、そうただよ。"},{en:"M-E-I. Mei.",ja:"M-E-I、めいだよ。"},{en:"R-E-N. Ren.",ja:"R-E-N、れんだよ。"}],
+          followup:{en:"Nice to meet you!", ja:"はじめまして！"} },
+        { en:"What subject do you like?", ja:"何の教科がすき？",
+          options:[{en:"I like English.",ja:"英語がすき。"},{en:"I like P.E.",ja:"体育がすき。"},{en:"I like music.",ja:"音楽がすき。"}],
+          followup:{en:"I see. Me too!", ja:"そうなんだ。わたしも！"} },
+        { en:"What sport do you like?", ja:"何のスポーツがすき？",
+          options:[{en:"I like dodgeball.",ja:"ドッジボールがすき。"},{en:"I like soccer.",ja:"サッカーがすき。"},{en:"I like badminton.",ja:"バドミントンがすき。"}],
+          followup:{en:"Let's play together. Sounds nice!", ja:"いっしょにやろう。いいね！"} }
+      ]},
+    { num:2, ja:"誕生日やほしいものを伝え合おう", en:"Happy birthday!", emoji:"🎂",
+      exchanges:[
+        { en:"When is your birthday?", ja:"たんじょうびはいつ？",
+          options:[{en:"My birthday is May 5th.",ja:"5月5日だよ。"},{en:"My birthday is August 20th.",ja:"8月20日だよ。"},{en:"My birthday is December 3rd.",ja:"12月3日だよ。"}],
+          followup:{en:"Oh, I see!", ja:"そうなんだ！"} },
+        { en:"What do you want for your birthday?", ja:"たんじょうびに何がほしい？",
+          options:[{en:"I want new shoes.",ja:"新しいくつがほしい。"},{en:"I want a soccer ball.",ja:"サッカーボールがほしい。"},{en:"I want a new tablet.",ja:"新しいタブレットがほしい。"}],
+          followup:{en:"New shoes? Nice!", ja:"新しいくつ？いいね！"} },
+        { en:"Happy birthday! Here you are.", ja:"たんじょうびおめでとう！はい、どうぞ。",
+          options:[{en:"Thank you!",ja:"ありがとう！"},{en:"Wow! Thank you very much.",ja:"わあ！どうもありがとう。"},{en:"Thank you. It's my turn next.",ja:"ありがとう。つぎはわたしの番だね。"}],
+          followup:{en:"You're welcome!", ja:"どういたしまして！"} }
+      ]},
+    { num:3, ja:"できることを伝え合おう", en:"Can you play dodgeball?", emoji:"💪",
+      exchanges:[
+        { en:"Can you play dodgeball?", ja:"ドッジボールはできる？",
+          options:[{en:"Yes, I can.",ja:"うん、できるよ。"},{en:"Yes, I can play it well.",ja:"うん、上手にできるよ。"},{en:"No, I can't.",ja:"ううん、できないよ。"}],
+          followup:{en:"How about you?", ja:"あなたは？"} },
+        { en:"Can you play the piano?", ja:"ピアノはひける？",
+          options:[{en:"Yes, I can.",ja:"うん、ひけるよ。"},{en:"No, I can't. But I can play the recorder.",ja:"ううん。でもリコーダーはふけるよ。"},{en:"No, I can't.",ja:"ううん、ひけないよ。"}],
+          followup:{en:"I see!", ja:"そうなんだ！"} },
+        { en:"I can sing well. What can you do?", ja:"わたしは上手に歌えるよ。あなたは何ができる？",
+          options:[{en:"I can run fast.",ja:"速く走れるよ。"},{en:"I can sing well, too.",ja:"わたしも上手に歌えるよ。"},{en:"I can ride a unicycle.",ja:"一輪車に乗れるよ。"}],
+          followup:{en:"Wow! You can do it well!", ja:"すごい！上手だね！"} }
+      ]},
+    { num:4, ja:"身近な人について紹介し合おう", en:"Who is this?", emoji:"👫",
+      exchanges:[
+        { en:"Who is this?", ja:"この人はだれ？",
+          options:[{en:"This is Saki. She is my classmate.",ja:"さきだよ。クラスメートだよ。"},{en:"This is my brother.",ja:"わたしの兄（弟）だよ。"},{en:"This is Mr. Sato. He is my teacher.",ja:"佐藤先生だよ。わたしの先生だよ。"}],
+          followup:{en:"Oh, I see!", ja:"そうなんだ！"} },
+        { en:"What is she like?", ja:"どんな人？",
+          options:[{en:"She is kind.",ja:"親切だよ。"},{en:"She is funny.",ja:"おもしろいよ。"},{en:"She is cool and active.",ja:"かっこよくて活発だよ。"}],
+          followup:{en:"Nice!", ja:"いいね！"} },
+        { en:"What can she do?", ja:"その人は何ができるの？",
+          options:[{en:"She can play badminton well.",ja:"バドミントンが上手だよ。"},{en:"She can run fast.",ja:"速く走れるよ。"},{en:"She can jump high.",ja:"高くとべるよ。"}],
+          followup:{en:"Wow, badminton! Great!", ja:"わあ、バドミントン！すごいね！"} }
+      ]},
+    { num:5, ja:"場所をたずねたり、案内したりしよう", en:"Let's go to the zoo.", emoji:"🗺️",
+      exchanges:[
+        { en:"What do you have in your town?", ja:"あなたの町には何がある？",
+          options:[{en:"We have a nice restaurant.",ja:"すてきなレストランがあるよ。"},{en:"We have a big park.",ja:"大きな公園があるよ。"},{en:"We have a zoo.",ja:"動物園があるよ。"}],
+          followup:{en:"Really? Sounds nice!", ja:"ほんと？いいね！"} },
+        { en:"Excuse me. Where is the park?", ja:"すみません、公園はどこですか？",
+          options:[{en:"Go straight for two blocks.",ja:"2ブロックまっすぐ行ってください。"},{en:"Go straight for one block. Turn right.",ja:"1ブロックまっすぐ行って、右に曲がってください。"},{en:"Turn left. You can see it on your right.",ja:"左に曲がってください。右に見えます。"}],
+          followup:{en:"Oh, I see. Thank you!", ja:"なるほど。ありがとう！"} },
+        { en:"Where is the zoo?", ja:"動物園はどこですか？",
+          options:[{en:"Go straight for three blocks.",ja:"3ブロックまっすぐ行ってください。"},{en:"Turn right. You can see it on your left.",ja:"右に曲がってください。左に見えます。"},{en:"Go straight for two blocks. Turn left.",ja:"2ブロックまっすぐ行って、左に曲がってください。"}],
+          followup:{en:"Thank you very much!", ja:"どうもありがとう！"} }
+      ]},
+    { num:6, ja:"ていねいに注文したり、値段をたずねたりしよう", en:"At a restaurant.", emoji:"🍔",
+      exchanges:[
+        { en:"Hello! What would you like?", ja:"いらっしゃいませ。何になさいますか？",
+          options:[{en:"I'd like a hamburger and juice.",ja:"ハンバーガーとジュースをお願いします。"},{en:"Let me see. I'd like a beef bowl.",ja:"ええと、牛丼をお願いします。"},{en:"I'd like spaghetti and salad.",ja:"スパゲッティとサラダをお願いします。"}],
+          followup:{en:"OK. Anything else?", ja:"かしこまりました。ほかには？"} },
+        { en:"Would you like some dessert?", ja:"デザートはいかがですか？",
+          options:[{en:"I'd like ice cream.",ja:"アイスクリームをお願いします。"},{en:"I'd like a parfait.",ja:"パフェをお願いします。"},{en:"No, thank you.",ja:"いいえ、けっこうです。"}],
+          followup:{en:"OK, a beef bowl and ice cream.", ja:"牛丼とアイスクリームですね。"} },
+        { en:"Anything else?", ja:"ほかにご注文は？",
+          options:[{en:"No, thank you. How much is it?",ja:"いいえ、けっこうです。いくらですか？"},{en:"How much is it?",ja:"いくらですか？"},{en:"That's all. How much is it?",ja:"以上です。いくらですか？"}],
+          followup:{en:"It's 940 yen.", ja:"940円です。"} }
+      ]},
+    { num:7, ja:"日本のすてきな場所を紹介しよう", en:"Welcome to Japan!", emoji:"🗾",
+      exchanges:[
+        { en:"Where do you want to go in Japan?", ja:"日本のどこに行きたい？",
+          options:[{en:"I want to go to Shiga.",ja:"滋賀に行きたい。"},{en:"I want to go to Hokkaido.",ja:"北海道に行きたい。"},{en:"I want to go to Okinawa.",ja:"沖縄に行きたい。"}],
+          followup:{en:"Why do you want to go there?", ja:"どうしてそこに行きたいの？"} },
+        { en:"Why do you want to go there?", ja:"どうしてそこに行きたいの？",
+          options:[{en:"I want to go to Lake Biwa.",ja:"びわ湖に行きたいから。"},{en:"I want to see snow festivals.",ja:"雪まつりを見たいから。"},{en:"I want to see the beautiful sea.",ja:"きれいな海を見たいから。"}],
+          followup:{en:"Sounds nice!", ja:"いいね！"} },
+        { en:"What do you want to do there?", ja:"そこで何をしたい？",
+          options:[{en:"I want to go fishing. It's exciting.",ja:"つりがしたい。わくわくするよ。"},{en:"I want to eat ramen. It's delicious.",ja:"ラーメンを食べたい。おいしいよ。"},{en:"I want to swim. It's fun.",ja:"泳ぎたい。たのしいよ。"}],
+          followup:{en:"Sounds nice! Welcome to Japan!", ja:"いいね！日本へようこそ！"} }
+      ]},
+    { num:8, ja:"あこがれの人について紹介し合おう", en:"Who is your hero?", emoji:"🦸",
+      exchanges:[
+        { en:"Who is your hero?", ja:"あなたのヒーローはだれ？",
+          options:[{en:"My hero is my mother.",ja:"母がヒーローだよ。"},{en:"My hero is my teacher.",ja:"先生がヒーローだよ。"},{en:"My hero is Ohtani Shohei.",ja:"大谷翔平選手がヒーローだよ。"}],
+          followup:{en:"Oh, really?", ja:"へえ、そうなんだ？"} },
+        { en:"What is he or she good at?", ja:"その人は何が得意？",
+          options:[{en:"She is good at cooking.",ja:"料理が得意だよ。"},{en:"He is good at running.",ja:"走るのが得意だよ。"},{en:"He is good at playing baseball.",ja:"野球が得意だよ。"}],
+          followup:{en:"Wow! Good job!", ja:"わあ！すごいね！"} },
+        { en:"What is he or she like?", ja:"その人はどんな人？",
+          options:[{en:"She is kind.",ja:"やさしいよ。"},{en:"He is strong.",ja:"強いよ。"},{en:"He is cool and brave.",ja:"かっこよくて勇かんだよ。"}],
+          followup:{en:"Your hero is great!", ja:"すてきなヒーローだね！"} }
+      ]}
+  ]},
+  6:{ book:"NEW HORIZON Elementary 6（令和6年度版）準拠", units:[
+    { num:1, ja:"好きなものや宝物を紹介し合おう", en:"This is me!", emoji:"🙋",
+      exchanges:[
+        { en:"What sport do you like?", ja:"何のスポーツがすき？",
+          options:[{en:"I like badminton.",ja:"バドミントンがすき。"},{en:"I like baseball.",ja:"野球がすき。"},{en:"I like swimming.",ja:"水泳がすき。"}],
+          followup:{en:"Me too!", ja:"わたしも！"} },
+        { en:"What is your treasure?", ja:"あなたの宝物は何？",
+          options:[{en:"My treasure is this bag.",ja:"このかばんが宝物だよ。"},{en:"My treasure is this glove.",ja:"このグローブが宝物だよ。"},{en:"My treasure is this watch.",ja:"このうで時計が宝物だよ。"}],
+          followup:{en:"Nice! Where is it from?", ja:"いいね！だれからもらったの？"} },
+        { en:"Where is it from?", ja:"それはだれからもらったの？",
+          options:[{en:"It's from my mother.",ja:"母からだよ。"},{en:"It's from my grandfather.",ja:"祖父からだよ。"},{en:"It's from my friend.",ja:"友だちからだよ。"}],
+          followup:{en:"That's nice! Any questions?", ja:"すてきだね！ほかに質問ある？"} }
+      ]},
+    { num:2, ja:"日常生活について紹介し合おう", en:"My Daily Schedule", emoji:"⏰",
+      exchanges:[
+        { en:"What time do you usually get up?", ja:"たいてい何時に起きる？",
+          options:[{en:"I usually get up at six thirty.",ja:"たいてい6時半に起きるよ。"},{en:"I usually get up at seven.",ja:"たいてい7時に起きるよ。"},{en:"I usually get up at six.",ja:"たいてい6時に起きるよ。"}],
+          followup:{en:"That's early!", ja:"早いね！"} },
+        { en:"What time do you usually go to bed?", ja:"たいてい何時に寝る？",
+          options:[{en:"I usually go to bed at 9 p.m.",ja:"たいてい夜9時に寝るよ。"},{en:"I usually go to bed at ten.",ja:"たいてい10時に寝るよ。"},{en:"I usually go to bed at nine thirty.",ja:"たいてい9時半に寝るよ。"}],
+          followup:{en:"I see.", ja:"そうなんだ。"} },
+        { en:"I usually wash the dishes. How about you?", ja:"わたしはたいてい皿を洗うよ。あなたは？",
+          options:[{en:"I usually walk the dog.",ja:"たいてい犬の散歩をするよ。"},{en:"I sometimes clean my room.",ja:"ときどき部屋をそうじするよ。"},{en:"I never wash the dishes.",ja:"一度も皿を洗ったことがないよ。"}],
+          followup:{en:"Lucky you!", ja:"いいなあ！"} }
+      ]},
+    { num:3, ja:"週末にしたことを紹介し合おう", en:"My Weekend", emoji:"🌈",
+      exchanges:[
+        { en:"How was your weekend?", ja:"週末はどうだった？",
+          options:[{en:"It was great!",ja:"最高だったよ！"},{en:"It was fun.",ja:"たのしかったよ。"},{en:"It was good.",ja:"よかったよ。"}],
+          followup:{en:"Where did you go?", ja:"どこに行ったの？"} },
+        { en:"Where did you go?", ja:"どこに行ったの？",
+          options:[{en:"I went to Koshien Stadium.",ja:"甲子園球場に行ったよ。"},{en:"I went to the park.",ja:"公園に行ったよ。"},{en:"I went to my grandmother's house.",ja:"おばあちゃんの家に行ったよ。"}],
+          followup:{en:"Cool!", ja:"いいね！"} },
+        { en:"What did you enjoy?", ja:"何を楽しんだの？",
+          options:[{en:"I enjoyed watching a baseball game.",ja:"野球の試合を見て楽しんだよ。"},{en:"I played soccer with my brother.",ja:"兄（弟）とサッカーをしたよ。"},{en:"I ate a big hamburger.",ja:"大きなハンバーガーを食べたよ。"}],
+          followup:{en:"Cool! Sounds fun!", ja:"いいね！たのしそう！"} }
+      ]},
+    { num:4, ja:"世界の行きたい国について紹介し合おう", en:"Let's see the world.", emoji:"✈️",
+      exchanges:[
+        { en:"Where do you want to go?", ja:"どこに行きたい？",
+          options:[{en:"I want to go to Italy.",ja:"イタリアに行きたい。"},{en:"I want to go to France.",ja:"フランスに行きたい。"},{en:"I want to go to Australia.",ja:"オーストラリアに行きたい。"}],
+          followup:{en:"Why?", ja:"どうして？"} },
+        { en:"What can you do there?", ja:"そこで何ができるの？",
+          options:[{en:"You can eat pizza. It's delicious.",ja:"ピザが食べられるよ。おいしいよ。"},{en:"You can see the Eiffel Tower. It's beautiful.",ja:"エッフェル塔が見られるよ。きれいだよ。"},{en:"You can see koalas. They're cute.",ja:"コアラが見られるよ。かわいいよ。"}],
+          followup:{en:"Nice! Anything else?", ja:"いいね！ほかには？"} },
+        { en:"Anything else?", ja:"ほかには？",
+          options:[{en:"You can see the Colosseum, too.",ja:"コロッセオも見られるよ。"},{en:"You can eat croissants, too.",ja:"クロワッサンも食べられるよ。"},{en:"You can swim in the sea, too.",ja:"海で泳ぐこともできるよ。"}],
+          followup:{en:"It's a nice country. Let's go!", ja:"すてきな国だね。行こう！"} }
+      ]},
+    { num:5, ja:"世界とのつながりを考え、発表しよう", en:"Where is it from?", emoji:"🌏",
+      exchanges:[
+        { en:"What is that?", ja:"それは何？",
+          options:[{en:"This is my sweater.",ja:"わたしのセーターだよ。"},{en:"This is my T-shirt.",ja:"わたしのTシャツだよ。"},{en:"This is my pencil case.",ja:"わたしの筆箱だよ。"}],
+          followup:{en:"Where is it from?", ja:"どこの国から来たの？"} },
+        { en:"Where is it from?", ja:"どこの国から来たの？",
+          options:[{en:"It's from New Zealand.",ja:"ニュージーランドからだよ。"},{en:"It's from Vietnam.",ja:"ベトナムからだよ。"},{en:"Can you guess?",ja:"わかるかな？"}],
+          followup:{en:"Wow! Where is that country?", ja:"へえ！その国はどこにあるの？"} },
+        { en:"Where is that country?", ja:"その国はどこにあるの？",
+          options:[{en:"New Zealand is in Oceania.",ja:"ニュージーランドはオセアニアにあるよ。"},{en:"Vietnam is in Asia.",ja:"ベトナムはアジアにあるよ。"},{en:"Italy is in Europe.",ja:"イタリアはヨーロッパにあるよ。"}],
+          followup:{en:"We are connected with the world!", ja:"わたしたちは世界とつながっているね！"} }
+      ]},
+    { num:6, ja:"生き物のためにできることを発表し合おう", en:"Save the animals.", emoji:"🐢",
+      exchanges:[
+        { en:"Where do sea turtles live?", ja:"ウミガメはどこにすんでいる？",
+          options:[{en:"Sea turtles live in the sea.",ja:"ウミガメは海にすんでいるよ。"},{en:"They live in the sea.",ja:"海にすんでいるよ。"},{en:"Pandas live in forests.",ja:"パンダは森にすんでいるよ。"}],
+          followup:{en:"I see.", ja:"そうなんだ。"} },
+        { en:"What is a big problem?", ja:"何が大きな問題なの？",
+          options:[{en:"Plastic is a big problem.",ja:"プラスチックが大きな問題だよ。"},{en:"Trash is a big problem.",ja:"ごみが大きな問題だよ。"},{en:"Plastic bags are a big problem.",ja:"レジぶくろが大きな問題だよ。"}],
+          followup:{en:"Oh no. What can we do?", ja:"そうなんだ。わたしたちに何ができる？"} },
+        { en:"What can we do?", ja:"わたしたちに何ができる？",
+          options:[{en:"We can use eco-friendly bags.",ja:"エコバッグを使えるよ。"},{en:"We can pick up trash.",ja:"ごみを拾えるよ。"},{en:"We can use my bottle.",ja:"マイボトルを使えるよ。"}],
+          followup:{en:"Nice idea! Let's save the animals.", ja:"いい考え！生き物を守ろう。"} }
+      ]},
+    { num:7, ja:"小学校生活の一番の思い出を伝え合おう", en:"My Best Memory", emoji:"🏫",
+      exchanges:[
+        { en:"What's your best memory?", ja:"いちばんの思い出は何？",
+          options:[{en:"My best memory is our school trip.",ja:"修学旅行がいちばんの思い出だよ。"},{en:"My best memory is our sports day.",ja:"運動会がいちばんの思い出だよ。"},{en:"My best memory is our music festival.",ja:"音楽会がいちばんの思い出だよ。"}],
+          followup:{en:"Oh, nice! What did you do?", ja:"いいね！何をしたの？"} },
+        { en:"What did you do?", ja:"何をしたの？",
+          options:[{en:"We went to Todaiji Temple.",ja:"東大寺に行ったよ。"},{en:"We enjoyed the relay.",ja:"リレーを楽しんだよ。"},{en:"We sang a song together.",ja:"いっしょに歌を歌ったよ。"}],
+          followup:{en:"How was it?", ja:"どうだった？"} },
+        { en:"How was it?", ja:"どうだった？",
+          options:[{en:"It was old and great.",ja:"古くてすばらしかったよ。"},{en:"It was exciting!",ja:"わくわくしたよ！"},{en:"It was a lot of fun!",ja:"とてもたのしかったよ！"}],
+          followup:{en:"Nice talking to you!", ja:"話せてよかったよ！"} }
+      ]},
+    { num:8, ja:"中学校生活や将来の夢について伝え合おう", en:"My Future, My Dream", emoji:"🌟",
+      exchanges:[
+        { en:"What club do you want to join?", ja:"何の部活に入りたい？",
+          options:[{en:"I want to join the tennis team.",ja:"テニス部に入りたい。"},{en:"I want to join the brass band.",ja:"吹奏楽部に入りたい。"},{en:"I want to join the art club.",ja:"美術部に入りたい。"}],
+          followup:{en:"That sounds great!", ja:"いいね！"} },
+        { en:"What do you want to study hard?", ja:"何を一生懸命勉強したい？",
+          options:[{en:"I want to study English hard.",ja:"英語を一生懸命勉強したい。"},{en:"I want to study math hard.",ja:"数学を一生懸命勉強したい。"},{en:"I want to study science hard.",ja:"理科を一生懸命勉強したい。"}],
+          followup:{en:"Nice!", ja:"いいね！"} },
+        { en:"What do you want to be?", ja:"将来、何になりたい？",
+          options:[{en:"I want to be a teacher.",ja:"先生になりたい。"},{en:"I want to be a doctor.",ja:"医者になりたい。"},{en:"I want to be a soccer player.",ja:"サッカー選手になりたい。"}],
+          followup:{en:"Good luck!", ja:"がんばってね！"} }
+      ]}
+  ]}
+};
+
+/* ---------------- state ---------------- */
+let state = {
+  screen:'home',      // home | grade | topics | practice | complete
+  grade:null,
+  unitIdx:null,
+  step:0,
+  chosen:null,
+  completed:{},        // key `g${grade}u${num}` -> true
+  slow:false
+};
+
+function unitsForGrade(){ return GRADE_INFO[state.grade].units; }
+function unitKey(g,num){ return 'g'+g+'u'+num; }
+function completedCountForGrade(){
+  return unitsForGrade().filter(u=>state.completed[unitKey(state.grade,u.num)]).length;
+}
+function isUnitUnlocked(idx){
+  return true; // どの単元からでも自由に選べる
+}
+
+/* ---------------- render router ---------------- */
+function render(){
+  stopSpeak();
+  if(state.screen !== 'practice') resetMic();
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+  if(state.screen==='home') app.appendChild(renderHome());
+  else if(state.screen==='grade') app.appendChild(renderGrade());
+  else if(state.screen==='topics') app.appendChild(renderTopics());
+  else if(state.screen==='practice') app.appendChild(renderPractice());
+  else if(state.screen==='complete') app.appendChild(renderComplete());
+}
+
+function topBar(showBack, onBack, showStamps){
+  const bar = el('div','topbar');
+  if(showBack){
+    const b = el('button','back-btn','←');
+    b.onclick = onBack;
+    bar.appendChild(b);
+  }
+  if(showStamps && state.grade){
+    const rail = el('div','stamp-rail');
+    unitsForGrade().forEach(u=>{
+      const done = state.completed[unitKey(state.grade,u.num)];
+      const s = el('div','stamp'+(done?' done':''), done?'★':'');
+      rail.appendChild(s);
+    });
+    bar.appendChild(rail);
+  } else {
+    bar.appendChild(el('div','stamp-rail'));
+  }
+  const slowBtn = el('button','slow-toggle'+(state.slow?' on':''), state.slow?'🐢 ゆっくり':'🐰 ふつう');
+  slowBtn.onclick = ()=>{ state.slow = !state.slow; render(); };
+  bar.appendChild(slowBtn);
+  return bar;
+}
+
+function el(tag, cls, text){
+  const e = document.createElement(tag);
+  if(cls) e.className = cls;
+  if(text!==undefined) e.textContent = text;
+  return e;
+}
+
+function voiceNote(){
+  if(VOICE_OK) return null;
+  return el('div','no-voice-note','⚠️ このブラウザでは音声のよみあげが使えません。');
+}
+
+/* ---------------- HOME ---------------- */
+function renderHome(){
+  const wrap = document.createElement('div');
+  wrap.appendChild(topBar(false, null, false));
+  const cover = el('div','cover');
+  cover.innerHTML = `
+    <h1>スモールトーク<br>れんしゅうノート</h1>
+    <div class="en-sub">Small Talk Practice Notebook</div>
+    <p>お友だちと英語でおしゃべりしてみよう！1つの単元で3回やり取りが練習できるよ。🔊お手本の発音を聞いて、🎙️自分の声もろくおんして聞き比べてみよう。</p>
+    <div class="textbook-line">3・4年生：Let's Try! 1・2 準拠　／　5・6年生：NEW HORIZON Elementary 5・6（東京書籍・令和6年度版）準拠</div>
+  `;
+  const btn = el('button','big-btn','はじめる ▶');
+  btn.onclick = ()=>{ state.screen='grade'; render(); };
+  cover.appendChild(btn);
+  wrap.appendChild(cover);
+  const note = voiceNote();
+  if(note) wrap.appendChild(note);
+  return wrap;
+}
+
+/* ---------------- GRADE SELECT ---------------- */
+function renderGrade(){
+  const wrap = document.createElement('div');
+  wrap.appendChild(topBar(true, ()=>{state.screen='home'; render();}, false));
+  wrap.appendChild(el('div','section-label','STEP 1'));
+  wrap.appendChild(el('h1',null,'何年生かな？'));
+  wrap.appendChild(el('p','subtitle','What grade are you in?'));
+  const grid = el('div','grade-grid');
+  [3,4,5,6].forEach(g=>{
+    const card = el('div','grade-card');
+    card.innerHTML = `<div class="num en">${g}</div><div class="lbl">${g}年生</div><div class="book">${GRADE_INFO[g].book}</div>`;
+    card.onclick = ()=>{ state.grade=g; state.screen='topics'; render(); };
+    grid.appendChild(card);
+  });
+  wrap.appendChild(grid);
+  return wrap;
+}
+
+/* ---------------- TOPIC(UNIT) SELECT ---------------- */
+function renderTopics(){
+  const wrap = document.createElement('div');
+  wrap.appendChild(topBar(true, ()=>{state.screen='grade'; render();}, true));
+  const units = unitsForGrade();
+  wrap.appendChild(el('div','section-label',`STEP 2 ・ ${state.grade}年生`));
+  wrap.appendChild(el('div','book-badge', GRADE_INFO[state.grade].book));
+  wrap.appendChild(el('h1',null,'単元をえらぼう'));
+  wrap.appendChild(el('p','subtitle',`スタンプ：${completedCountForGrade()} / ${units.length}`));
+  const grid = el('div','topic-grid');
+  units.forEach((u, idx)=>{
+    const unlocked = isUnitUnlocked(idx);
+    const done = state.completed[unitKey(state.grade,u.num)];
+    const card = el('div','topic-card'+(unlocked?'':' locked'));
+    card.innerHTML = `
+      <div class="tape"></div>
+      ${done ? '<div class="done-badge">✓</div>' : ''}
+      <div class="unum en">UNIT ${u.num}</div>
+      <div class="emoji">${u.emoji}</div>
+      <div class="t-ja">${u.ja}</div>
+      <div class="t-en en">${u.en}</div>
+      ${unlocked ? '' : `<div class="lock-note">🔒 前の単元をクリアしよう</div>`}
+    `;
+    if(unlocked){
+      card.onclick = ()=>{
+        state.unitIdx=idx; state.step=0; state.chosen=null; state.screen='practice'; render();
+      };
+    }
+    grid.appendChild(card);
+  });
+  wrap.appendChild(grid);
+  return wrap;
+}
+
+/* ---------------- PRACTICE ---------------- */
+function currentUnit(){ return unitsForGrade()[state.unitIdx]; }
+
+function renderPractice(){
+  const unit = currentUnit();
+  const ex = unit.exchanges[state.step];
+  const wrap = document.createElement('div');
+  wrap.appendChild(topBar(true, ()=>{state.screen='topics'; render();}, true));
+  wrap.appendChild(el('div','section-label',`UNIT ${unit.num} ・ ${unit.emoji} ${unit.ja}`));
+
+  const dots = el('div','progress-dots');
+  unit.exchanges.forEach((_,i)=>{
+    dots.appendChild(el('div','dot'+(i<state.step?' past':(i===state.step?' active':''))));
+  });
+  wrap.appendChild(dots);
+
+  const scene = el('div','scene-card');
+
+  const bubble = el('div','partner-bubble');
+  bubble.appendChild(el('div','who',`👦👧 ともだち（${state.step+1}/${unit.exchanges.length}往復目）`));
+  const enRow = el('div','en-row');
+  enRow.appendChild(el('div','en-line en', ex.en));
+  enRow.appendChild(speakBtn(ex.en));
+  bubble.appendChild(enRow);
+  bubble.appendChild(el('div','ja-line', ex.ja));
+  scene.appendChild(bubble);
+
+  scene.appendChild(el('div','prompt-note','👉 🔊で発音をきいて、いちばん自分に近い答えをタップしよう'));
+
+  const list = el('div','option-list');
+  ex.options.forEach((opt, i)=>{
+    const o = el('div','option'+(state.chosen===i?' chosen':''));
+    const txt = el('div','txt');
+    txt.appendChild(el('div','en-line en', opt.en));
+    txt.appendChild(el('div','ja-line', opt.ja));
+    o.appendChild(txt);
+    o.appendChild(speakBtn(opt.en,'sm'));
+    o.onclick = ()=>{ resetMic(); state.chosen=i; render(); };
+    list.appendChild(o);
+  });
+  scene.appendChild(list);
+
+  if(state.chosen!==null){
+    const chosenText = ex.options[state.chosen].en;
+    const say = el('div','say-banner');
+    const txt = el('div','txt');
+    txt.appendChild(el('div',null,'🎤 声に出して言ってみよう：'));
+    txt.appendChild(el('div','en', '"'+chosenText+'"'));
+    say.appendChild(txt);
+    say.appendChild(speakBtn(chosenText));
+    scene.appendChild(say);
+
+    scene.appendChild(renderMicBox(chosenText));
+
+    const fu = el('div','followup-box');
+    fu.appendChild(el('div','lbl','💬 もっと話をつづけるなら…'));
+    const fuRow = el('div','en-row');
+    fuRow.appendChild(el('div','en-line en', ex.followup.en));
+    fuRow.appendChild(speakBtn(ex.followup.en,'sm'));
+    fu.appendChild(fuRow);
+    fu.appendChild(el('div','ja-line', ex.followup.ja));
+    scene.appendChild(fu);
+  }
+
+  const note = voiceNote();
+  if(note) scene.appendChild(note);
+
+  const navRow = el('div','nav-row');
+  const isLast = state.step === unit.exchanges.length - 1;
+  const nextBtn = el('button','next-btn', isLast ? 'できた！ 🎉' : 'つぎへ ▶');
+  nextBtn.disabled = state.chosen===null;
+  nextBtn.onclick = ()=>{
+    resetMic();
+    if(isLast){
+      state.completed[unitKey(state.grade, unit.num)]=true;
+      state.screen='complete';
+    } else {
+      state.step += 1;
+      state.chosen = null;
+      state.screen='practice';
+    }
+    render();
+  };
+  navRow.appendChild(nextBtn);
+  scene.appendChild(navRow);
+
+  wrap.appendChild(scene);
+
+  if(VOICE_OK){ setTimeout(()=>{ speak(ex.en); }, 250); }
+
+  return wrap;
+}
+
+/* ---------------- COMPLETE ---------------- */
+function renderComplete(){
+  const unit = currentUnit();
+  const units = unitsForGrade();
+  const wrap = document.createElement('div');
+  wrap.appendChild(topBar(true, ()=>{state.screen='topics'; render();}, true));
+  const card = el('div','complete-card');
+  card.innerHTML = `
+    <div class="stamp-big">★</div>
+    <h2 class="en">Well done!</h2>
+    <p>UNIT ${unit.num}「${unit.ja}」で3往復のスモールトークができたね！<br>スタンプが増えたよ。 (${completedCountForGrade()} / ${units.length})</p>
+  `;
+  const row = el('div','btn-row');
+  const retry = el('button','big-btn','もう一回れんしゅう');
+  retry.onclick = ()=>{ state.step=0; state.chosen=null; state.screen='practice'; render(); };
+  row.appendChild(retry);
+
+  const nextIdx = state.unitIdx+1;
+  if(nextIdx < units.length){
+    const toNext = el('button','ghost-btn','つぎの単元へ ▶');
+    toNext.onclick = ()=>{ state.unitIdx=nextIdx; state.step=0; state.chosen=null; state.screen='practice'; render(); };
+    row.appendChild(toNext);
+  }
+  const toTopics = el('button','ghost-btn','単元一覧へ');
+  toTopics.onclick = ()=>{ state.screen='topics'; render(); };
+  row.appendChild(toTopics);
+
+  card.appendChild(row);
+  wrap.appendChild(card);
+  return wrap;
+}
+
+render();
+</script>
+</body>
+</html>
