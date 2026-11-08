@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>スピーチ名人 3〜6年</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff8ee; --card:#ffffff; --ink:#3a3150; --sub:#857c99; --line:#eee3d3;
+  --B:#3d9be9; --Bl:#e6f2fd; --M:#3fae74; --Ml:#e4f6ec; --C:#f08a3c; --Cl:#fdeedf;
+  --pri:#7a5cf0; --ok:#2fb36e; --ng:#e85a5a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Meiryo",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.6}
+.en{font-family:"Nunito","Zen Maru Gothic",sans-serif}
+button{font-family:inherit;cursor:pointer;border:none}
+#app{max-width:880px;margin:0 auto;padding:16px 16px 60px}
+.topbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;min-height:44px}
+.back{width:44px;height:44px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08);font-size:1.2rem;color:var(--ink)}
+.topbar .ttl{font-weight:900;font-size:1.05rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pill{background:#fff;border-radius:999px;padding:6px 12px;font-size:.85rem;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.06);white-space:nowrap}
+h1{font-size:1.6rem;font-weight:900;text-align:center;margin:8px 0 4px}
+.lead{text-align:center;color:var(--sub);font-size:.95rem;margin-bottom:18px}
+.card{background:var(--card);border-radius:20px;padding:18px;box-shadow:0 4px 14px rgba(80,60,30,.07);margin-bottom:14px}
+
+/* hamburger */
+.burger{max-width:420px;margin:6px auto 18px}
+.bun{border-radius:60px 60px 14px 14px;padding:14px 16px 10px;color:#fff;text-align:center}
+.bun.top{background:var(--B)}
+.bun.mid{background:var(--M);border-radius:12px;margin:5px 8px;padding:12px 16px}
+.bun.bot{background:var(--C);border-radius:14px 14px 40px 40px}
+.bun .k{font-weight:900;font-size:1.15rem}
+.bun .s{font-size:.82rem;opacity:.95}
+
+.grade-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grade{border-radius:22px;padding:22px 12px;color:#fff;text-align:center;font-weight:900;box-shadow:0 6px 0 rgba(0,0,0,.12)}
+.grade:active{transform:translateY(3px);box-shadow:0 3px 0 rgba(0,0,0,.12)}
+.grade .n{font-size:2.6rem;line-height:1}
+.grade .b{font-size:.78rem;font-weight:700;opacity:.92;margin-top:6px}
+.g5{background:linear-gradient(135deg,#5ec98f,#38a872)}
+.g6{background:linear-gradient(135deg,#b07df0,#8a5cdc)}
+.g3{background:linear-gradient(135deg,#ff9f73,#f07a45)}
+.g4{background:linear-gradient(135deg,#5cc0ff,#2f97e0)}
+
+.unit-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.unit{background:#fff;border-radius:18px;padding:14px 16px;text-align:left;box-shadow:0 3px 10px rgba(0,0,0,.06);position:relative;color:var(--ink)}
+.unit:active{transform:scale(.98)}
+.unit .no{font-size:.75rem;font-weight:900;color:var(--pri);letter-spacing:.06em}
+.unit .t{font-size:1.1rem;font-weight:900;margin-top:2px}
+.unit .j{font-size:.85rem;color:var(--sub)}
+.unit .emo{position:absolute;right:14px;top:12px;font-size:1.7rem}
+.unit .stars{font-size:.85rem;margin-top:4px;color:#f5b301;min-height:1.2em}
+
+/* tabs */
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;background:#fff;border-radius:14px;padding:9px 12px;font-weight:700;font-size:.88rem;color:var(--sub);box-shadow:0 2px 6px rgba(0,0,0,.05)}
+.tab.on{background:var(--pri);color:#fff}
+.tab .d{font-size:.7rem;margin-left:3px}
+
+.goal{background:#fff;border-radius:16px;padding:12px 16px;margin-bottom:14px;border-left:6px solid var(--pri)}
+.goal b{font-size:1.05rem}
+.goal small{display:block;color:var(--sub)}
+
+/* parts */
+.part{border-radius:18px;padding:14px 14px 12px;margin-bottom:10px;border:3px solid}
+.part.B{background:var(--Bl);border-color:var(--B)}
+.part.M{background:var(--Ml);border-color:var(--M)}
+.part.C{background:var(--Cl);border-color:var(--C)}
+.ph{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.tag{color:#fff;border-radius:10px;padding:2px 10px;font-weight:900;font-size:.9rem}
+.B .tag,.tag.B{background:var(--B)} .M .tag,.tag.M{background:var(--M)} .C .tag,.tag.C{background:var(--C)}
+.ph .role{font-size:.82rem;color:var(--sub);font-weight:700}
+.line{display:flex;align-items:flex-start;gap:8px;padding:6px 8px;border-radius:10px;background:rgba(255,255,255,.75);margin-bottom:6px}
+.line .e{font-size:1.12rem;font-weight:800}
+.line .jj{font-size:.8rem;color:var(--sub)}
+.line.hl{outline:3px solid #ffd54a;background:#fffbe6}
+.spk{flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.12);font-size:1rem}
+
+.btn{border-radius:14px;padding:12px 18px;font-weight:900;font-size:1rem;background:var(--pri);color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.15)}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.btn.sub{background:#fff;color:var(--ink);box-shadow:0 3px 0 #e2d8c8}
+.btn.red{background:var(--ng)}
+.btn.ok{background:var(--ok)}
+.btn:disabled{opacity:.45}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.row.c{justify-content:center}
+.note{font-size:.85rem;color:var(--sub)}
+.big-msg{text-align:center;font-weight:900;font-size:1.2rem;margin:10px 0}
+
+/* puzzle */
+.pz{background:#fff;border-radius:14px;padding:10px 12px;margin-bottom:8px;box-shadow:0 2px 6px rgba(0,0,0,.05);border:3px solid transparent}
+.pz .e{font-weight:800;font-size:1.05rem;display:flex;align-items:center;gap:8px}
+.pz .chs{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.pz .ch{flex:1;min-width:90px;border-radius:10px;padding:8px 4px;font-weight:900;font-size:.85rem;background:#f3eee6;color:var(--sub)}
+.pz .ch.B.on{background:var(--B);color:#fff} .pz .ch.M.on{background:var(--M);color:#fff} .pz .ch.C.on{background:var(--C);color:#fff}
+.pz.right{border-color:var(--ok)} .pz.wrong{border-color:var(--ng)}
+
+/* make */
+.slot{background:rgba(255,255,255,.85);border-radius:12px;padding:10px;margin-bottom:8px}
+.slot .lb{font-size:.8rem;font-weight:700;color:var(--sub)}
+.slot .fr{font-size:1.1rem;font-weight:800;margin:2px 0 6px}
+.slot .fr .bl{display:inline-block;min-width:70px;border-bottom:3px dashed #bbb;color:var(--pri);padding:0 4px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:#fff;border:2px solid #e5dccd;border-radius:999px;padding:5px 12px;font-weight:800;font-size:.92rem;color:var(--ink)}
+.chip.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.chip.free{border-style:dashed}
+.free-in{width:100%;margin-top:6px;border:2px solid #d9cfee;border-radius:10px;padding:8px 10px;font-size:1rem;font-family:"Nunito",sans-serif;font-weight:700}
+
+/* practice */
+.lv{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.lv button{flex:1;min-width:110px;border-radius:12px;padding:9px 6px;font-weight:900;font-size:.85rem;background:#fff;color:var(--sub);box-shadow:0 2px 5px rgba(0,0,0,.06)}
+.lv button.on{background:var(--ink);color:#fff}
+.hide-e{color:transparent;text-shadow:none;background:repeating-linear-gradient(90deg,#d9d2e6 0 10px,transparent 10px 14px);border-radius:6px}
+.rec-box{background:#fff;border-radius:16px;padding:14px;margin-top:12px;text-align:center}
+.timer{font-family:"Nunito";font-weight:900;font-size:1.6rem}
+.meter{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center;margin-top:10px;text-align:left}
+.bar{height:14px;background:#eee;border-radius:7px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:7px}
+.heard{margin-top:8px;font-size:.9rem;background:#f7f4fb;border-radius:10px;padding:8px;text-align:left;min-height:2em}
+.myg{background:#fff;border-radius:14px;padding:10px 12px;margin-bottom:12px}
+.myg .chips{margin-top:6px}
+
+/* check */
+.ck{background:#fff;border-radius:14px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ck .q{flex:1;min-width:200px;font-weight:700}
+.ck .q.goalq{color:var(--pri)}
+.st{display:flex;gap:2px}
+.st button{background:none;font-size:1.6rem;color:#ddd;padding:0 2px}
+.st button.on{color:#f5b301}
+textarea{width:100%;border:2px solid #e5dccd;border-radius:12px;padding:10px;font-family:inherit;font-size:1rem;min-height:70px}
+
+.phrase{display:grid;grid-template-columns:1fr;gap:8px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:999px;padding:10px 18px;font-weight:700;z-index:50;max-width:90vw;text-align:center}
+
+@media (max-width:520px){ h1{font-size:1.35rem} .line .e{font-size:1.02rem} .grade .n{font-size:2.2rem} }
+@media print{
+  body{background:#fff}
+  .topbar,.tabs,.row,.lv,.rec-box,.no-print,.toast,.spk{display:none!important}
+  .card,.part{box-shadow:none;break-inside:avoid}
+  .print-only{display:block!important}
+}
+.print-only{display:none}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<noscript><p style="padding:20px">このアプリを使うにはJavaScriptが必要です。</p></noscript>
+<script>
+/* ============================================================
+   スピーチ名人 3〜6年
+   3・4年: Let's Try! 1・2 ／ 5・6年: NEW HORIZON Elementary 5・6（東京書籍・令和6年度版）の単元に対応
+   構成: Beginning（はじめ）/ Body（なか）/ Conclusion（おわり）
+   ============================================================ */
+
+const PART = {
+  B:{en:"Beginning", ja:"はじめ", role:"あいさつ・何について話すか", icon:"🍞"},
+  M:{en:"Body", ja:"なか", role:"くわしく・具体的に", icon:"🥩"},
+  C:{en:"Conclusion", ja:"おわり", role:"まとめ・聞いてくれたお礼", icon:"🍞"}
+};
+const ORDER = ["B","M","C"];
+const BOOK = {3:"Let's Try! 1",4:"Let's Try! 2",5:"NEW HORIZON Elementary 5",6:"NEW HORIZON Elementary 6"};
+function bodyN(){ return st.grade<=4 ? "1〜2文" : "2〜3文"; }
+
+// slot helper: S(日本語ラベル, 英文の型 ___=空らん, 選択肢)
+function S(ja, f, o, hint){ return {ja, f, o: o || [], hint}; }
+const HELLO = S("あいさつ", "Hello, everyone.");
+const THANKS = S("おわりのことば", "___", ["Thank you.", "Thank you for listening."]);
+
+const UNITS = {
+3: [
+ { n:1, en:"Hello!", ja:"あいさつをして友だちになろう", emo:"👋", sp:"はじめましてスピーチ",
+   model:{ B:[["Hello!","こんにちは!"]], M:[["I'm Yui.","ゆいです。"],["Nice to meet you.","はじめまして。"]], C:[["Goodbye!","さようなら!"]] },
+   build:{ B:[S("あいさつ","___",["Hello!","Hi!","Good morning!"])], M:[S("名前","I'm ___.",["Yui","Ken","Sota","Mei"]), S("ひとこと","Nice to meet you.")], C:[S("おわりのあいさつ","___",["Goodbye!","See you!","Thank you."])] } },
+ { n:2, en:"How are you?", ja:"ごきげんいかが?", emo:"😊", sp:"今の気持ち",
+   model:{ B:[["Hello!","こんにちは!"],["I'm Ken.","けんです。"]], M:[["I'm happy.","うれしいです。"],["I'm hungry, too.","おなかもすいています。"]], C:[["How are you?","みんなはどう?"],["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello!"), S("名前","I'm ___.",["Ken","Yui","Sota","Mei"])], M:[S("気持ち","I'm ___.",["happy","fine","sleepy","hungry","tired","great"]), S("もうひとつ","I'm ___, too.",["happy","sleepy","hungry","hot","cold"])], C:[S("みんなにきく","How are you?"), THANKS] } },
+ { n:3, en:"How many?", ja:"数えてあそぼう", emo:"🔢", sp:"いくつあるかな?クイズ",
+   model:{ B:[["Hello!","こんにちは!"],["Look!","見て!"]], M:[["How many apples?","りんごはいくつ?"],["Five apples!","5こ!"]], C:[["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello!"), S("注目させる","Look!")], M:[S("しつもん","How many ___?",["apples","pencils","balls","cats","stars"]), S("こたえ","___!",[],"Five apples")], C:[THANKS] } },
+ { n:4, en:"I like blue.", ja:"すきなものをつたえよう", emo:"💙", sp:"わたしのすきなもの",
+   model:{ B:[["Hello.","こんにちは。"],["I'm Mei.","めいです。"]], M:[["I like blue.","青がすきです。"],["I like apples.","りんごがすきです。"],["I don't like green peppers.","ピーマンはすきではありません。"]], C:[["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello."), S("名前","I'm ___.",["Mei","Ken","Yui","Sota"])], M:[S("すきな色","I like ___.",["blue","red","yellow","green","pink","black"]), S("すきな食べ物","I like ___.",["apples","bananas","strawberries","ice cream","soccer"]), S("すきではないもの","I don't like ___.",["green peppers","tomatoes","onions","spiders"])], C:[THANKS] } },
+ { n:5, en:"What do you like?", ja:"何がすき?", emo:"⚽", sp:"すきなものしょうかい",
+   model:{ B:[["Hello.","こんにちは。"],["I'm Sota.","そうたです。"]], M:[["I like soccer.","サッカーがすきです。"],["I like cats.","ねこがすきです。"]], C:[["What do you like?","みんなは何がすき?"],["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello."), S("名前","I'm ___.",["Sota","Yui","Ken","Mei"])], M:[S("すきなスポーツ","I like ___.",["soccer","baseball","swimming","tennis","dodgeball"]), S("すきな動物・食べ物","I like ___.",["cats","dogs","rabbits","pizza","curry"])], C:[S("みんなにきく","What do you like?"), THANKS] } },
+ { n:6, en:"ALPHABET", ja:"アルファベットとなかよし", emo:"🔤", sp:"名前カードのしょうかい",
+   model:{ B:[["Hello.","こんにちは。"],["This is my name card.","これはわたしの名前カードです。"]], M:[["K-E-N.","K-E-N。"],["I'm Ken.","けんです。"]], C:[["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello."), S("話題","This is my name card.")], M:[S("文字","___",[],"K-E-N."), S("名前","I'm ___.",["Ken","Yui","Sota","Mei"])], C:[THANKS] } },
+ { n:7, en:"This is for you.", ja:"カードをおくろう", emo:"💌", sp:"カードのプレゼント",
+   model:{ B:[["Hello.","こんにちは。"],["This is my card.","これはわたしのカードです。"]], M:[["Red hearts.","赤いハートです。"],["Three stars.","星が3つです。"]], C:[["This is for you.","これはあなたにです。"],["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello."), S("話題","This is my card.")], M:[S("形と色","___.",["Red hearts","Blue stars","Yellow circles","Green triangles"]), S("数","___.",["Three stars","Two hearts","Four circles","Five squares"])], C:[S("わたす","This is for you."), THANKS] } },
+ { n:8, en:"What's this?", ja:"これなあに?", emo:"❓", sp:"これなあに?クイズ",
+   model:{ B:[["Hello.","こんにちは。"],["Quiz time!","クイズです!"]], M:[["What's this?","これなあに?"],["It's a fruit.","くだものです。"],["It's yellow.","黄色です。"]], C:[["It's a banana!","バナナです!"],["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello."), S("話題","Quiz time!")], M:[S("しつもん","What's this?"), S("ヒント①","It's ___.",["a fruit","an animal","a vegetable","a sport"]), S("ヒント②","It's ___.",["yellow","red","big","small","white"])], C:[S("こたえ","It's ___!",["a banana","an apple","a lion","a tomato","a rabbit"]), THANKS] } },
+ { n:9, en:"Who are you?", ja:"きみはだれ?", emo:"🐶", sp:"わたしはだれでしょう?",
+   model:{ B:[["Hello.","こんにちは。"],["Who am I?","わたしはだれでしょう?"]], M:[["I'm white.","白いです。"],["I like carrots.","にんじんがすきです。"]], C:[["I'm a rabbit!","うさぎです!"],["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello."), S("クイズで始める","Who am I?")], M:[S("ヒント①（色・様子）","I'm ___.",["white","black","big","small","long"]), S("ヒント②（すきなもの）","I like ___.",["carrots","fish","bananas","bones","grass"])], C:[S("こたえ","I'm ___!",["a rabbit","a cat","a monkey","a dog","a cow"]), THANKS] } }
+],
+4: [
+ { n:1, en:"Hello, world!", ja:"世界のいろいろなことばであいさつをしよう", emo:"🌍", sp:"世界のあいさつ",
+   model:{ B:[["Hello!","こんにちは!"]], M:[["I'm Yui.","ゆいです。"],["I'm fine.","元気です。"],["Ni hao!","ニーハオ!（中国語のこんにちは）"]], C:[["See you!","またね!"]] },
+   build:{ B:[S("あいさつ","___",["Hello!","Hi!","Good morning!"])], M:[S("名前","I'm ___.",["Yui","Ken","Sota","Mei"]), S("気持ち","I'm ___.",["fine","happy","great","sleepy"]), S("世界のあいさつ","___!",["Ni hao","Annyeong","Jambo","Bonjour","Hola"])], C:[S("おわりのあいさつ","___",["See you!","Goodbye!","Thank you."])] } },
+ { n:2, en:"Let's play cards.", ja:"すきな遊びをつたえよう", emo:"🃏", sp:"天気とすきな遊び",
+   model:{ B:[["Hello.","こんにちは。"],["How's the weather? It's sunny.","天気はどう?晴れです。"]], M:[["I like dodgeball.","ドッジボールがすきです。"],["Let's play dodgeball.","ドッジボールをしよう。"]], C:[["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello."), S("天気","How's the weather? It's ___.",["sunny","rainy","cloudy","snowy"])], M:[S("すきな遊び","I like ___.",["dodgeball","tag","cards","jump rope","soccer"]), S("さそう","Let's ___.",["play dodgeball","play tag","play cards","play outside"])], C:[THANKS] } },
+ { n:3, en:"I like Mondays.", ja:"すきな曜日は何かな?", emo:"📅", sp:"すきな曜日",
+   model:{ B:[["Hello.","こんにちは。"],["I'm Ken.","けんです。"]], M:[["I like Fridays.","金曜日がすきです。"],["I play soccer.","サッカーをします。"]], C:[["What day do you like?","みんなは何曜日がすき?"],["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello."), S("名前","I'm ___.",["Ken","Yui","Sota","Mei"])], M:[S("すきな曜日","I like ___.",["Mondays","Tuesdays","Wednesdays","Thursdays","Fridays","Saturdays","Sundays"]), S("その日にすること","I ___.",["play soccer","play the piano","swim","watch TV","eat curry"])], C:[S("みんなにきく","What day do you like?"), THANKS] } },
+ { n:4, en:"What time is it?", ja:"今、何時?", emo:"⏰", sp:"わたしのすきな時間",
+   model:{ B:[["Hello.","こんにちは。"],["What time is it?","何時でしょう?"]], M:[["It's 7 p.m.","夜7時です。"],["It's TV time.","テレビの時間です。"]], C:[["I like TV time.","テレビの時間がすきです。"],["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello."), S("しつもん","What time is it?")], M:[S("時刻","It's ___.",["7 a.m.","12 p.m.","3 p.m.","7 p.m.","9 p.m."]), S("何の時間","It's ___ time.",["breakfast","lunch","snack","TV","game","bed"])], C:[S("まとめ","I like ___ time.",["breakfast","lunch","snack","TV","game","bed"]), THANKS] } },
+ { n:5, en:"Do you have a pen?", ja:"おすすめの文房具セットをつくろう", emo:"✏️", sp:"おすすめ文房具セット",
+   model:{ B:[["Hello.","こんにちは。"],["This is my pencil case.","これはわたしの筆箱です。"]], M:[["I have two pencils.","えんぴつが2本あります。"],["I have a red pen and a ruler.","赤ペンと定規があります。"]], C:[["This is for you.","これはあなたにです。"],["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello."), S("話題","This is my pencil case.")], M:[S("持っているもの①","I have ___.",["two pencils","three pencils","an eraser","a glue stick"]), S("持っているもの②","I have ___.",["a red pen and a ruler","a blue pen","scissors","a pencil sharpener"])], C:[S("わたす","This is for you."), THANKS] } },
+ { n:6, en:"Alphabet", ja:"アルファベットで文字遊びをしよう", emo:"🔡", sp:"すきな英語のことば",
+   model:{ B:[["Hello.","こんにちは。"],["Look at this.","これを見て。"]], M:[["d, o, g.","d、o、g。"],["It's dog.","dog（いぬ）です。"]], C:[["I like dogs.","いぬがすきです。"],["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello."), S("注目させる","Look at this.")], M:[S("文字","___",[],"d, o, g."), S("ことば","It's ___.",["dog","cat","bus","sun","pen","map"])], C:[S("まとめ","I like ___.",["dogs","cats","buses","the sun"]), THANKS] } },
+ { n:7, en:"What do you want?", ja:"ほしいものは何かな?", emo:"🍕", sp:"オリジナルピザ",
+   model:{ B:[["Hello.","こんにちは。"],["This is my pizza.","これはわたしのピザです。"]], M:[["I want tomatoes.","トマトがほしいです。"],["I want onions and green peppers.","たまねぎとピーマンがほしいです。"]], C:[["It's delicious!","おいしいよ!"],["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello."), S("話題","This is my ___.",["pizza","parfait","salad"])], M:[S("ほしいもの①","I want ___.",["tomatoes","strawberries","corn","cheese"]), S("ほしいもの②","I want ___.",["onions and green peppers","bananas and cherries","mushrooms","cucumbers"])], C:[S("まとめ","It's ___!",["delicious","colorful","sweet"]), THANKS] } },
+ { n:8, en:"This is my favorite place.", ja:"お気に入りの場所をしょうかいしよう", emo:"🏫", sp:"お気に入りの場所",
+   model:{ B:[["Hello.","こんにちは。"],["This is my favorite place.","これはわたしのお気に入りの場所です。"]], M:[["This is the music room.","音楽室です。"],["I like music.","音楽がすきです。"]], C:[["Let's go together!","いっしょに行こう!"],["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello."), S("話題","This is my favorite place.")], M:[S("場所","This is the ___.",["music room","library","gym","playground","science room","computer room"]), S("理由","I like ___.",["music","books","P.E.","soccer","science"])], C:[S("さそう","Let's go together!"), THANKS] } },
+ { n:9, en:"This is my day.", ja:"ぼく・わたしの一日", emo:"🌞", sp:"ぼく・わたしの一日",
+   model:{ B:[["Hello.","こんにちは。"],["This is my day.","これはわたしの一日です。"]], M:[["I wake up.","起きます。"],["I have breakfast.","朝ごはんを食べます。"],["I go to school.","学校に行きます。"]], C:[["I'm happy.","しあわせです。"],["Thank you.","ありがとう。"]] },
+   build:{ B:[S("あいさつ","Hello."), S("話題","This is my day.")], M:[S("朝","I ___.",["wake up","wash my face","brush my teeth"]), S("その次","I ___.",["have breakfast","get dressed","check my bag"]), S("学校・夜","I ___.",["go to school","do my homework","take a bath","go to bed"])], C:[S("気持ち","I'm ___.",["happy","busy","sleepy"]), THANKS] } }
+],
+
+5: [
+ { n:1, en:"Hello, friends!", ja:"名前や好きなものを伝え合おう", emo:"🤝", sp:"自己紹介スピーチ",
+   model:{ B:[["Hello, everyone.","みなさん、こんにちは。"],["I'm Sota. S-O-T-A, Sota.","そうたです。S-O-T-A、そうたです。"]],
+           M:[["I like P.E.","体育が好きです。"],["I like dodgeball.","ドッジボールが好きです。"],["I like the color blue.","青色が好きです。"]],
+           C:[["Let's play dodgeball together.","いっしょにドッジボールをしましょう。"],["Thank you.","ありがとうございました。"]] },
+   build:{ B:[HELLO, S("名前","I'm ___.",["Sota","Yuki","Ren","Mei"]), S("名前のつづり","___",[],"S-O-T-A, Sota.")],
+           M:[S("好きな教科","I like ___.",["English","math","P.E.","music","science","art"]),
+              S("好きなスポーツ","I like ___.",["dodgeball","soccer","baseball","swimming","badminton","basketball"]),
+              S("好きな色や食べ物","I like ___.",["the color blue","the color red","curry","sushi","ice cream"])],
+           C:[S("さそいかけ","Let's ___ together.",["play dodgeball","play soccer","sing","study English"]), THANKS] } },
+ { n:2, en:"Happy birthday!", ja:"誕生日やほしいものを伝え合おう", emo:"🎂", sp:"わたしの誕生日",
+   model:{ B:[["Hello, everyone.","みなさん、こんにちは。"],["My birthday is May 5th.","わたしの誕生日は5月5日です。"]],
+           M:[["I want a soccer ball.","サッカーボールがほしいです。"],["I like soccer.","サッカーが好きです。"],["I want new shoes, too.","新しいくつもほしいです。"]],
+           C:[["Happy birthday to me!","わたし、誕生日おめでとう!"],["Thank you.","ありがとうございました。"]] },
+   build:{ B:[HELLO, S("誕生日","My birthday is ___.",["April 3rd","May 5th","July 10th","August 20th","October 12th","December 3rd"])],
+           M:[S("ほしいもの","I want ___.",["a soccer ball","a new bag","a cake","a new tablet","a watch"]),
+              S("好きなもの（理由）","I like ___.",["soccer","music","games","books","cooking"]),
+              S("もう一つほしいもの","I want ___, too.",["new shoes","a cap","a bike","a puppy"])],
+           C:[S("しめくくり","___",["Happy birthday to me!","I'm happy on my birthday."]), THANKS] } },
+ { n:3, en:"Can you play dodgeball?", ja:"できることを伝え合おう", emo:"💪", sp:"わたしにできること",
+   model:{ B:[["Hello, everyone.","みなさん、こんにちは。"],["I'm Riku.","りくです。"]],
+           M:[["I can swim.","わたしは泳げます。"],["I can play the piano well.","ピアノを上手にひけます。"],["I can't ski.","スキーはできません。"]],
+           C:[["Let's swim together!","いっしょに泳ぎましょう!"],["Thank you.","ありがとうございました。"]] },
+   build:{ B:[HELLO, S("名前","I'm ___.",["Riku","Yuki","Sota","Mei"])],
+           M:[S("できること","I can ___.",["swim","run fast","cook","dance","skate","ride a unicycle"]),
+              S("上手にできること","I can ___ well.",["play the piano","sing","play dodgeball","draw"]),
+              S("できないこと","I can't ___.",["ski","play the violin","cook","swim"])],
+           C:[S("さそいかけ","Let's ___ together!",["swim","sing","run","play dodgeball"]), THANKS] } },
+ { n:4, en:"Who is this?", ja:"身近な人について紹介し合おう", emo:"👫", sp:"この人を紹介します",
+   model:{ B:[["Hello, everyone.","みなさん、こんにちは。"],["Who is this?","この人はだれでしょう?"],["This is Saki.","さきさんです。"]],
+           M:[["She is my classmate.","わたしのクラスメートです。"],["She is kind.","彼女は親切です。"],["She can play badminton well.","バドミントンが上手です。"]],
+           C:[["She is my good friend.","彼女はわたしのよい友だちです。"],["Thank you.","ありがとうございました。"]] },
+   build:{ B:[HELLO, S("クイズで始める","Who is this?"), S("だれか","This is ___.",["Saki","Kenta","my brother","my sister","Mr. Sato"])],
+           M:[S("わたしとの関係","___ is my ___.",[],"She is my classmate."),
+              S("どんな人か","___",["She is kind.","He is kind.","She is funny.","He is funny.","She is cool.","He is cool."]),
+              S("できること","___",["She can play badminton well.","He can run fast.","She can jump high.","He can sing well."])],
+           C:[S("まとめ","___",["She is my good friend.","He is my good friend.","She is my hero.","He is great."]), THANKS] } },
+ { n:5, en:"Let's go to the zoo.", ja:"場所をたずねたり、案内したりしよう", emo:"🗺️", sp:"わたしの町のおすすめ",
+   model:{ B:[["Hello, everyone.","みなさん、こんにちは。"],["We have a nice zoo in my town.","わたしの町にはすてきな動物園があります。"]],
+           M:[["Go straight for two blocks.","2ブロックまっすぐ行きます。"],["Turn right.","右に曲がります。"],["You can see it on your left.","左側に見えます。"]],
+           C:[["Let's go to the zoo!","動物園に行きましょう!"],["Thank you.","ありがとうございました。"]] },
+   build:{ B:[HELLO, S("町にあるもの","We have ___ in my town.",["a nice zoo","a big park","a nice restaurant","a library","an aquarium"])],
+           M:[S("行き方①","Go straight for ___.",["one block","two blocks","three blocks"]),
+              S("行き方②","Turn ___.",["right","left"]),
+              S("見える場所","You can see it on your ___.",["right","left"])],
+           C:[S("さそいかけ","Let's go to ___!",["the zoo","the park","the restaurant","the library","the aquarium"]), THANKS] } },
+ { n:6, en:"At a restaurant.", ja:"ていねいに注文したり、値段をたずねたりしよう", emo:"🍔", sp:"わたしのオリジナルメニュー",
+   model:{ B:[["Hello, everyone.","みなさん、こんにちは。"],["This is my special menu.","これはわたしのとくべつメニューです。"]],
+           M:[["It's curry, salad, and ice cream.","カレーとサラダとアイスクリームです。"],["It's delicious.","おいしいです。"],["It's 900 yen.","900円です。"]],
+           C:[["Please try my menu!","ぜひ食べてみてください!"],["Thank you.","ありがとうございました。"]] },
+   build:{ B:[HELLO, S("話題","This is my special menu.")],
+           M:[S("メニューの中身","It's ___.",["curry, salad, and ice cream","a hamburger and juice","a beef bowl and miso soup","spaghetti and cake"]),
+              S("どんな味","It's ___.",["delicious","sweet","hot","healthy"]),
+              S("ねだん","It's ___ yen.",["500","700","900","940"])],
+           C:[S("しめくくり","Please try my menu!"), THANKS] } },
+ { n:7, en:"Welcome to Japan!", ja:"日本のすてきな場所を紹介しよう", emo:"🗾", sp:"日本のおすすめの場所",
+   model:{ B:[["Welcome to Japan!","日本へようこそ!"],["I want to go to Shiga.","わたしは滋賀に行きたいです。"]],
+           M:[["I want to go to Lake Biwa.","びわ湖に行きたいです。"],["I want to go fishing.","つりがしたいです。"],["It's exciting.","わくわくします。"]],
+           C:[["Let's go to Shiga!","滋賀に行きましょう!"],["Thank you.","ありがとうございました。"]] },
+   build:{ B:[S("あいさつ","Welcome to Japan!"), S("行きたい場所","I want to go to ___.",["Shiga","Hokkaido","Okinawa","Kyoto","Hiroshima","Nara"])],
+           M:[S("理由（見たいもの・行きたいところ）","I want to ___.",["go to Lake Biwa","see the snow festival","see the beautiful sea","see old temples"]),
+              S("したいこと","I want to ___.",["go fishing","ski","swim","eat ramen","eat okonomiyaki"]),
+              S("感想","It's ___.",["exciting","beautiful","delicious","fun"])],
+           C:[S("さそいかけ","Let's go to ___!",["Shiga","Hokkaido","Okinawa","Kyoto","Hiroshima","Nara"]), THANKS] } },
+ { n:8, en:"Who is your hero?", ja:"あこがれの人について紹介し合おう", emo:"🦸", sp:"わたしのヒーロー",
+   model:{ B:[["Hello, everyone.","みなさん、こんにちは。"],["My hero is my mother.","わたしのヒーローは母です。"]],
+           M:[["She is a nurse.","母は看護師です。"],["She is good at cooking.","料理が得意です。"],["She is kind.","やさしいです。"]],
+           C:[["She is my hero.","母はわたしのヒーローです。"],["Thank you for listening.","聞いてくれてありがとうございました。"]] },
+   build:{ B:[HELLO, S("ヒーロー","My hero is ___.",["my mother","my father","my grandmother","my teacher","Ohtani Shohei"])],
+           M:[S("何をしている人か","___",["She is a nurse.","He is a baseball player.","She is a teacher.","He is a cook."]),
+              S("得意なこと","___",["She is good at cooking.","He is good at running.","She is good at singing.","He is good at playing baseball."]),
+              S("どんな人か","___",["She is kind.","He is strong.","She is brave.","He is cool."])],
+           C:[S("まとめ","___",["She is my hero.","He is my hero."]), THANKS] } }
+],
+6: [
+ { n:1, en:"This is me!", ja:"好きなものや宝物を紹介し合おう", emo:"🙋", sp:"This is me!",
+   model:{ B:[["Hello, everyone.","みなさん、こんにちは。"],["I'm Deepa.","わたしはディーパです。"]],
+           M:[["I like badminton.","バドミントンが好きです。"],["My treasure is this bag.","わたしの宝物はこのかばんです。"],["It's from my mother.","母からもらいました。"]],
+           C:[["Thank you.","ありがとうございました。"],["Any questions?","何か質問はありますか?"]] },
+   build:{ B:[HELLO, S("名前","I'm ___.",["Deepa","Yuki","Sota","Mei"])],
+           M:[S("好きなもの","I like ___.",["badminton","baseball","music","drawing","reading"]),
+              S("宝物","My treasure is ___.",["this bag","this glove","this watch","this book"]),
+              S("だれからのものか","It's from ___.",["my mother","my father","my grandfather","my friend"])],
+           C:[S("おわりのことば","Thank you."), S("質問をうける","Any questions?")] } },
+ { n:2, en:"My Daily Schedule", ja:"日常生活について紹介し合おう", emo:"⏰", sp:"わたしの一日",
+   model:{ B:[["Hello, everyone.","みなさん、こんにちは。"],["Today's topic is my daily schedule.","今日のテーマはわたしの一日です。"]],
+           M:[["I usually get up at six thirty.","たいてい6時半に起きます。"],["I usually wash the dishes.","たいてい皿を洗います。"],["I usually go to bed at 9 p.m.","たいてい夜9時に寝ます。"]],
+           C:[["That's my day.","これがわたしの一日です。"],["Thank you.","ありがとうございました。"]] },
+   build:{ B:[HELLO, S("話題","Today's topic is my daily schedule.")],
+           M:[S("起きる時間","I usually get up at ___.",["six","six thirty","seven"]),
+              S("家の手伝い","I ___.",["usually wash the dishes","usually walk the dog","sometimes clean my room","never take out the garbage"]),
+              S("寝る時間","I usually go to bed at ___.",["9 p.m.","nine thirty","ten"])],
+           C:[S("まとめ","That's my day."), THANKS] } },
+ { n:3, en:"My Weekend", ja:"週末にしたことを紹介し合おう", emo:"🌈", sp:"わたしの週末",
+   model:{ B:[["Hello, everyone.","みなさん、こんにちは。"],["Today's topic is my weekend.","今日のテーマはわたしの週末です。"]],
+           M:[["I went to Koshien Stadium.","甲子園球場に行きました。"],["I enjoyed watching a baseball game.","野球の試合を見て楽しみました。"],["I ate a big hot dog.","大きなホットドッグを食べました。"]],
+           C:[["It was great.","最高でした。"],["Thank you.","ありがとうございました。"]] },
+   build:{ B:[HELLO, S("話題","Today's topic is my weekend.")],
+           M:[S("行った場所","I went to ___.",["Koshien Stadium","the park","the sea","my grandmother's house","the museum"]),
+              S("楽しんだこと","I enjoyed ___.",["watching a baseball game","swimming","playing soccer","shopping","reading books"]),
+              S("したこと","I ___.",["ate a big hot dog","played soccer with my brother","saw a movie","ate shaved ice"])],
+           C:[S("感想","It was ___.",["great","fun","exciting","good"]), THANKS] } },
+ { n:4, en:"Let's see the world.", ja:"世界の行きたい国について紹介し合おう", emo:"✈️", sp:"行ってみたい国",
+   model:{ B:[["Hello, everyone.","みなさん、こんにちは。"],["I want to go to Italy.","わたしはイタリアに行きたいです。"]],
+           M:[["You can eat pizza.","ピザが食べられます。"],["It's delicious.","おいしいです。"],["You can see the Colosseum, too.","コロッセオも見られます。"]],
+           C:[["Italy is a nice country.","イタリアはすてきな国です。"],["Let's go to Italy! Thank you.","イタリアに行きましょう!ありがとうございました。"]] },
+   build:{ B:[HELLO, S("行きたい国","I want to go to ___.",["Italy","France","Australia","Egypt","Brazil","America"])],
+           M:[S("できること①","You can ___.",["eat pizza","see koalas","see the pyramids","eat croissants","watch soccer games"]),
+              S("感想","It's ___.",["delicious","cute","great","exciting","beautiful"]),
+              S("できること②","You can ___, too.",["see the Colosseum","see the Eiffel Tower","swim in the sea","see kangaroos"])],
+           C:[S("まとめ","___ is a nice country.",["Italy","France","Australia","Egypt","Brazil","America"]), S("おわりのことば","___",["Let's go! Thank you.","Thank you for listening."])] } },
+ { n:5, en:"Where is it from?", ja:"世界とのつながりを考え、発表しよう", emo:"🌏", sp:"世界とつながる身の回りのもの",
+   model:{ B:[["Hello, everyone.","みなさん、こんにちは。"],["This is my sweater.","これはわたしのセーターです。"]],
+           M:[["It's from New Zealand.","ニュージーランドから来ました。"],["New Zealand is in Oceania.","ニュージーランドはオセアニアにあります。"],["You can see many sheep in New Zealand.","ニュージーランドではたくさんの羊が見られます。"]],
+           C:[["We are connected with the world.","わたしたちは世界とつながっています。"],["Thank you.","ありがとうございました。"]] },
+   build:{ B:[HELLO, S("紹介するもの","This is my ___.",["sweater","T-shirt","pencil case","shoes","banana"])],
+           M:[S("生産国","It's from ___.",["New Zealand","Vietnam","China","the Philippines","Thailand"]),
+              S("その国の場所","___ is in ___.",[],"Vietnam is in Asia."),
+              S("その国のこと","You can ___ in ___.",[],"You can eat pho in Vietnam.")],
+           C:[S("まとめ","We are connected with the world."), THANKS] } },
+ { n:6, en:"Save the animals.", ja:"生き物のためにできることを発表し合おう", emo:"🐢", sp:"生き物を守ろう",
+   model:{ B:[["Hello, everyone.","みなさん、こんにちは。"],["Let's save the sea turtles.","ウミガメを守りましょう。"]],
+           M:[["Sea turtles live in the sea.","ウミガメは海にすんでいます。"],["Plastic is a big problem.","プラスチックが大きな問題です。"],["We can use eco-friendly bags.","わたしたちはエコバッグを使うことができます。"]],
+           C:[["Let's save the sea turtles together.","いっしょにウミガメを守りましょう。"],["Thank you.","ありがとうございました。"]] },
+   build:{ B:[HELLO, S("守りたい生き物","Let's save the ___.",["sea turtles","pandas","koalas","polar bears","elephants"])],
+           M:[S("すんでいる場所","___ live in ___.",[],"Sea turtles live in the sea."),
+              S("問題","___ is a big problem.",["Plastic","Trash","Global warming"]),
+              S("できること","We can ___.",["use eco-friendly bags","pick up trash","use my bottle","save electricity"])],
+           C:[S("さそいかけ","Let's save the ___ together.",["sea turtles","pandas","koalas","polar bears","elephants","animals"]), THANKS] } },
+ { n:7, en:"My Best Memory", ja:"小学校生活の一番の思い出を伝え合おう", emo:"🏫", sp:"一番の思い出",
+   model:{ B:[["Hello, everyone.","みなさん、こんにちは。"],["My best memory is our school trip.","わたしの一番の思い出は修学旅行です。"]],
+           M:[["We went to Nara.","奈良に行きました。"],["We saw the big Buddha.","大仏を見ました。"],["It was old and great.","古くてすばらしかったです。"]],
+           C:[["I enjoyed our school trip.","修学旅行は楽しかったです。"],["Thank you.","ありがとうございました。"]] },
+   build:{ B:[HELLO, S("一番の思い出","My best memory is our ___.",["school trip","sports day","music festival","field trip","summer camp"])],
+           M:[S("行った場所・したこと①","We ___.",["went to Nara","went to Kyoto","ran a relay","sang a song","went to the mountain"]),
+              S("したこと②","We ___.",["saw the big Buddha","enjoyed the relay","ate lunch together","practiced hard"]),
+              S("感想","It was ___.",["old and great","exciting","a lot of fun","beautiful"])],
+           C:[S("まとめ","I enjoyed our ___.",["school trip","sports day","music festival","field trip","summer camp"]), THANKS] } },
+ { n:8, en:"My Future, My Dream", ja:"中学校生活や将来の夢について伝え合おう", emo:"🌟", sp:"わたしの未来、わたしの夢",
+   model:{ B:[["Hello, everyone.","みなさん、こんにちは。"],["I want to be a teacher.","わたしは先生になりたいです。"]],
+           M:[["I like children.","子どもが好きです。"],["I want to study English hard.","英語を一生懸命勉強したいです。"],["I want to join the brass band in junior high school.","中学校では吹奏楽部に入りたいです。"]],
+           C:[["I want to be a good teacher.","よい先生になりたいです。"],["Thank you for listening.","聞いてくれてありがとうございました。"]] },
+   build:{ B:[HELLO, S("将来の夢","I want to be ___.",["a teacher","a doctor","a vet","a soccer player","an engineer","a cook"])],
+           M:[S("理由","___",["I like children.","I want to help people.","I like animals.","I like soccer.","I like cooking."]),
+              S("がんばりたい勉強","I want to study ___ hard.",["English","math","science","music"]),
+              S("入りたい部活動","I want to join ___ in junior high school.",["the brass band","the tennis team","the soccer team","the art club","the science club"])],
+           C:[S("まとめ","I want to be ___.",["a good teacher","a good doctor","a kind vet","a great soccer player"]), THANKS] } }
+]
+};
+
+// フレーズバンク（どの単元でも使える）
+const PHRASES = {
+  B:[["Hello, everyone.","みなさん、こんにちは。"],["Welcome to Japan!","日本へようこそ!"],["Today's topic is ___.","今日のテーマは〜です。"],["Who is this?","これはだれでしょう?（クイズで始める）"]],
+  M:[["I like ___.","〜が好きです。"],["I can ___.","〜ができます。"],["It's ___.","〜です。（感想）"],["___, too.","〜も。（つけたし）"]],
+  C:[["Let's ___ together!","いっしょに〜しましょう!"],["Thank you.","ありがとうございました。"],["Thank you for listening.","聞いてくれてありがとう。"],["Any questions?","何か質問はありますか?"]]
+};
+
+const GOALS = ["大きな声で","ゆっくりはっきり","聞く人を見て","笑顔で","ジェスチャーをつけて","はじめ・なか・おわりを意識して"];
+
+/* ---------------- storage ---------------- */
+const KEY = "speech56_v1";
+let SAVE = {};
+try { SAVE = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch(e){ SAVE = {}; }
+function persist(){ try { localStorage.setItem(KEY, JSON.stringify(SAVE)); } catch(e){} }
+function uid(g,n){ return "g"+g+"u"+n; }
+function rec(g,n){ const k = uid(g,n); if(!SAVE[k]) SAVE[k] = {picks:{}, free:{}, stars:{}, memo:"", goal:null, puzzle:false}; return SAVE[k]; }
+
+/* ---------------- state ---------------- */
+let st = { screen:"home", grade:null, idx:null, tab:"model", level:0 };
+function unit(){ return UNITS[st.grade][st.idx]; }
+
+/* ---------------- utils ---------------- */
+function el(t,c,h){ const e=document.createElement(t); if(c) e.className=c; if(h!==undefined) e.innerHTML=h; return e; }
+function esc(s){ return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function toast(msg){ const t=el("div","toast",msg); document.body.appendChild(t); setTimeout(()=>t.remove(),1800); }
+
+/* ---------------- speech synthesis ---------------- */
+const TTS = "speechSynthesis" in window;
+let VOICES=[]; function lv(){ VOICES = TTS ? speechSynthesis.getVoices() : []; }
+if(TTS){ lv(); speechSynthesis.onvoiceschanged = lv; }
+function utter(text){
+  const u = new SpeechSynthesisUtterance(text.replace(/___/g,"blank"));
+  u.lang="en-US"; u.rate = st.slow ? 0.7 : 0.9;
+  const v = VOICES.find(v=>v.lang==="en-US") || VOICES.find(v=>v.lang && v.lang.startsWith("en"));
+  if(v) u.voice=v; return u;
+}
+function speak(text){ if(!TTS) return; speechSynthesis.cancel(); speechSynthesis.speak(utter(text)); }
+function speakSeq(items, onEach, onDone){
+  if(!TTS){ toast("この端末では読み上げが使えません"); return; }
+  speechSynthesis.cancel();
+  let i=0;
+  function next(){
+    if(i>=items.length){ onEach && onEach(-1); onDone && onDone(); return; }
+    onEach && onEach(i);
+    const u = utter(items[i]); u.onend = ()=>{ i++; setTimeout(next, 350); }; u.onerror = u.onend;
+    speechSynthesis.speak(u);
+  }
+  next();
+}
+function spkBtn(text){ const b=el("button","spk","🔊"); b.setAttribute("aria-label","読み上げ"); b.onclick=(e)=>{e.stopPropagation();speak(text);}; return b; }
+
+/* ---------------- built speech ---------------- */
+function slotSentence(slot, val){
+  if(slot.f.indexOf("___")<0) return slot.f;
+  if(!val) return null;
+  if(slot.f==="___" || slot.o.length===0) return val;
+  return slot.f.replace("___", val).replace(/\.\.$/, ".").replace(/([!?])\.$/, "$1");
+}
+function builtSpeech(){
+  const u=unit(), r=rec(st.grade,u.n), out={B:[],M:[],C:[]}; let missing=0;
+  ORDER.forEach(p=>{
+    u.build[p].forEach((s,i)=>{
+      const k=p+i; const v = r.free[k] || r.picks[k];
+      const sen = slotSentence(s, v);
+      if(sen) out[p].push(sen); else { out[p].push(null); missing++; }
+    });
+  });
+  return {out, missing};
+}
+
+/* ---------------- render root ---------------- */
+function render(){
+  if(TTS) speechSynthesis.cancel();
+  stopRecog(true);
+  const app=document.getElementById("app"); app.innerHTML="";
+  if(st.screen==="home") app.appendChild(viewHome());
+  else if(st.screen==="units") app.appendChild(viewUnits());
+  else app.appendChild(viewUnit());
+  window.scrollTo(0,0);
+}
+function topbar(title, back, right){
+  const b=el("div","topbar");
+  if(back){ const x=el("button","back","←"); x.setAttribute("aria-label","もどる"); x.onclick=back; b.appendChild(x); }
+  b.appendChild(el("div","ttl",title));
+  if(right) b.appendChild(right);
+  return b;
+}
+function slowToggle(){
+  const s=el("button","pill", st.slow?"🐢 ゆっくり":"🐰 ふつう");
+  s.onclick=()=>{ st.slow=!st.slow; s.textContent = st.slow?"🐢 ゆっくり":"🐰 ふつう"; };
+  return s;
+}
+function burger(small){
+  const w=el("div","burger");
+  ORDER.forEach(p=>{
+    const cls = p==="B"?"top":p==="M"?"mid":"bot";
+    const d=el("div","bun "+cls, `<div class="k"><span class="en">${PART[p].en}</span>　${PART[p].ja}</div>${small?"":`<div class="s">${PART[p].role}</div>`}`);
+    w.appendChild(d);
+  });
+  return w;
+}
+
+/* ---------------- home ---------------- */
+function viewHome(){
+  const w=el("div");
+  w.appendChild(el("h1",null,"🎤 スピーチ名人"));
+  w.appendChild(el("p","lead","はじめ・なか・おわりで、英語のスピーチをしよう!<br>3・4年 Let's Try! 1・2 ／ 5・6年 NEW HORIZON Elementary 5・6（令和6年度版）に対応"));
+  const c=el("div","card");
+  c.appendChild(el("div","big-msg","スピーチは「ハンバーガー」🍔"));
+  c.appendChild(burger(false));
+  const ph=el("div","phrase");
+  ORDER.forEach(p=>{
+    const box=el("div","part "+p);
+    box.appendChild(el("div","ph",`<span class="tag">${PART[p].en}</span><span class="role">${PART[p].ja}でよく使うことば</span>`));
+    PHRASES[p].forEach(([e,j])=>{
+      const l=el("div","line"); l.appendChild(spkBtn(e));
+      l.appendChild(el("div",null,`<div class="e en">${esc(e)}</div><div class="jj">${esc(j)}</div>`)); box.appendChild(l);
+    });
+    ph.appendChild(box);
+  });
+  c.appendChild(ph);
+  w.appendChild(c);
+  w.appendChild(el("div","big-msg","何年生かな?"));
+  const g=el("div","grade-grid");
+  [3,4,5,6].forEach(n=>{
+    const b=el("button","grade g"+n, `<div class="n en">${n}</div><div>${n}年生</div><div class="b">${BOOK[n]}</div>`);
+    b.onclick=()=>{ st.grade=n; st.screen="units"; render(); };
+    g.appendChild(b);
+  });
+  w.appendChild(g);
+  return w;
+}
+
+/* ---------------- units ---------------- */
+function starsOf(g,n){
+  const r=SAVE[uid(g,n)]; if(!r||!r.stars) return 0;
+  const v=Object.values(r.stars); if(!v.length) return 0;
+  return Math.round(v.reduce((a,b)=>a+b,0)/v.length);
+}
+function viewUnits(){
+  const w=el("div");
+  w.appendChild(topbar(`${st.grade}年生 ・ 単元をえらぼう`, ()=>{st.screen="home";render();}));
+  const list=el("div","unit-list");
+  UNITS[st.grade].forEach((u,i)=>{
+    const s=starsOf(st.grade,u.n);
+    const b=el("button","unit", `<div class="emo">${u.emo}</div><div class="no en">UNIT ${u.n}</div><div class="t en">${esc(u.en)}</div><div class="j">${esc(u.sp)}</div><div class="stars">${s?"★".repeat(s)+"☆".repeat(3-s):""}</div>`);
+    b.onclick=()=>{ st.idx=i; st.tab="model"; st.screen="unit"; render(); };
+    list.appendChild(b);
+  });
+  w.appendChild(list);
+  return w;
+}
+
+/* ---------------- unit ---------------- */
+const TABS=[["model","① おてほん"],["puzzle","② なかま分け"],["make","③ つくる"],["practice","④ れんしゅう"],["check","⑤ ふりかえり"]];
+function viewUnit(){
+  const u=unit(), w=el("div");
+  w.appendChild(topbar(`UNIT ${u.n}　${u.en}`, ()=>{st.screen="units";render();}, slowToggle()));
+  const g=el("div","goal",`<b>${u.emo} ${esc(u.sp)}</b><small>${esc(u.ja)}</small>`);
+  w.appendChild(g);
+  const tabs=el("div","tabs");
+  const r=rec(st.grade,u.n);
+  TABS.forEach(([k,label])=>{
+    let done="";
+    if(k==="puzzle" && r.puzzle) done="✓";
+    if(k==="make" && builtSpeech().missing===0) done="✓";
+    if(k==="check" && Object.keys(r.stars).length) done="✓";
+    const t=el("button","tab"+(st.tab===k?" on":""), label+(done?`<span class="d">${done}</span>`:""));
+    t.onclick=()=>{ st.tab=k; render(); };
+    tabs.appendChild(t);
+  });
+  w.appendChild(tabs);
+  const body=el("div");
+  ({model:tabModel, puzzle:tabPuzzle, make:tabMake, practice:tabPractice, check:tabCheck})[st.tab](body);
+  w.appendChild(body);
+  return w;
+}
+function nextTabBtn(label){
+  const i=TABS.findIndex(t=>t[0]===st.tab);
+  if(i>=TABS.length-1) return null;
+  const b=el("button","btn", label || (TABS[i+1][1]+" へ ▶"));
+  b.onclick=()=>{ st.tab=TABS[i+1][0]; render(); };
+  return b;
+}
+
+/* ① model */
+function tabModel(root){
+  const u=unit();
+  root.appendChild(el("p","note","お手本のスピーチを聞いて、はじめ・なか・おわりの役わりをたしかめよう。"));
+  const lines=[], texts=[];
+  ORDER.forEach(p=>{
+    const box=el("div","part "+p);
+    box.appendChild(el("div","ph",`<span class="tag">${PART[p].icon} ${PART[p].en}</span><b>${PART[p].ja}</b><span class="role">${PART[p].role}${p==="M"?"（"+bodyN()+"）":""}</span>`));
+    u.model[p].forEach(([e,j])=>{
+      const l=el("div","line"); l.appendChild(spkBtn(e));
+      l.appendChild(el("div",null,`<div class="e en">${esc(e)}</div><div class="jj">${esc(j)}</div>`));
+      box.appendChild(l); lines.push(l); texts.push(e);
+    });
+    root.appendChild(box);
+  });
+  const row=el("div","row c");
+  const all=el("button","btn","▶ 通して聞く");
+  all.onclick=()=>speakSeq(texts, i=>lines.forEach((l,k)=>l.classList.toggle("hl",k===i)));
+  row.appendChild(all);
+  const nb=nextTabBtn(); if(nb) row.appendChild(nb);
+  root.appendChild(row);
+}
+
+/* ② puzzle */
+function tabPuzzle(root){
+  const u=unit(), r=rec(st.grade,u.n);
+  root.appendChild(el("p","note","バラバラになった文を、はじめ・なか・おわりのどこに入るか分けよう。"));
+  const items=[]; ORDER.forEach(p=>u.model[p].forEach(([e])=>items.push({e,p})));
+  const qs=shuffle(items), ans={}, cards=[];
+  qs.forEach((q,i)=>{
+    const c=el("div","pz");
+    const head=el("div","e en"); head.appendChild(spkBtn(q.e)); head.appendChild(el("span",null,esc(q.e)));
+    c.appendChild(head);
+    const chs=el("div","chs");
+    ORDER.forEach(p=>{
+      const b=el("button","ch "+p, `${PART[p].en}<br>${PART[p].ja}`);
+      b.onclick=()=>{ ans[i]=p; [...chs.children].forEach(x=>x.classList.remove("on")); b.classList.add("on"); c.classList.remove("right","wrong"); };
+      chs.appendChild(b);
+    });
+    c.appendChild(chs); root.appendChild(c); cards.push(c);
+  });
+  const msg=el("div","big-msg","");
+  const row=el("div","row c");
+  const chk=el("button","btn ok","こたえあわせ");
+  chk.onclick=()=>{
+    let ok=0;
+    qs.forEach((q,i)=>{ const right=ans[i]===q.p; if(right) ok++; cards[i].classList.toggle("right",right); cards[i].classList.toggle("wrong",!right); });
+    if(ok===qs.length){ msg.innerHTML="🎉 ぜんぶ正解! はじめ・なか・おわりがわかったね!"; r.puzzle=true; persist(); }
+    else msg.innerHTML=`${ok} / ${qs.length} 正解。赤いわくの文をもう一度考えよう。<br><small class="note">ヒント: はじめ＝あいさつ・話題、おわり＝まとめ・お礼</small>`;
+  };
+  const again=el("button","btn sub","🔀 もう一回");
+  again.onclick=()=>render();
+  row.appendChild(chk); row.appendChild(again);
+  root.appendChild(row); root.appendChild(msg);
+  const nb=nextTabBtn(); if(nb){ const r2=el("div","row c"); r2.appendChild(nb); root.appendChild(r2); }
+}
+
+/* ③ make */
+function tabMake(root){
+  const u=unit(), r=rec(st.grade,u.n);
+  root.appendChild(el("p","note","ことばをえらんで、自分のスピーチをつくろう。✏️ で自分のことばも書けるよ。"));
+  ORDER.forEach(p=>{
+    const box=el("div","part "+p);
+    box.appendChild(el("div","ph",`<span class="tag">${PART[p].icon} ${PART[p].en}</span><b>${PART[p].ja}</b><span class="role">${PART[p].role}${p==="M"?"（"+bodyN()+"）":""}</span>`));
+    u.build[p].forEach((s,i)=>{
+      const k=p+i, sl=el("div","slot");
+      sl.appendChild(el("div","lb",esc(s.ja)));
+      const fr=el("div","fr en");
+      const paint=()=>{
+        const v=r.free[k]||r.picks[k];
+        if(s.f.indexOf("___")<0){ fr.innerHTML=esc(s.f); return; }
+        if(s.f==="___"||s.o.length===0) fr.innerHTML = v?esc(v):`<span class="bl">${esc(s.o.length?"えらぼう":(s.hint||s.f))}</span>`;
+        else fr.innerHTML = esc(s.f).replace("___", `<span class="bl">${v?esc(v):"　"}</span>`);
+      };
+      paint(); sl.appendChild(fr);
+      if(s.f.indexOf("___")>=0){
+        const chips=el("div","chips");
+        const inp=el("input","free-in"); inp.type="text"; inp.autocomplete="off"; inp.spellcheck=false;
+        inp.placeholder = (s.f==="___"||s.o.length===0) ? "例: "+(s.hint || (s.o[0]||"")) : "ここに英語を書こう";
+        inp.value=r.free[k]||"";
+        const hasFreeOnly = s.o.length===0;
+        inp.style.display = (hasFreeOnly || r.free[k]) ? "block" : "none";
+        s.o.forEach(o=>{
+          const c=el("button","chip en"+(!r.free[k]&&r.picks[k]===o?" on":""), esc(o));
+          c.onclick=()=>{ r.picks[k]=o; delete r.free[k]; inp.value=""; inp.style.display="none"; persist(); [...chips.children].forEach(x=>x.classList.remove("on")); c.classList.add("on"); paint(); };
+          chips.appendChild(c);
+        });
+        if(!hasFreeOnly){
+          const fc=el("button","chip free"+(r.free[k]?" on":""),"✏️ 自分で");
+          fc.onclick=()=>{ inp.style.display="block"; inp.focus(); [...chips.children].forEach(x=>x.classList.remove("on")); fc.classList.add("on"); };
+          chips.appendChild(fc);
+        }
+        inp.oninput=()=>{ const v=inp.value.trim(); if(v) r.free[k]=v; else delete r.free[k]; persist(); paint(); };
+        sl.appendChild(chips); sl.appendChild(inp);
+      }
+      box.appendChild(sl);
+    });
+    root.appendChild(box);
+  });
+  const row=el("div","row c");
+  const chk=el("button","btn","✅ できた!");
+  chk.onclick=()=>{
+    const {missing}=builtSpeech();
+    if(missing){ toast(`まだ空らんが ${missing} こあるよ`); return; }
+    st.tab="practice"; render();
+  };
+  const reset=el("button","btn sub","🧹 リセット");
+  reset.onclick=()=>{ r.picks={}; r.free={}; persist(); render(); };
+  row.appendChild(chk); row.appendChild(reset);
+  root.appendChild(row);
+}
+
+/* ④ practice */
+let mic={rec:null,chunks:[],url:null,t0:0,timer:null,stream:null};
+let recog=null, recogText="", recogOn=false;
+function stopRecog(silent){
+  if(recog){ try{ recog.onend=null; recog.stop(); }catch(e){} recog=null; }
+  recogOn=false;
+  if(mic.rec && mic.rec.state==="recording"){ try{ mic.rec.stop(); }catch(e){} }
+  if(mic.stream){ mic.stream.getTracks().forEach(t=>t.stop()); mic.stream=null; }
+  clearInterval(mic.timer);
+}
+function words(s){ return (s||"").toLowerCase().replace(/[^a-z0-9' ]/g," ").split(/\s+/).filter(Boolean); }
+function tabPractice(root){
+  const u=unit(), r=rec(st.grade,u.n), {out,missing}=builtSpeech();
+  if(missing){
+    root.appendChild(el("div","card","<div class='big-msg'>まず ③ つくる でスピーチを完成させよう</div>"));
+    const row=el("div","row c"); const b=el("button","btn","③ つくる へ"); b.onclick=()=>{st.tab="make";render();}; row.appendChild(b); root.appendChild(row);
+    return;
+  }
+  // めあて（予見）
+  const myg=el("div","myg",`<b>🎯 今日のめあて</b><span class="note">（1つえらぼう）</span>`);
+  const gc=el("div","chips");
+  GOALS.forEach(gname=>{
+    const c=el("button","chip"+(r.goal===gname?" on":""),gname);
+    c.onclick=()=>{ r.goal = r.goal===gname?null:gname; persist(); [...gc.children].forEach(x=>x.classList.toggle("on", x.textContent===r.goal)); };
+    gc.appendChild(c);
+  });
+  myg.appendChild(gc); root.appendChild(myg);
+
+  const lv=el("div","lv");
+  ["① ぜんぶ見る","② 最初のことばだけ","③ はじめ・なか・おわりだけ"].forEach((t,i)=>{
+    const b=el("button",st.level===i?"on":"",t); b.onclick=()=>{st.level=i;render();}; lv.appendChild(b);
+  });
+  root.appendChild(lv);
+  root.appendChild(el("p","note",["文を見ながら言ってみよう。","最初の2語をヒントに言ってみよう。","わくだけを見て、自分の力で言ってみよう!"][st.level]));
+
+  const lines=[], texts=[];
+  ORDER.forEach(p=>{
+    const box=el("div","part "+p);
+    box.appendChild(el("div","ph",`<span class="tag">${PART[p].icon} ${PART[p].en}</span><b>${PART[p].ja}</b>${st.level===2?`<span class="role">${out[p].length}文 ・ ${PART[p].role}</span>`:""}`));
+    out[p].forEach(sen=>{
+      texts.push(sen);
+      if(st.level===2) return;
+      const l=el("div","line");
+      l.appendChild(spkBtn(sen));
+      let shown = esc(sen);
+      if(st.level===1){ const ws=sen.split(" "); shown = esc(ws.slice(0,2).join(" ")) + (ws.length>2?` <span class="hide-e">${esc(ws.slice(2).join(" "))}</span>`:""); }
+      l.appendChild(el("div",null,`<div class="e en">${shown}</div>`));
+      box.appendChild(l); lines.push(l);
+    });
+    root.appendChild(box);
+  });
+
+  const row=el("div","row c");
+  const listen=el("button","btn sub","🔊 自分のスピーチを聞く");
+  listen.onclick=()=>speakSeq(texts, i=>lines.forEach((l,k)=>l.classList.toggle("hl",k===i)));
+  const print=el("button","btn sub","🖨 スピーチメモを印刷");
+  print.onclick=()=>window.print();
+  row.appendChild(listen); row.appendChild(print);
+  root.appendChild(row);
+
+  // 録音＋聞き取りチェック（遂行）
+  const box=el("div","rec-box");
+  box.appendChild(el("div",null,"<b>🎙️ 本番れんしゅう</b>"));
+  const timer=el("div","timer en","0:00"); box.appendChild(timer);
+  const ctrl=el("div","row c"); box.appendChild(ctrl);
+  const meter=el("div","meter"); box.appendChild(meter);
+  const heard=el("div","heard note","「スタート」をおして、はじめからおわりまで通して話そう。"); box.appendChild(heard);
+  const play=el("div","row c"); box.appendChild(play);
+  root.appendChild(box);
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const canRec = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+  if(!SR && !canRec) heard.innerHTML="この端末ではマイク機能が使えません。声に出して練習しよう!";
+
+  function drawMeter(){
+    meter.innerHTML="";
+    const hw=new Set(words(recogText));
+    ORDER.forEach(p=>{
+      const target=words(out[p].join(" ")).filter(w=>w.length>1);
+      const got=target.filter(w=>hw.has(w)).length;
+      const pct=target.length?Math.round(got/target.length*100):0;
+      meter.appendChild(el("span","tag "+p,PART[p].en));
+      const bar=el("div","bar",`<i style="width:${pct}%;background:var(--${p})"></i>`); meter.appendChild(bar);
+      meter.appendChild(el("b","en",(pct>=70?"✓ ":"")+pct+"%"));
+    });
+  }
+  function fin(){
+    clearInterval(mic.timer);
+    start.disabled=false; stop.disabled=true;
+    if(SR){
+      drawMeter();
+      const hw=new Set(words(recogText)); const parts=ORDER.filter(p=>{ const t=words(out[p].join(" ")).filter(w=>w.length>1); return t.length && t.filter(w=>hw.has(w)).length/t.length>=0.7; });
+      heard.innerHTML = (recogText?`<b>聞きとれた英語:</b> <span class="en">${esc(recogText)}</span><br>`:"") +
+        (parts.length===3?"🎉 はじめ・なか・おわり、ぜんぶ伝わったよ!":"％が低いところをもう一度練習しよう。（聞きとりは目安です）");
+    } else heard.innerHTML="録音をきいて、はじめ・なか・おわりが言えたかたしかめよう。";
+  }
+  const start=el("button","btn red","● スタート");
+  const stop=el("button","btn sub","■ おわり"); stop.disabled=true;
+  start.onclick=async ()=>{
+    if(TTS) speechSynthesis.cancel();
+    recogText=""; meter.innerHTML=""; play.innerHTML="";
+    heard.innerHTML="🎤 話してね…";
+    start.disabled=true; stop.disabled=false;
+    mic.t0=Date.now(); timer.textContent="0:00";
+    mic.timer=setInterval(()=>{ const s=Math.floor((Date.now()-mic.t0)/1000); timer.textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); },300);
+    if(canRec){
+      try{
+        mic.stream=await navigator.mediaDevices.getUserMedia({audio:true});
+        mic.chunks=[]; mic.rec=new MediaRecorder(mic.stream);
+        mic.rec.ondataavailable=e=>mic.chunks.push(e.data);
+        mic.rec.onstop=()=>{
+          if(mic.url) URL.revokeObjectURL(mic.url);
+          mic.url=URL.createObjectURL(new Blob(mic.chunks,{type:mic.rec.mimeType||"audio/webm"}));
+          play.innerHTML="";
+          const pb=el("button","btn sub","▶ 自分の声を聞く"); pb.onclick=()=>new Audio(mic.url).play(); play.appendChild(pb);
+          if(mic.stream){ mic.stream.getTracks().forEach(t=>t.stop()); mic.stream=null; }
+        };
+        mic.rec.start();
+      }catch(e){ heard.innerHTML="マイクが使えませんでした。設定でマイクを許可してね。"; }
+    }
+    if(SR){
+      try{
+        recog=new SR(); recog.lang="en-US"; recog.continuous=true; recog.interimResults=true; recogOn=true;
+        let finalT="";
+        recog.onresult=(ev)=>{ let interim=""; for(let i=ev.resultIndex;i<ev.results.length;i++){ const t=ev.results[i][0].transcript; if(ev.results[i].isFinal) finalT+=" "+t; else interim+=" "+t; } recogText=(finalT+interim).trim(); heard.innerHTML=`<span class="en">${esc(recogText)}</span>`; drawMeter(); };
+        recog.onend=()=>{ if(recogOn){ try{recog.start();}catch(e){} } };
+        recog.start();
+      }catch(e){}
+    }
+  };
+  stop.onclick=()=>{
+    recogOn=false;
+    if(recog){ try{ recog.onend=null; recog.stop(); }catch(e){} recog=null; }
+    if(mic.rec && mic.rec.state==="recording") mic.rec.stop();
+    setTimeout(fin, 400);
+  };
+  ctrl.appendChild(start); ctrl.appendChild(stop);
+
+  // print memo
+  const pm=el("div","print-only card");
+  pm.innerHTML=`<h1>${esc(u.sp)}</h1><p class="lead">${st.grade}年 UNIT ${u.n} ${esc(u.en)}　名前（　　　　　　　　）</p>`+
+    ORDER.map(p=>`<div class="part ${p}"><div class="ph"><span class="tag">${PART[p].en}</span><b>${PART[p].ja}</b></div>${out[p].map(s=>`<div class="line"><div class="e en">${esc(s)}</div></div>`).join("")}</div>`).join("");
+  root.appendChild(pm);
+
+  const nb=nextTabBtn(); if(nb){ const r2=el("div","row c no-print"); r2.appendChild(nb); root.appendChild(r2); }
+}
+
+/* ⑤ check（省察） */
+function tabCheck(root){
+  const u=unit(), r=rec(st.grade,u.n);
+  root.appendChild(el("p","note","スピーチをふりかえろう。★をつけてね。"));
+  const items=[
+    ["B","Beginning（はじめ）で、あいさつと話題が言えた"],
+    ["M",`Body（なか）で、くわしく${bodyN()}言えた`],
+    ["C","Conclusion（おわり）で、まとめとお礼が言えた"],
+    ["voice","大きな声で、はっきり話せた"],
+    ["eye","聞く人を見て、笑顔で話せた"]
+  ];
+  if(r.goal) items.unshift(["goal",`🎯 めあて「${r.goal}」ができた`]);
+  items.forEach(([k,q])=>{
+    const c=el("div","ck");
+    c.appendChild(el("div","q"+(k==="goal"?" goalq":""),esc(q)));
+    const s=el("div","st");
+    [1,2,3].forEach(n=>{
+      const b=el("button",(r.stars[k]||0)>=n?"on":"","★"); b.setAttribute("aria-label",n+"つぼし");
+      b.onclick=()=>{ r.stars[k]=n; persist(); [...s.children].forEach((x,i)=>x.classList.toggle("on",i<n)); };
+      s.appendChild(b);
+    });
+    c.appendChild(s); root.appendChild(c);
+  });
+  const memo=el("div","card");
+  memo.appendChild(el("div",null,"<b>📝 次はこうしたい</b>"));
+  const ta=document.createElement("textarea"); ta.placeholder="例: おわりで「Let's ～ together!」を入れたい"; ta.value=r.memo||"";
+  ta.oninput=()=>{ r.memo=ta.value; persist(); };
+  memo.appendChild(ta); root.appendChild(memo);
+  const row=el("div","row c");
+  const done=el("button","btn ok","できた! 単元一覧へ");
+  done.onclick=()=>{ if(!Object.keys(r.stars).length){ toast("★をつけてね"); return; } toast("🌟 おつかれさま!"); st.screen="units"; render(); };
+  const again=el("button","btn sub","④ もう一回れんしゅう"); again.onclick=()=>{st.tab="practice";render();};
+  row.appendChild(again); row.appendChild(done); root.appendChild(row);
+}
+
+render();
+</script>
+</body>
+</html>
