@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>フォニックスたんけん（小学校版）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff8ec; --ink:#2b2b3a; --sub:#6b6b7d; --card:#fff; --line:#eadfcb;
+  --c1:#ff7a59; --c2:#ffb627; --c3:#2ec4b6; --c4:#5b8def; --c5:#a26bf2; --c6:#ef5da8;
+  --ok:#22a06b; --ng:#e5484d; --r:18px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Zen Maru Gothic",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+.en{font-family:"Andika","Century Gothic",sans-serif}
+button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
+header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 16px;background:rgba(255,248,236,.92);backdrop-filter:blur(6px);border-bottom:2px solid var(--line)}
+header h1{font-size:18px;margin:0;font-weight:900;flex:1;display:flex;align-items:center;gap:8px;cursor:pointer}
+header h1 .logo{font-size:26px}
+.hbtn{padding:8px 12px;border-radius:12px;background:#fff;border:2px solid var(--line);font-weight:700;font-size:14px}
+main{max-width:1100px;margin:0 auto;padding:18px 16px 60px}
+h2{font-size:24px;margin:6px 0 4px;font-weight:900}
+.lead{color:var(--sub);margin:0 0 16px;font-size:15px}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--sub);font-weight:700;margin-bottom:6px;padding:4px 0}
+/* home */
+.hero{background:linear-gradient(135deg,#ffe3c2,#fff1d6);border-radius:24px;padding:22px;display:flex;gap:18px;align-items:center;margin-bottom:20px;border:2px solid var(--line)}
+.hero .big{font-size:64px}
+.hero h2{font-size:26px}
+.stages{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.stage{background:var(--card);border-radius:var(--r);padding:16px;border:2px solid var(--line);text-align:left;display:flex;flex-direction:column;gap:6px;transition:transform .12s, box-shadow .12s;position:relative;overflow:hidden}
+.stage:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.08)}
+.stage .num{position:absolute;right:12px;top:8px;font-size:44px;font-weight:900;opacity:.12}
+.stage .ic{font-size:36px}
+.stage b{font-size:19px}
+.stage small{color:var(--sub);font-size:13px;line-height:1.5}
+.stage .tag{display:inline-block;font-size:12px;font-weight:700;color:#fff;border-radius:999px;padding:2px 10px;width:max-content}
+.stars{font-size:16px;letter-spacing:2px}
+.note{margin-top:22px;background:#fff;border:2px dashed var(--line);border-radius:var(--r);padding:14px 16px;font-size:14px;color:var(--sub);line-height:1.7}
+/* chips/tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 16px}
+.tab{padding:8px 14px;border-radius:999px;background:#fff;border:2px solid var(--line);font-weight:700}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+/* abc board */
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.lc{background:#fff;border-radius:16px;border:2px solid var(--line);padding:10px 8px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .1s}
+.lc:active{transform:scale(.96)}
+.lc .L{font-size:52px;line-height:1;font-weight:700}
+.lc .E{font-size:30px}
+.lc .W{font-size:16px}
+.lc .W .h{color:var(--c1);font-weight:700}
+.lc .H{font-size:11px;color:var(--sub);min-height:15px}
+.lc .row{display:flex;gap:6px;margin-top:4px}
+.mini{font-size:12px;padding:4px 8px;border-radius:999px;background:#f3ecdf;font-weight:700}
+.mini.s{background:#ffe2d6;color:#b6431f}
+.lc.v .L{color:var(--c1)}
+/* quiz */
+.qbox{background:#fff;border-radius:24px;border:2px solid var(--line);padding:22px;text-align:center;max-width:720px;margin:0 auto}
+.qtop{display:flex;justify-content:space-between;color:var(--sub);font-weight:700;font-size:14px;margin-bottom:6px}
+.pic{font-size:110px;line-height:1.15;min-height:128px}
+.say{display:inline-flex;align-items:center;gap:8px;background:var(--c4);color:#fff;border-radius:999px;padding:12px 22px;font-size:20px;font-weight:900;box-shadow:0 4px 0 #3a63b8}
+.say:active{transform:translateY(3px);box-shadow:0 1px 0 #3a63b8}
+.choices{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:20px}
+.ch{min-width:110px;padding:14px 18px;border-radius:20px;background:#fff;border:3px solid var(--line);font-size:48px;font-weight:700;box-shadow:0 4px 0 var(--line)}
+.ch.word{font-size:28px;display:flex;flex-direction:column;align-items:center}
+.ch.word .e{font-size:40px}
+.ch.ok{border-color:var(--ok);background:#e5f7ee}
+.ch.ng{border-color:var(--ng);background:#fdeceb;animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.reveal{font-size:40px;font-weight:700;min-height:52px;margin-top:10px}
+.reveal .h{color:var(--c1)}
+.nextb{margin-top:14px;padding:12px 26px;border-radius:999px;background:var(--ok);color:#fff;font-weight:900;font-size:18px;box-shadow:0 4px 0 #177a50}
+.ghost{padding:10px 18px;border-radius:999px;background:#fff;border:2px solid var(--line);font-weight:700}
+.opt{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px;font-size:14px;color:var(--sub)}
+/* tiles */
+.tiles{display:flex;justify-content:center;gap:12px;margin:18px 0;flex-wrap:wrap}
+.tile{width:96px;height:110px;border-radius:18px;background:#fff;border:3px solid var(--ink);font-size:68px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 0 var(--ink);transition:transform .1s}
+.tile.v{color:var(--c1);border-color:var(--c1);box-shadow:0 5px 0 var(--c1)}
+.tile.on{transform:translateY(-8px) scale(1.06);background:#fff4c7}
+.tile.empty{border-style:dashed;color:#ccc;box-shadow:none}
+.tile.sm{width:66px;height:76px;font-size:44px}
+.tile.dg{width:auto;padding:0 16px}
+.bubble{min-height:34px;font-size:18px;color:#b6431f;font-weight:700}
+.ctrl{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.btn{padding:12px 18px;border-radius:14px;font-weight:900;font-size:16px;color:#fff;background:var(--c3);box-shadow:0 4px 0 #1f8f85}
+.btn.o{background:var(--c1);box-shadow:0 4px 0 #c45534}
+.btn.p{background:var(--c5);box-shadow:0 4px 0 #7444b8}
+.btn:active{transform:translateY(3px);box-shadow:none}
+.blend{height:10px;background:#f3ecdf;border-radius:999px;max-width:340px;margin:6px auto 0;overflow:hidden}
+.blend i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--c2),var(--c1));transition:width .3s}
+/* machine */
+.machine{display:flex;align-items:center;justify-content:center;gap:8px;margin:18px 0 6px}
+.onsets{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:620px;margin:0 auto}
+.onsets button{width:52px;height:56px;border-radius:12px;background:#fff;border:2px solid var(--line);font-size:30px;font-weight:700}
+.onsets button.on{background:var(--c2);border-color:var(--c2);color:#fff}
+.mres{min-height:30px;font-weight:700;color:var(--sub)}
+/* digraph board */
+.dgboard{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:22px}
+.dgc{background:#fff;border:2px solid var(--line);border-radius:18px;padding:12px;text-align:center}
+.dgc .L{font-size:54px;font-weight:700;color:var(--c5)}
+.dgc .ws{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px}
+.dgc .ws button{font-size:15px;padding:4px 8px;border-radius:10px;background:#f6f0ff}
+.dgc .H{font-size:12px;color:var(--sub)}
+/* flash */
+.flash{background:#fff;border:2px solid var(--line);border-radius:24px;min-height:52vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;position:relative}
+.flash .fw{font-size:clamp(80px,16vw,190px);font-weight:700;line-height:1}
+.flash .fe{font-size:clamp(60px,10vw,120px);min-height:1.2em}
+.flash .ft{position:absolute;top:12px;left:16px;font-size:13px;color:var(--sub);font-weight:700}
+.flash:fullscreen{border-radius:0;border:none}
+.timer{height:8px;background:#f3ecdf;border-radius:999px;overflow:hidden;width:60%;margin-top:14px}
+.timer i{display:block;height:100%;background:var(--c4);width:0}
+/* teacher */
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;font-size:14px}
+th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left}
+th{background:#f7efe1}
+td .L{font-size:22px;font-weight:700}
+.st-ok{color:var(--ok);font-weight:700}.st-no{color:#aaa}
+.panel{background:#fff;border:2px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:16px;line-height:1.7;font-size:14px}
+.panel h3{margin:0 0 8px;font-size:17px}
+.file{font-size:13px}
+.danger{color:var(--ng);font-weight:700;border:2px solid var(--ng);padding:6px 12px;border-radius:10px;background:#fff}
+/* fx */
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;transition:transform .25s;z-index:50;max-width:90vw;text-align:center}
+#toast.on{transform:translateX(-50%) translateY(0)}
+.burst{position:fixed;pointer-events:none;font-size:34px;z-index:60;animation:fly 1s ease-out forwards}
+@keyframes fly{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+.result{font-size:22px;font-weight:900;margin:8px 0}
+.result .bigstar{font-size:56px}
+@media (max-width:560px){
+  .tile{width:76px;height:90px;font-size:54px}
+  .ch{min-width:84px;font-size:38px}
+  .pic{font-size:90px;min-height:104px}
+  header h1{font-size:15px}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1 onclick="go('home')"><span class="logo">🦉</span>フォニックスたんけん <small style="font-weight:500;font-size:12px;color:var(--sub)">小学校版</small></h1>
+  <button class="hbtn" onclick="go('home')">🏠</button>
+  <button class="hbtn" onclick="go('teacher')">👩‍🏫 先生</button>
+</header>
+<main id="app"></main>
+<div id="toast"></div>
+
+<script>
+/* ============ データ ============ */
+const VOWELS = new Set(['a','e','i','o','u']);
+// 文字・キーワード・音のめやす（NEW HORIZON Elementary / Let's Try! の語彙を中心に）
+const LETTERS = [
+ {l:'a',w:'apple',e:'🍎',n:'ay',h:'ア（エの口で）'},
+ {l:'b',w:'bear',e:'🐻',n:'bee',h:'ブッ（短く）'},
+ {l:'c',w:'cat',e:'🐱',n:'see',h:'クッ（息だけ）'},
+ {l:'d',w:'dog',e:'🐶',n:'dee',h:'ドゥッ（短く）'},
+ {l:'e',w:'egg',e:'🥚',n:'ee',h:'エ'},
+ {l:'f',w:'fish',e:'🐟',n:'eff',h:'フー（下くちびるに歯）'},
+ {l:'g',w:'gorilla',e:'🦍',n:'gee',h:'グッ（短く）'},
+ {l:'h',w:'hat',e:'🎩',n:'aitch',h:'ハッ（息だけ）'},
+ {l:'i',w:'insect',e:'🐛',n:'eye',h:'イ（エに近い短いイ）'},
+ {l:'j',w:'juice',e:'🧃',n:'jay',h:'ジュッ'},
+ {l:'k',w:'king',e:'👑',n:'kay',h:'クッ（息だけ）'},
+ {l:'l',w:'lion',e:'🦁',n:'el',h:'ルー（舌先を上の歯ぐきに）'},
+ {l:'m',w:'monkey',e:'🐵',n:'em',h:'ンー（口を閉じて）'},
+ {l:'n',w:'nose',e:'👃',n:'en',h:'ンー（舌先を上に）'},
+ {l:'o',w:'octopus',e:'🐙',n:'oh',h:'ア（口をたてに大きく）'},
+ {l:'p',w:'panda',e:'🐼',n:'pee',h:'プッ（息だけ）'},
+ {l:'q',w:'queen',e:'👸',n:'cue',h:'クワ（q はいつも u といっしょ）'},
+ {l:'r',w:'rabbit',e:'🐰',n:'are',h:'ゥル（舌をどこにもつけない）'},
+ {l:'s',w:'sun',e:'☀️',n:'ess',h:'スー（息だけ）'},
+ {l:'t',w:'tiger',e:'🐯',n:'tee',h:'トゥッ（息だけ）'},
+ {l:'u',w:'umbrella',e:'☂️',n:'you',h:'ア（短く・弱く）'},
+ {l:'v',w:'violin',e:'🎻',n:'vee',h:'ヴー（下くちびるに歯・声）'},
+ {l:'w',w:'watermelon',e:'🍉',n:'double you',h:'ウ（口をすぼめて）'},
+ {l:'x',w:'box',e:'📦',n:'ex',h:'クス（おわりの音）'},
+ {l:'y',w:'yo-yo',e:'🪀',n:'why',h:'ィヤ'},
+ {l:'z',w:'zebra',e:'🦓',n:'zee',h:'ズー（声を出して）'},
+];
+const LMAP = Object.fromEntries(LETTERS.map(o=>[o.l,o]));
+// はじめの音クイズ用
+const FIRST = {
+ a:[['apple','🍎'],['ant','🐜']],
+ b:[['bear','🐻'],['banana','🍌'],['bus','🚌'],['baseball','⚾']],
+ c:[['cat','🐱'],['cake','🍰'],['cap','🧢'],['carrot','🥕']],
+ d:[['dog','🐶'],['duck','🦆'],['doughnut','🍩']],
+ e:[['egg','🥚'],['elephant','🐘']],
+ f:[['fish','🐟'],['fox','🦊'],['frog','🐸']],
+ g:[['gorilla','🦍'],['guitar','🎸'],['gift','🎁']],
+ h:[['hat','🎩'],['horse','🐴'],['hamburger','🍔'],['house','🏠']],
+ i:[['insect','🐛']],
+ j:[['juice','🧃'],['jacket','🧥']],
+ k:[['king','👑'],['koala','🐨'],['kangaroo','🦘']],
+ l:[['lion','🦁'],['lemon','🍋'],['leg','🦵']],
+ m:[['monkey','🐵'],['milk','🥛'],['melon','🍈'],['mouse','🐭']],
+ n:[['nose','👃'],['notebook','📓'],['nest','🪺']],
+ o:[['octopus','🐙'],['otter','🦦']],
+ p:[['panda','🐼'],['pig','🐷'],['pizza','🍕'],['pen','🖊️']],
+ q:[['queen','👸']],
+ r:[['rabbit','🐰'],['rice','🍚'],['robot','🤖'],['rainbow','🌈']],
+ s:[['sun','☀️'],['soccer','⚽'],['salad','🥗'],['sock','🧦']],
+ t:[['tiger','🐯'],['tomato','🍅'],['tennis','🎾'],['tent','⛺']],
+ u:[['umbrella','☂️'],['up','⬆️']],
+ v:[['violin','🎻'],['volleyball','🏐']],
+ w:[['watermelon','🍉'],['watch','⌚'],['window','🪟']],
+ y:[['yo-yo','🪀'],['yellow','🟡']],
+ z:[['zebra','🦓'],['zero','0️⃣']],
+};
+const SAME_SOUND = {c:['k','q'],k:['c','q'],q:['c','k']};
+// CVC
+const CVC = {
+ a:[['cat','🐱'],['hat','🎩'],['bag','👜'],['cap','🧢'],['map','🗺️'],['van','🚐'],['bat','🦇'],['jam','🍓']],
+ e:[['pen','🖊️'],['bed','🛏️'],['red','🔴'],['ten','🔟'],['net','🥅'],['hen','🐔'],['jet','✈️'],['leg','🦵']],
+ i:[['pig','🐷'],['six','6️⃣'],['pin','📌'],['lip','👄'],['zip','🤐'],['wig','💇'],['bin','🗑️'],['fin','🦈']],
+ o:[['dog','🐶'],['box','📦'],['fox','🦊'],['hot','🔥'],['pot','🍲'],['mop','🧹'],['top','🔝'],['log','🪵']],
+ u:[['sun','☀️'],['bus','🚌'],['cup','☕'],['bug','🐛'],['nut','🥜'],['hug','🤗'],['run','🏃'],['bun','🍞']],
+};
+// ライム（なかまの音）
+const RIMES = {
+ at:{cat:'🐱',hat:'🎩',bat:'🦇',rat:'🐀',mat:'',fat:'',sat:'',pat:''},
+ an:{fan:'🪭',can:'🥫',man:'👨',van:'🚐',pan:'🍳',ran:''},
+ en:{pen:'🖊️',ten:'🔟',hen:'🐔',men:'👬',den:''},
+ et:{net:'🥅',jet:'✈️',pet:'🐕',wet:'💦',vet:'',set:'',met:'',bet:'',get:'',let:''},
+ ig:{pig:'🐷',big:'',wig:'💇',dig:'⛏️',fig:''},
+ in:{pin:'📌',bin:'🗑️',fin:'🦈',win:'🏆',tin:''},
+ op:{top:'🔝',hop:'🐇',mop:'🧹',pop:'🍿'},
+ ot:{hot:'🔥',pot:'🍲',dot:'⚫',cot:'',not:'',jot:'',rot:''},
+ ug:{bug:'🐛',mug:'☕',hug:'🤗',rug:'',jug:'',dug:'',tug:''},
+ un:{sun:'☀️',run:'🏃',bun:'🍞',fun:'🎉',nun:''},
+};
+const ONSETS = ['b','c','d','f','h','j','m','n','p','r','s','t','v','w'];
+// 2文字で1音（6年・発展）
+const DIGRAPHS = [
+ {d:'sh',h:'シュー（しずかに！の音）',ws:[['fish','🐟'],['ship','🚢'],['shoe','👟'],['shirt','👕'],['English','🇬🇧']]},
+ {d:'ch',h:'チッ',ws:[['chicken','🐔'],['cheese','🧀'],['lunch','🍱'],['chair','🪑'],['lunch','🍱']]},
+ {d:'th',h:'舌を歯ではさんで スー／ズー',ws:[['three','3️⃣'],['bath','🛁'],['mouth','👄'],['Thursday','📅'],['brother','👦']]},
+ {d:'ck',h:'クッ（c と k で1つの音）',ws:[['duck','🦆'],['sock','🧦'],['clock','🕰️'],['black','⬛'],['chicken','🐔']]},
+ {d:'wh',h:'ウ（w と同じ）',ws:[['whale','🐋'],['white','⬜'],['what','❓']]},
+ {d:'ph',h:'フー（f と同じ）',ws:[['phone','📱'],['photo','📷'],['dolphin','🐬']]},
+];
+DIGRAPHS.forEach(o=>{const s=new Set();o.ws=o.ws.filter(([w])=>!s.has(w)&&s.add(w));});
+const DGQ = [
+ ['ship','sh','🚢'],['shoe','sh','👟'],['fish','sh','🐟'],['shirt','sh','👕'],
+ ['chair','ch','🪑'],['cheese','ch','🧀'],['lunch','ch','🍱'],['chicken','ch','🐔'],
+ ['three','th','3️⃣'],['bath','th','🛁'],['mouth','th','👄'],
+ ['duck','ck','🦆'],['sock','ck','🧦'],['clock','ck','🕰️'],
+ ['whale','wh','🐋'],['white','wh','⬜'],['phone','ph','📱'],['photo','ph','📷'],
+];
+// よめるかな？
+const FLASH = [
+ ...Object.values(CVC).flat().map(([w,e])=>({w,e,t:'cvc'})),
+ ...Object.entries(RIMES).flatMap(([r,o])=>Object.entries(o).filter(([,e])=>e).map(([w,e])=>({w,e,t:'rime'}))),
+ ...DGQ.map(([w,,e])=>({w,e,t:'dg'})),
+];
+const SOUND_IDS = [...LETTERS.map(o=>o.l), ...DIGRAPHS.map(o=>o.d)];
+const DG_MAP = Object.fromEntries(DIGRAPHS.map(o=>[o.d,o]));
+
+/* ============ ユーティリティ ============ */
+const $ = s=>document.querySelector(s);
+const app = $('#app');
+const shuffle = a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick = a=>a[Math.random()*a.length|0];
+const sleep = ms=>new Promise(r=>setTimeout(r,ms));
+let toastT;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2600)}
+function burst(x,y,set=['⭐','🎉','✨','💮']){
+  for(let i=0;i<10;i++){const s=document.createElement('div');s.className='burst';s.textContent=pick(set);
+    s.style.left=x+'px';s.style.top=y+'px';s.style.setProperty('--x',(Math.random()*240-120)+'px');
+    s.style.setProperty('--y',(-80-Math.random()*160)+'px');s.style.setProperty('--r',(Math.random()*360)+'deg');
+    document.body.appendChild(s);setTimeout(()=>s.remove(),1000)}
+}
+function hl(word, part, cls='h'){ // 単語の一部を色付け
+  const i=word.toLowerCase().indexOf(part);
+  if(i<0) return word;
+  return word.slice(0,i)+`<span class="${cls}">${word.slice(i,i+part.length)}</span>`+word.slice(i+part.length);
+}
+
+/* ---- 保存（使えない環境でも動く） ---- */
+const LS = (()=>{try{localStorage.setItem('_t','1');localStorage.removeItem('_t');return localStorage}catch(e){return null}})();
+function lsGet(k,d){try{const v=LS&&LS.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function lsSet(k,v){try{LS&&LS.setItem(k,JSON.stringify(v))}catch(e){}}
+let STARS = lsGet('phES_stars',{});
+function addStar(stage,n){ if((STARS[stage]||0)<n){STARS[stage]=n;lsSet('phES_stars',STARS)} }
+const starStr = n=>'★'.repeat(n)+'☆'.repeat(3-n);
+let SET = Object.assign({rate:0.85,voice:''}, lsGet('phES_set',{}));
+
+/* ---- 音声：先生の録音（IndexedDB）→ なければ合成音声 ---- */
+const REC = {}; let db=null;
+function idb(){return new Promise(res=>{try{const r=indexedDB.open('phonicsES',1);
+  r.onupgradeneeded=()=>r.result.createObjectStore('audio');
+  r.onsuccess=()=>{db=r.result;res(db)};r.onerror=()=>res(null)}catch(e){res(null)}})}
+async function loadRec(){await idb();if(!db)return;try{
+  const tx=db.transaction('audio');const st=tx.objectStore('audio');
+  const req=st.openCursor();req.onsuccess=()=>{const c=req.result;if(c){REC[c.key]=URL.createObjectURL(c.value);c.continue()}else if(cur==='teacher')render()}
+}catch(e){}}
+function saveRec(id,blob){REC[id]&&URL.revokeObjectURL(REC[id]);REC[id]=URL.createObjectURL(blob);
+  if(db){try{db.transaction('audio','readwrite').objectStore('audio').put(blob,id)}catch(e){}}}
+function delRec(id){if(REC[id]){URL.revokeObjectURL(REC[id]);delete REC[id]}
+  if(db){try{db.transaction('audio','readwrite').objectStore('audio').delete(id)}catch(e){}}}
+
+let VOICES=[];
+function loadVoices(){try{VOICES=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang))}catch(e){}}
+try{loadVoices();speechSynthesis.onvoiceschanged=()=>{loadVoices();if(cur==='teacher')render()}}catch(e){}
+function pickVoice(){if(SET.voice){const v=VOICES.find(v=>v.name===SET.voice);if(v)return v}
+  return VOICES.find(v=>v.lang==='en-US'&&/Samantha|Google US|Aria|Jenny|Zira/i.test(v.name))||VOICES.find(v=>v.lang==='en-US')||VOICES[0]}
+function speak(t,rate=1){return new Promise(res=>{try{speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=SET.rate*rate;const v=pickVoice();if(v)u.voice=v;
+  u.onend=res;u.onerror=res;speechSynthesis.speak(u);setTimeout(res,4000)}catch(e){res()}})}
+function playRec(id){return new Promise(res=>{const a=new Audio(REC[id]);a.onended=res;a.onerror=res;a.play().catch(res);setTimeout(res,3000)})}
+// 音を鳴らす。録音がなければ false（呼び出し側でめやすを表示）
+async function sound(id){ if(REC[id]){await playRec(id);return true} return false }
+function hintOf(id){return (LMAP[id]||DG_MAP[id]||{}).h||''}
+
+/* ============ ルーティング ============ */
+let cur='home';
+const VIEWS = {};
+function go(v){ if(location.hash.slice(1)!==v) location.hash=v; else render() }
+window.addEventListener('hashchange',render);
+function render(){
+  stopFlash(); try{speechSynthesis.cancel()}catch(e){}
+  const h=location.hash.slice(1); cur = VIEWS[h]?h:'home';
+  app.innerHTML=''; VIEWS[cur](); window.scrollTo(0,0);
+}
+const backLink = ()=>`<button class="back" onclick="go('home')">← マップにもどる</button>`;
+
+/* ============ ホーム ============ */
+const STAGES = [
+ {id:'abc',ic:'🔤',t:'ABCの音',d:'文字には「名前」と「音」がある！26文字の音を聞いてみよう。',g:'3・4年〜',c:'var(--c1)'},
+ {id:'first',ic:'👂',t:'はじめの音クイズ',d:'ことばを聞いて、さいしょの音の文字をえらぼう。',g:'4・5年',c:'var(--c2)'},
+ {id:'cvc',ic:'🧩',t:'3文字をよもう',d:'c-a-t → cat！ 音をつなげて読む・ことばを作る。',g:'5年',c:'var(--c3)'},
+ {id:'rhyme',ic:'🎵',t:'なかまの音（ライム）',d:'cat・hat・bat…おわりが同じなかまを見つけよう。',g:'5・6年',c:'var(--c4)'},
+ {id:'digraph',ic:'🤝',t:'2文字で1つの音',d:'sh・ch・th・ck… 2文字がチームになると新しい音に！',g:'6年・発展',c:'var(--c5)'},
+ {id:'flash',ic:'⚡',t:'よめるかな？',d:'フラッシュカードで読みにチャレンジ。大画面の投影にも。',g:'5・6年',c:'var(--c6)'},
+];
+VIEWS.home = ()=>{
+  app.innerHTML = `
+  <div class="hero"><div class="big">🗺️</div><div>
+    <h2>フォニックスたんけんへようこそ！</h2>
+    <p class="lead" style="margin:0">文字と音のひみつを見つけながら、英語を「読める」ようになろう。ステージ1からじゅんばんに進むのがおすすめ。</p>
+  </div></div>
+  <div class="stages">${STAGES.map((s,i)=>`
+    <button class="stage" onclick="go('${s.id}')">
+      <span class="num">${i+1}</span><span class="ic">${s.ic}</span>
+      <span class="tag" style="background:${s.c}">${s.g}</span>
+      <b>${s.t}</b><small>${s.d}</small>
+      ${s.id==='abc'?'':`<span class="stars" style="color:${s.c}">${starStr(STARS[s.id]||0)}</span>`}
+    </button>`).join('')}
+  </div>
+  <div class="note">👩‍🏫 <b>先生へ：</b>英語の音はブラウザの合成音声で読み上げます。<b>文字の「音」だけ</b>（/b/ など）は合成音声では正確に出せないため、録音がない場合は「音のめやす」を表示し、単語で聞かせます。「先生」ページから先生の声（音声ファイル）を登録すると、音だけを再生できるようになります。</div>`;
+};
+
+/* ============ 1. ABCの音 ============ */
+let abcCase='lower';
+VIEWS.abc = ()=>{
+  app.innerHTML = `${backLink()}<h2>🔤 ABCの音</h2>
+  <p class="lead">カードをタップ → 音とことばを聞こう。<b>なまえ</b>は「エイ・ビー・スィー」、<b>おと</b>はことばのはじめの音だよ。</p>
+  <div class="tabs">
+    <button class="tab ${abcCase==='lower'?'on':''}" onclick="abcCase='lower';render()">a b c 小文字</button>
+    <button class="tab ${abcCase==='upper'?'on':''}" onclick="abcCase='upper';render()">A B C 大文字</button>
+    <button class="tab" onclick="abcChant()">🎶 チャンツ（a, a, apple…）</button>
+  </div>
+  <div class="board">${LETTERS.map(o=>`
+    <div class="lc ${VOWELS.has(o.l)?'v':''}" id="lc-${o.l}">
+      <button onclick="abcTap('${o.l}')" style="display:flex;flex-direction:column;align-items:center;width:100%">
+        <span class="L en">${abcCase==='upper'?o.l.toUpperCase():o.l}</span>
+        <span class="E">${o.e}</span>
+        <span class="W en">${o.l==='x'?hl(o.w,'x'):hl(o.w,o.l)}</span>
+      </button>
+      <span class="H">${REC[o.l]?'':o.h}</span>
+      <div class="row"><button class="mini" onclick="speak('${o.n}')">なまえ</button><button class="mini s" onclick="abcSound('${o.l}')">おと</button></div>
+    </div>`).join('')}</div>
+  <p class="lead" style="margin-top:14px">🟠 オレンジの文字は<b>母音</b>（a・e・i・o・u）。日本語の「ア・イ・ウ・エ・オ」とは少しちがう音だよ。</p>`;
+};
+async function abcSound(l){ if(!(await sound(l))) toast(`「${l}」の音のめやす：${LMAP[l].h}`) }
+async function abcTap(l){
+  const o=LMAP[l]; const el=$('#lc-'+l); el&&(el.style.background='#fff4c7');
+  if(REC[l]){await playRec(l);await sleep(150);await playRec(l);await sleep(150)}
+  await speak(o.w==='yo-yo'?'yo-yo':o.w,0.9);
+  el&&(el.style.background='');
+}
+let chantStop=false;
+async function abcChant(){
+  chantStop=false; toast('チャンツ開始（ほかのボタンで止まります）');
+  for(const o of LETTERS){
+    if(chantStop||cur!=='abc')return;
+    const el=$('#lc-'+o.l); if(!el) return;
+    el.scrollIntoView({block:'center',behavior:'smooth'}); el.style.background='#fff4c7';
+    if(REC[o.l]){await playRec(o.l);await sleep(120);await playRec(o.l)} else {await speak(o.n)}
+    await sleep(120); await speak(o.w); await sleep(300); el.style.background='';
+  }
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.tab'))chantStop=true},true);
+
+/* ============ 2. はじめの音クイズ ============ */
+let FQ=null;
+VIEWS.first = ()=>{ FQ={i:0,score:0,n:10,showPic:FQ?FQ.showPic:true,list:makeFirst()}; drawFirst() };
+function makeFirst(){
+  const letters=Object.keys(FIRST);
+  return shuffle(letters).slice(0,10).map(l=>{
+    const [w,e]=pick(FIRST[l]); const ban=new Set([l,...(SAME_SOUND[l]||[])]);
+    const ds=shuffle(letters.filter(x=>!ban.has(x))).slice(0,2);
+    return {l,w,e,ch:shuffle([l,...ds])};
+  });
+}
+function drawFirst(){
+  if(cur!=='first')return;
+  const q=FQ.list[FQ.i];
+  if(!q){ return finish('first',FQ.score,FQ.n,'VIEWS.first()') }
+  app.innerHTML=`${backLink()}<h2>👂 はじめの音クイズ</h2>
+  <div class="qbox">
+    <div class="qtop"><span>${FQ.i+1} / ${FQ.n}</span><span>⭕ ${FQ.score}</span></div>
+    <div class="pic">${FQ.showPic?q.e:'❔'}</div>
+    <button class="say" onclick="speak('${q.w}',0.85)">🔊 きく</button>
+    <div class="choices">${q.ch.map(c=>`<button class="ch en" onclick="ansFirst(this,'${c}')">${c}</button>`).join('')}</div>
+    <div class="reveal en" id="rv"></div>
+    <div class="opt"><label><input type="checkbox" ${FQ.showPic?'checked':''} onchange="FQ.showPic=this.checked;drawFirst()"> 絵を見せる</label>
+      <button class="mini" onclick="speak('${q.w}',0.55)">🐢 ゆっくり</button></div>
+  </div>`;
+  setTimeout(()=>speak(q.w,0.85),300);
+}
+async function ansFirst(btn,c){
+  const q=FQ.list[FQ.i]; if(q.done)return;
+  if(c===q.l){
+    q.done=true; if(!q.miss)FQ.score++;
+    btn.classList.add('ok'); const r=btn.getBoundingClientRect(); burst(r.left+r.width/2,r.top);
+    $('#rv').innerHTML=`${q.e} ${hl(q.w,q.l)}`;
+    if(!(await sound(q.l))) await sleep(200);
+    await speak(q.w);
+    if($('#rv'))$('#rv').insertAdjacentHTML('afterend',`<button class="nextb" onclick="FQ.i++;drawFirst()">つぎへ ▶</button>`);
+  }else{ q.miss=true; btn.classList.add('ng'); setTimeout(()=>btn.classList.remove('ng'),400) }
+}
+
+/* 結果画面（共通） */
+function finish(stage,score,n,retry){
+  const star = score>=n?3: score>=n*0.7?2: score>=n*0.4?1:0;
+  addStar(stage,star);
+  app.innerHTML=`${backLink()}<div class="qbox">
+    <div class="bigstar" style="font-size:60px;color:var(--c2)">${starStr(star)}</div>
+    <div class="result">${n}問中 ${score}問 せいかい！</div>
+    <p class="lead">${star===3?'パーフェクト！音の名人だね 🏅':star>=2?'すごい！あと少しで名人！':'もう一回やると、きっともっと読めるよ！'}</p>
+    <div class="ctrl"><button class="btn" onclick="${retry}">もう一回</button><button class="ghost" onclick="go('home')">マップへ</button></div>
+  </div>`;
+  if(star>=2) setTimeout(()=>burst(innerWidth/2,innerHeight/2),200);
+}
+
+/* ============ 3. 3文字をよもう（CVC） ============ */
+let CV={v:'a',mode:'read',i:0};
+VIEWS.cvc = ()=>{ CV.list=cvcList(); CV.i=0; CV.made=0; drawCvc() };
+function cvcList(){ return shuffle(CV.v==='mix'?Object.values(CVC).flat():CVC[CV.v]) }
+function drawCvc(){
+  if(cur!=='cvc')return;
+  const [w,e]=CV.list[CV.i%CV.list.length];
+  const tabs=`<div class="tabs">${['a','e','i','o','u','mix'].map(v=>`<button class="tab ${CV.v===v?'on':''}" onclick="CV.v='${v}';VIEWS.cvc()">${v==='mix'?'ミックス':'まん中が '+v}</button>`).join('')}
+   <span style="flex:1"></span>
+   <button class="tab ${CV.mode==='read'?'on':''}" onclick="CV.mode='read';VIEWS.cvc()">📖 よむ</button>
+   <button class="tab ${CV.mode==='make'?'on':''}" onclick="CV.mode='make';VIEWS.cvc()">✏️ つくる</button></div>`;
+  if(CV.mode==='read'){
+    app.innerHTML=`${backLink()}<h2>🧩 3文字をよもう</h2>
+    <p class="lead">1文字ずつタップして音を出そう → 「つなげる」で1つのことばに！</p>${tabs}
+    <div class="qbox">
+      <div class="pic" id="cpic">❔</div>
+      <div class="tiles">${[...w].map((c,k)=>`<button class="tile en ${VOWELS.has(c)?'v':''}" id="t${k}" onclick="tapTile(${k},'${c}')">${c}</button>`).join('')}</div>
+      <div class="bubble" id="bub"></div>
+      <div class="blend"><i id="bl"></i></div>
+      <div class="ctrl" style="margin-top:16px">
+        <button class="btn o" onclick="blendWord('${w}')">🔗 つなげる</button>
+        <button class="btn" onclick="$('#cpic').textContent='${e}';speak('${w}')">👀 こたえ</button>
+        <button class="btn p" onclick="CV.i++;drawCvc()">つぎ ▶</button>
+      </div>
+    </div>`;
+  }else{
+    const pool=shuffle([...w, ...shuffle('abcdefghijlmnoprstuvw'.split('').filter(c=>!w.includes(c))).slice(0,3)]);
+    CV.slot=[]; CV.word=w;
+    app.innerHTML=`${backLink()}<h2>🧩 ことばをつくろう</h2>
+    <p class="lead">絵と音をヒントに、文字をじゅんばんにタップしてことばを作ろう。（${CV.made}/8）</p>${tabs}
+    <div class="qbox">
+      <div class="pic">${e}</div>
+      <button class="say" onclick="speak('${w}')">🔊 きく</button>
+      <div class="tiles" id="slots">${[0,1,2].map(k=>`<div class="tile empty en" id="s${k}">?</div>`).join('')}</div>
+      <div class="tiles">${pool.map((c,k)=>`<button class="tile sm en ${VOWELS.has(c)?'v':''}" id="p${k}" onclick="putTile(this,'${c}')">${c}</button>`).join('')}</div>
+      <div class="ctrl"><button class="ghost" onclick="drawCvc()">↺ やりなおし</button><button class="ghost" onclick="CV.i++;drawCvc()">スキップ</button></div>
+    </div>`;
+    setTimeout(()=>speak(w),300);
+  }
+}
+async function tapTile(k,c){
+  document.querySelectorAll('.tile').forEach(t=>t.classList.remove('on'));
+  $('#t'+k).classList.add('on');
+  $('#bub').textContent = (await sound(c)) ? '' : `${c}：${LMAP[c].h}`;
+}
+async function blendWord(w){
+  const bl=$('#bl'); const ts=[...document.querySelectorAll('.tiles .tile')];
+  for(let k=0;k<w.length;k++){
+    ts.forEach(t=>t.classList.remove('on')); ts[k].classList.add('on'); bl.style.width=((k+1)/w.length*100)+'%';
+    if(!(await sound(w[k]))){ $('#bub').textContent=`${w[k]}：${LMAP[w[k]].h}`; await sleep(650) }
+  }
+  ts.forEach(t=>t.classList.add('on')); $('#bub').textContent='';
+  await speak(w,0.55); await sleep(200); await speak(w,1);
+  setTimeout(()=>{ts.forEach(t=>t.classList.remove('on'));bl.style.width='0'},600);
+}
+async function putTile(btn,c){
+  const k=CV.slot.length; if(k>=3)return;
+  CV.slot.push(c); btn.style.visibility='hidden';
+  const s=$('#s'+k); s.textContent=c; s.classList.remove('empty'); if(VOWELS.has(c))s.classList.add('v');
+  sound(c);
+  if(CV.slot.length===3){
+    if(CV.slot.join('')===CV.word){
+      const r=$('#slots').getBoundingClientRect(); burst(r.left+r.width/2,r.top);
+      CV.made++; await speak(CV.word);
+      if(CV.made>=8){ addStar('cvc',3); toast('8こ作れた！ ★★★ ゲット'); CV.made=0 }
+      else if(CV.made>=5) addStar('cvc',2); else if(CV.made>=2) addStar('cvc',1);
+      setTimeout(()=>{CV.i++;drawCvc()},900);
+    }else{
+      $('#slots').querySelectorAll('.tile').forEach(t=>t.classList.add('ng'));
+      $('#slots').style.animation='shake .35s'; toast('おしい！音をよく聞いてもう一回'); setTimeout(drawCvc,900);
+    }
+  }
+}
+
+/* ============ 4. なかまの音（ライム） ============ */
+let RM={mode:'quiz',fam:'at',on:'c'};
+VIEWS.rhyme = ()=>{
+  const tabs=`<div class="tabs"><button class="tab ${RM.mode==='quiz'?'on':''}" onclick="RM.mode='quiz';render()">🔍 なかまさがし</button>
+    <button class="tab ${RM.mode==='machine'?'on':''}" onclick="RM.mode='machine';render()">⚙️ ことばマシン</button></div>`;
+  if(RM.mode==='quiz'){ RM.q={i:0,score:0,n:8,list:makeRhyme()}; app.innerHTML=`${backLink()}<h2>🎵 なかまの音（ライム）</h2>${tabs}<div id="rq"></div>`; drawRhyme() }
+  else { RM.tabs=tabs; drawMachine(); }
+};
+function makeRhyme(){
+  const withE=f=>Object.entries(RIMES[f]).filter(([,e])=>e);
+  return shuffle(Object.keys(RIMES)).slice(0,8).map(f=>{
+    const [[tw,te],[aw,ae]]=shuffle(withE(f));
+    const others=shuffle(Object.keys(RIMES).filter(x=>x!==f)).slice(0,2)
+      .map(x=>pick(withE(x)));
+    return {f,tw,te,ans:aw,ch:shuffle([[aw,ae],...others])};
+  });
+}
+function drawRhyme(){
+  if(!$('#rq'))return;
+  const R=RM.q, q=R.list[R.i];
+  if(!q){ return finish('rhyme',R.score,R.n,"RM.mode='quiz';render()") }
+  $('#rq').innerHTML=`<div class="qbox">
+    <div class="qtop"><span>${R.i+1} / ${R.n}</span><span>⭕ ${R.score}</span></div>
+    <p class="lead" style="margin:0">おわりの音が <b>おなじなかま</b> はどれ？</p>
+    <div class="pic" style="font-size:80px;min-height:96px">${q.te}</div>
+    <div class="reveal en">${hl(q.tw,q.f)}</div>
+    <button class="say" onclick="speak('${q.tw}')">🔊 きく</button>
+    <div class="choices">${q.ch.map(([w,e])=>`<button class="ch word en" onclick="ansRhyme(this,'${w}')"><span class="e">${e}</span>${w}</button>`).join('')}</div>
+    <div id="rnext"></div></div>`;
+  setTimeout(()=>speak(q.tw),300);
+}
+async function ansRhyme(btn,w){
+  const R=RM.q,q=R.list[R.i]; if(q.done){return}
+  speak(w);
+  if(w===q.ans){ q.done=true; if(!q.miss)R.score++; btn.classList.add('ok'); btn.innerHTML=btn.innerHTML.replace(w,hl(w,q.f));
+    const r=btn.getBoundingClientRect(); burst(r.left+r.width/2,r.top);
+    await sleep(900); await speak(`${q.tw}, ${w}`);
+    if($('#rnext'))$('#rnext').innerHTML=`<button class="nextb" onclick="RM.q.i++;drawRhyme()">つぎへ ▶</button>`;
+  }else{ q.miss=true; btn.classList.add('ng'); setTimeout(()=>btn.classList.remove('ng'),400) }
+}
+function drawMachine(){
+  const tabs=RM.tabs;
+  const fam=RM.fam, w=RM.on+fam, real=RIMES[fam][w]!==undefined, e=RIMES[fam][w]||'';
+  app.innerHTML=`${backLink()}<h2>🎵 ことばマシン</h2>${tabs}
+  <p class="lead">うしろ（なかまの音）を決めて、はじめの文字を入れかえてみよう。本当にあることばかな？</p>
+  <div class="tabs">${Object.keys(RIMES).map(f=>`<button class="tab en ${f===fam?'on':''}" onclick="RM.fam='${f}';drawMachine()">-${f}</button>`).join('')}</div>
+  <div class="qbox">
+    <div class="pic" style="font-size:80px;min-height:96px">${real?(e||'📗'):'🤔'}</div>
+    <div class="machine">
+      <div class="tile en" style="background:#fff4c7">${RM.on}</div>
+      <div style="font-size:30px;font-weight:900">+</div>
+      ${[...fam].map(c=>`<div class="tile en ${VOWELS.has(c)?'v':''}">${c}</div>`).join('')}
+    </div>
+    <div class="mres">${real?`<span style="color:var(--ok)">⭕ 「${w}」は本当にあることば！</span>`:`「${w}」…これはことばじゃないみたい（でも読めたね！）`}</div>
+    <div class="onsets en" style="margin-top:12px">${ONSETS.map(c=>`<button class="${c===RM.on?'on':''}" onclick="RM.on='${c}';drawMachine();speak('${c+fam}')">${c}</button>`).join('')}</div>
+    <div class="ctrl" style="margin-top:14px"><button class="btn" onclick="speak('${w}')">🔊 ${w}</button>
+      <button class="btn o" onclick="rhymeList('${fam}')">🎶 なかまを全部きく</button></div>
+  </div>`;
+}
+async function rhymeList(f){ for(const w of Object.keys(RIMES[f])){ await speak(w); await sleep(120) } }
+
+/* ============ 5. 2文字で1つの音 ============ */
+let DQ=null;
+VIEWS.digraph = ()=>{
+  DQ={i:0,score:0,n:8,list:shuffle(DGQ).slice(0,8)};
+  app.innerHTML=`${backLink()}<h2>🤝 2文字で1つの音</h2>
+  <p class="lead">2つの文字がチームになると、べつの新しい音になるよ。ことばをタップして聞いてみよう。</p>
+  <div class="dgboard">${DIGRAPHS.map(o=>`<div class="dgc">
+    <button class="L en" onclick="dgSound('${o.d}')">${o.d}</button>
+    <div class="H">${REC[o.d]?'🔊 タップで音':o.h}</div>
+    <div class="ws en">${o.ws.map(([w,e])=>`<button onclick="speak('${w}')">${e} ${hl(w,o.d,'')}</button>`).join('')}</div>
+  </div>`).join('')}</div>
+  <h2 style="font-size:20px">🔍 クイズ：どのチームが入るかな？</h2>
+  <div id="dq"></div>`;
+  app.querySelectorAll('.dgc .ws button span').forEach(s=>{s.style.color='var(--c5)';s.style.fontWeight='700'});
+  drawDg();
+};
+async function dgSound(d){ if(!(await sound(d))){ toast(`${d} の音のめやす：${DG_MAP[d].h}`); speak(DG_MAP[d].ws[0][0]) } }
+function drawDg(){
+  if(!$('#dq'))return;
+  const q=DQ.list[DQ.i];
+  if(!q){ return finish('digraph',DQ.score,DQ.n,"VIEWS.digraph()") }
+  const [w,d,e]=q; const blank=w.replace(d,'＿＿');
+  const opts=shuffle([d,...shuffle(['sh','ch','th','ck'].filter(x=>x!==d)).slice(0,2)]);
+  $('#dq').innerHTML=`<div class="qbox">
+    <div class="qtop"><span>${DQ.i+1} / ${DQ.n}</span><span>⭕ ${DQ.score}</span></div>
+    <div class="pic" style="font-size:84px;min-height:100px">${e}</div>
+    <div class="reveal en" id="dgw" style="font-size:52px">${blank}</div>
+    <button class="say" onclick="speak('${w}')">🔊 きく</button>
+    <div class="choices">${opts.map(o=>`<button class="ch en" onclick="ansDg(this,'${o}')">${o}</button>`).join('')}</div>
+    <div id="dnext"></div></div>`;
+}
+async function ansDg(btn,o){
+  const q=DQ.list[DQ.i]; if(q.done)return; const [w,d]=q;
+  if(o===d){ q.done=true; if(!q.miss)DQ.score++; btn.classList.add('ok');
+    $('#dgw').innerHTML=hl(w,d); $('#dgw').querySelector('span').style.color='var(--c5)';
+    const r=btn.getBoundingClientRect(); burst(r.left+r.width/2,r.top); await speak(w);
+    if($('#dnext'))$('#dnext').innerHTML=`<button class="nextb" onclick="DQ.i++;drawDg()">つぎへ ▶</button>`;
+  }else{ q.miss=true; btn.classList.add('ng'); setTimeout(()=>btn.classList.remove('ng'),400) }
+}
+
+/* ============ 6. よめるかな？（フラッシュカード） ============ */
+let FL={t:'cvc',i:0,auto:false,sec:4,list:[]}; let flT=null, flRaf=null;
+function stopFlash(){clearTimeout(flT);cancelAnimationFrame(flRaf);FL.auto=false}
+VIEWS.flash = ()=>{
+  FL.list=shuffle(FLASH.filter(o=>FL.t==='mix'||o.t===FL.t)); FL.i=0; FL.shown=false;
+  const lab={cvc:'3文字（CVC）',rime:'なかまの音',dg:'2文字で1音',mix:'ミックス'};
+  app.innerHTML=`${backLink()}<h2>⚡ よめるかな？</h2>
+  <p class="lead">文字だけを見て読んでみよう。「こたえ」で絵と音が出るよ。「オート」は投影におすすめ。</p>
+  <div class="tabs">${Object.entries(lab).map(([k,v])=>`<button class="tab ${FL.t===k?'on':''}" onclick="FL.t='${k}';render()">${v}</button>`).join('')}</div>
+  <div class="flash" id="flbox">
+    <span class="ft" id="fcount"></span>
+    <div class="fe" id="fe"></div>
+    <div class="fw en" id="fw"></div>
+    <div class="timer" id="ftim" style="visibility:hidden"><i id="fbar"></i></div>
+  </div>
+  <div class="ctrl" style="margin-top:14px">
+    <button class="ghost" onclick="flMove(-1)">◀ まえ</button>
+    <button class="btn o" onclick="flReveal()">👀 こたえ</button>
+    <button class="ghost" onclick="flMove(1)">つぎ ▶</button>
+    <button class="btn p" id="autoB" onclick="flAuto()">▶ オート</button>
+    <select class="ghost" onchange="FL.sec=+this.value">${[3,4,6,8].map(s=>`<option value="${s}" ${s===FL.sec?'selected':''}>${s}秒</option>`).join('')}</select>
+    <button class="ghost" onclick="flFull()">⛶ 全画面</button>
+  </div>`;
+  flDraw();
+};
+function flDraw(){ const o=FL.list[FL.i]; FL.shown=false;
+  $('#fw').textContent=o.w; $('#fe').textContent=''; $('#fcount').textContent=`${FL.i+1} / ${FL.list.length}`; }
+function flReveal(){ const o=FL.list[FL.i]; FL.shown=true; $('#fe').textContent=o.e; speak(o.w) }
+function flMove(d){ if(FL.auto)flAuto(); FL.i=(FL.i+d+FL.list.length)%FL.list.length; flDraw() }
+function flAuto(){
+  if(FL.auto){ stopFlash(); $('#autoB').textContent='▶ オート'; $('#ftim').style.visibility='hidden'; return }
+  FL.auto=true; $('#autoB').textContent='⏸ ストップ'; $('#ftim').style.visibility='visible';
+  const step=()=>{ if(!FL.auto||cur!=='flash')return; flDraw(); const t0=performance.now(), T=FL.sec*1000;
+    const tick=()=>{ if(!FL.auto)return; const p=Math.min(1,(performance.now()-t0)/T); $('#fbar').style.width=(p*100)+'%';
+      if(p<1) flRaf=requestAnimationFrame(tick); else { flReveal(); flT=setTimeout(()=>{FL.i=(FL.i+1)%FL.list.length;step()},2200) } };
+    tick(); };
+  step();
+}
+function flFull(){ const el=$('#flbox'); try{ (document.fullscreenElement?document.exitFullscreen():(el.requestFullscreen||el.webkitRequestFullscreen).call(el))?.catch?.(()=>toast('この画面では全画面にできません')) }catch(e){ toast('この画面では全画面にできません') } }
+
+/* ============ 先生ページ ============ */
+VIEWS.teacher = ()=>{
+  const nRec=SOUND_IDS.filter(id=>REC[id]).length;
+  app.innerHTML=`${backLink()}<h2>👩‍🏫 先生ページ</h2>
+  <div class="panel"><h3>🎙 音声の登録（${nRec} / ${SOUND_IDS.length}）</h3>
+    合成音声は単語はきれいに読めますが、<b>/b/ /æ/ のような「音だけ」は正確に出せません</b>。先生の声を登録すると、カードのタップや「つなげる」で音だけを再生します。<br>
+    ① スマホのボイスメモなどで1音ずつ録音し、ファイル名を <code>a.m4a</code>・<code>b.mp3</code>・<code>sh.m4a</code> のようにする<br>
+    ② 下の「まとめて登録」で全部いっしょに選ぶ（ファイル名で自動ふりわけ）<br>
+    <span style="font-size:12px">※ 登録した音声はこの端末のこのブラウザにだけ保存されます。投影用PCで登録してください。母音（a e i o u）は「短い音」で録音します。</span>
+    <div style="margin-top:10px"><label class="btn" style="display:inline-block">📂 まとめて登録<input type="file" accept="audio/*" multiple hidden onchange="bulkRec(this.files)"></label></div>
+    ${db?'':'<p style="color:var(--ng)">⚠ この環境では保存領域が使えないため、ページを閉じると登録が消えます。</p>'}
+  </div>
+  <div class="panel" style="padding:0;overflow:auto"><table>
+    <tr><th>文字</th><th>音のめやす</th><th>登録</th><th></th></tr>
+    ${SOUND_IDS.map(id=>`<tr><td><span class="L en">${id}</span></td><td>${hintOf(id)}</td>
+      <td class="${REC[id]?'st-ok':'st-no'}">${REC[id]?'✔ 登録ずみ':'—'}</td>
+      <td style="white-space:nowrap">${REC[id]?`<button class="mini" onclick="playRec('${id}')">▶</button> <button class="mini" onclick="delRec('${id}');render()">削除</button>`:''}
+        <label class="mini" style="cursor:pointer">📂<input type="file" accept="audio/*" hidden onchange="oneRec('${id}',this.files[0])"></label></td></tr>`).join('')}
+  </table></div>
+  <div class="panel"><h3>🗣 合成音声の設定</h3>
+    声：<select class="ghost" onchange="SET.voice=this.value;lsSet('phES_set',SET)">
+      <option value="">自動（アメリカ英語）</option>
+      ${VOICES.map(v=>`<option ${v.name===SET.voice?'selected':''}>${v.name}</option>`).join('')}</select>
+    <div style="margin-top:8px">はやさ：<input type="range" min="0.5" max="1.2" step="0.05" value="${SET.rate}" oninput="SET.rate=+this.value;$('#rt').textContent=this.value;lsSet('phES_set',SET)"> <span id="rt">${SET.rate}</span>
+      <button class="mini" onclick="speak('cat, hat, bat')">テスト</button></div>
+  </div>
+  <div class="panel"><h3>📚 使い方のめやす</h3>
+    <b>3・4年（Let's Try!）</b>：ステージ1の「なまえ」とチャンツで文字に親しむ。音は「はじめの音が同じことば」に気付く程度に。<br>
+    <b>5年（NEW HORIZON Elementary 5）</b>：ステージ1〜3。帯活動（5分）で「はじめの音クイズ」→「3文字をよもう」。<br>
+    <b>6年（NEW HORIZON Elementary 6）</b>：ステージ3〜6。ライムや2文字1音で「読めた！」を増やし、教科書の語を推測して読む活動につなげる。<br>
+    小学校では「文字の名前」と「文字には音があることへの気付き」が中心です。正確な発音指導やルールの暗記よりも、音と文字のつながりに気付く楽しさを大切にしてください。
+  </div>
+  <div class="panel"><h3>🗑 記録のリセット</h3>
+    <button class="danger" id="rs" onclick="resetStars(this)">★の記録を消す</button></div>`;
+};
+function oneRec(id,f){ if(!f)return; saveRec(id,f); toast(`${id} を登録しました`); render() }
+function bulkRec(files){
+  let ok=[],ng=[];
+  for(const f of files){ const id=f.name.replace(/\.[^.]+$/,'').trim().toLowerCase();
+    if(SOUND_IDS.includes(id)){saveRec(id,f);ok.push(id)} else ng.push(f.name) }
+  toast(`${ok.length}件 登録しました`+(ng.length?`（名前が合わない：${ng.slice(0,3).join(', ')}${ng.length>3?'…':''}）`:''));
+  render();
+}
+function resetStars(b){ if(b.dataset.c){STARS={};lsSet('phES_stars',STARS);toast('記録を消しました');render()} else {b.dataset.c=1;b.textContent='本当に消す？もう一度押してください'} }
+
+/* ============ 起動 ============ */
+loadRec(); render();
+</script>
+</body>
+</html>
